@@ -39,11 +39,13 @@ export class Dates {
             const msInHour = 1000 * 60 * 60;
             const msInMinutes = 1000 * 60;
             const msInSeconds = 1000;
+
             const differenceInMilliseconds = this.nextChristmas().getTime() - this.now().getTime();
             const days = Math.floor(differenceInMilliseconds / msInDay);
             const hours = Math.floor((differenceInMilliseconds % msInDay) / msInHour);
             const minutes = Math.floor((differenceInMilliseconds % msInHour) / msInMinutes);
             const seconds = Math.floor((differenceInMilliseconds % msInMinutes) / msInSeconds);
+            
             duration = {
                 days: days,
                 hours: hours,

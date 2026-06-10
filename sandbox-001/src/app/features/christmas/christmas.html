@@ -1,8 +1,28 @@
-<div>{{ dates.now() | date: 'medium'}}</div>
-<div>Next Christmas: {{ dates.nextChristmas() | date: 'medium'}}</div>
-@if (dates.isChristmas()) {
-    <div>IT'S CHRISTMAS</div>
-}
-@else {
-    <div>Time until Christmas: {{ dates.timeUntilChristmas().days }} days | {{ dates.timeUntilChristmas().hours }} hours | {{dates.timeUntilChristmas().minutes }} minutes | {{ dates.timeUntilChristmas().seconds }} seconds </div>
-}
+<div class="christmas-feature">
+    @if (dates.isChristmas()) {
+        <div>MERRY CHRISTMAS</div>
+    }
+    @else {
+        <div class="countdown">
+            <div class="countdown-title">Christmas Countdown</div>
+            <div class="countdown-timer">
+                <div class="countdown-timer-block">
+                    <div class="countdown-timer-block-title">Days</div>
+                    <div class="countdown-timer-block-value">{{ dates.timeUntilChristmas().days }}</div>
+                </div>
+                <div class="countdown-timer-block">
+                    <div class="countdown-timer-block-title">Hours</div>
+                    <div class="countdown-timer-block-value">{{ dates.timeUntilChristmas().hours }}</div>
+                </div>
+                <div class="countdown-timer-block">
+                    <div class="countdown-timer-block-title">Minutes</div>
+                    <div class="countdown-timer-block-value">{{ dates.timeUntilChristmas().minutes }}</div>
+                </div>
+                <div class="countdown-timer-block">
+                    <div class="countdown-timer-block-title">Seconds</div>
+                    <div class="countdown-timer-block-value">{{ dates.timeUntilChristmas().seconds }}</div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,54 @@
+.christmas-feature {
+    display: grid;
+    height: 75%;
+}
+
+.countdown {
+    display: grid;
+    justify-items: center;
+    gap: 1cqi;
+    font-family: cursive;
+    line-height: 1;
+    margin: 2cqi 0;
+}
+
+.countdown-title {
+    display: grid;
+    align-items: center;
+    font-size: 4cqi;
+    margin: 2cqi;
+}
+
+.countdown-timer {
+    display: grid;
+    
+    @media (orientation: landscape) {
+        grid-auto-flow: column;
+        grid-template-columns: repeat(4, 1fr);
+    }
+    @media (orientation: portrait) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    gap: 1cqi;
+    width: 90%;
+}
+
+.countdown-timer-block {
+    display: grid;
+    justify-items: center; 
+
+    background-color: var(--mat-sys-on-secondary-container);
+    color: var(--mat-sys-on-secondary);
+    border-radius: 10px;
+    
+
+    .countdown-timer-block-title {
+        font-size: 4cqi;
+        margin: 2cqi;
+    }
+
+    .countdown-timer-block-value {
+        font-size: 6cqi;
+        margin: 2cqi;
+    }
+}
