@@ -1,6 +1,9 @@
-<div class="christmas-feature">
+<div class="christmas-feature" [style.background]="dates.isChristmas() ? 'linear-gradient(to bottom, #051026, #0f2b46, #1c3c63)' : null">
     @if (dates.isChristmas()) {
-        <div>MERRY CHRISTMAS</div>
+        <div class="its-christmas">MERRY CHRISTMAS</div>
+        @for (snowflake of dates.snowflakeArray(); track snowflake) {
+            <div class="snow"></div>
+        }
     }
     @else {
         <div class="countdown">
@@ -25,4 +28,6 @@
             </div>
         </div>
     }
+    
 </div>
+

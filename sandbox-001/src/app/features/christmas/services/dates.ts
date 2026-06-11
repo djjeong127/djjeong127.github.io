@@ -45,7 +45,7 @@ export class Dates {
             const hours = Math.floor((differenceInMilliseconds % msInDay) / msInHour);
             const minutes = Math.floor((differenceInMilliseconds % msInHour) / msInMinutes);
             const seconds = Math.floor((differenceInMilliseconds % msInMinutes) / msInSeconds);
-            
+
             duration = {
                 days: days,
                 hours: hours,
@@ -64,6 +64,10 @@ export class Dates {
             return false
         }
     });
+
+    numberOfSnowflakes = 300;
+    public snowflakeArray = signal(Array.from({ length: this.numberOfSnowflakes }));
+
     
     private subscription: Subscription = timer(0, 1000).pipe(map(() => {
         this.now.update(() => new Date());
