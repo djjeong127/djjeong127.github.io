@@ -1,0 +1,66 @@
+{
+  "recipes": [
+    {
+      "id": 1,
+      "name": "Egg Salad",
+      "description": "A simple egg salad recipe",
+      "author": "me",
+      "ingredients": [
+        {
+          "item": "Eggs",
+          "amount": 3,
+          "unit": ""
+        },
+        {
+          "item": "Green Onions (thinly sliced",
+          "amount": 2,
+          "unit": ""
+        },
+        {
+          "item": "Mayonnaise",
+          "amount": 2,
+          "unit": "Tablespoons"
+        },
+        {
+          "item": "Mustard",
+          "amount": 1,
+          "unit": "Teaspoon"
+        },
+        {
+          "item": "Black Pepper",
+          "amount": 2,
+          "unit": "pinches"
+        },
+        {
+          "item": "Salt",
+          "amount": 3,
+          "unit": "pinches"
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Bring water to a boil"
+        },
+        {
+          "step": 2,
+          "text": "Boil eggs for 12 min"
+        },
+        {
+          "step": 4,
+          "text": "Mash the peeled eggs in a bowl with your hands"
+        },
+        {
+          "step": 3,
+          "text": "Put eggs in cold water for 2 min, and then peel"
+        },
+        
+        {
+          "step": 5,
+          "text": "Add the rest of the ingredients in and mix thoroughly"
+        }
+      ]
+    }
+  ],
+  "total": 1
+}
