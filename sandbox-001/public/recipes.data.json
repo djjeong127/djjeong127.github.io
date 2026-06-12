@@ -2,37 +2,38 @@
   "recipes": [
     {
       "id": 1,
-      "name": "Egg Salad",
+      "name": "Egg salad",
       "description": "A simple egg salad recipe",
       "author": "me",
+      "image": "/recipe/egg_salad.png",
       "ingredients": [
         {
-          "item": "Eggs",
+          "item": "eggs",
           "amount": 3,
           "unit": ""
         },
         {
-          "item": "Green Onions (thinly sliced",
+          "item": "green onions (thinly sliced",
           "amount": 2,
           "unit": ""
         },
         {
-          "item": "Mayonnaise",
+          "item": "mayonnaise",
           "amount": 2,
-          "unit": "Tablespoons"
+          "unit": "Tablespoon"
         },
         {
-          "item": "Mustard",
+          "item": "mustard",
           "amount": 1,
           "unit": "Teaspoon"
         },
         {
-          "item": "Black Pepper",
+          "item": "black pepper",
           "amount": 2,
           "unit": "pinches"
         },
         {
-          "item": "Salt",
+          "item": "salt",
           "amount": 3,
           "unit": "pinches"
         }
@@ -47,20 +48,328 @@
           "text": "Boil eggs for 12 min"
         },
         {
-          "step": 4,
-          "text": "Mash the peeled eggs in a bowl with your hands"
-        },
-        {
           "step": 3,
           "text": "Put eggs in cold water for 2 min, and then peel"
         },
-        
+        {
+          "step": 4,
+          "text": "Mash the peeled eggs in a bowl with your hands"
+        },
         {
           "step": 5,
           "text": "Add the rest of the ingredients in and mix thoroughly"
         }
       ]
+    },
+    {
+      "id": 2,
+      "name": "Cucumber salad/오이무짐",
+      "description": "A sweet and spicy cucumber salad side dish",
+      "author": "me",
+      "image": "/recipe/korean_cucumber_salad.png",
+      "ingredients": [
+        {
+          "item": "cucumber",
+          "amount": 0.5,
+          "unit": "Pound"
+        },
+        {
+          "item": "coarse kosher salt",
+          "amount": 0.25,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "gochugaru/고춧가루",
+          "amount": 1,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "sugar",
+          "amount": 1,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "minced garlic",
+          "amount": 1,
+          "unit": "Teaspoon"
+        },
+        {
+          "item": "soy sauce",
+          "amount": 1,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "sesame oil",
+          "amount": 1,
+          "unit": "Teaspoon"
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Cut the cucumbers into semicircles, roughly 1/4 inches thick"
+        },
+        {
+          "step": 2,
+          "text": "Salt and toss the cucumbers (salting before adding the other stuff enhances texture and flavor)"
+        },
+        {
+          "step": 3,
+          "text": "Mix everything else into a sauce"
+        },
+        {
+          "step": 4,
+          "text": "Add sauce to cucumbers and toss/mix"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Egg salad 2",
+      "description": "A simple egg salad recipe",
+      "author": "me",
+      "image": "/recipe/egg_salad.png",
+      "ingredients": [
+        {
+          "item": "eggs",
+          "amount": 3,
+          "unit": ""
+        },
+        {
+          "item": "green onions (thinly sliced",
+          "amount": 2,
+          "unit": ""
+        },
+        {
+          "item": "mayonnaise",
+          "amount": 2,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "mustard",
+          "amount": 1,
+          "unit": "Teaspoon"
+        },
+        {
+          "item": "black pepper",
+          "amount": 2,
+          "unit": "pinches"
+        },
+        {
+          "item": "salt",
+          "amount": 3,
+          "unit": "pinches"
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Bring water to a boil"
+        },
+        {
+          "step": 2,
+          "text": "Boil eggs for 12 min"
+        },
+        {
+          "step": 3,
+          "text": "Put eggs in cold water for 2 min, and then peel"
+        },
+        {
+          "step": 4,
+          "text": "Mash the peeled eggs in a bowl with your hands"
+        },
+        {
+          "step": 5,
+          "text": "Add the rest of the ingredients in and mix thoroughly"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Cucumber salad/오이무짐 2",
+      "description": "A sweet and spicy cucumber salad side dish",
+      "author": "me",
+      "image": "/recipe/korean_cucumber_salad.png",
+      "ingredients": [
+        {
+          "item": "cucumber",
+          "amount": 0.5,
+          "unit": "Pound"
+        },
+        {
+          "item": "coarse kosher salt",
+          "amount": 0.25,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "gochugaru/고춧가루",
+          "amount": 1,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "sugar",
+          "amount": 1,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "minced garlic",
+          "amount": 1,
+          "unit": "Teaspoon"
+        },
+        {
+          "item": "soy sauce",
+          "amount": 1,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "sesame oil",
+          "amount": 1,
+          "unit": "Teaspoon"
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Cut the cucumbers into semicircles, roughly 1/4 inches thick"
+        },
+        {
+          "step": 2,
+          "text": "Salt and toss the cucumbers (salting before adding the other stuff enhances texture and flavor)"
+        },
+        {
+          "step": 3,
+          "text": "Mix everything else into a sauce"
+        },
+        {
+          "step": 4,
+          "text": "Add sauce to cucumbers and toss/mix"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Egg salad 3",
+      "description": "A simple egg salad recipe",
+      "author": "me",
+      "image": "/recipe/egg_salad.png",
+      "ingredients": [
+        {
+          "item": "eggs",
+          "amount": 3,
+          "unit": ""
+        },
+        {
+          "item": "green onions (thinly sliced",
+          "amount": 2,
+          "unit": ""
+        },
+        {
+          "item": "mayonnaise",
+          "amount": 2,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "mustard",
+          "amount": 1,
+          "unit": "Teaspoon"
+        },
+        {
+          "item": "black pepper",
+          "amount": 2,
+          "unit": "pinches"
+        },
+        {
+          "item": "salt",
+          "amount": 3,
+          "unit": "pinches"
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Bring water to a boil"
+        },
+        {
+          "step": 2,
+          "text": "Boil eggs for 12 min"
+        },
+        {
+          "step": 3,
+          "text": "Put eggs in cold water for 2 min, and then peel"
+        },
+        {
+          "step": 4,
+          "text": "Mash the peeled eggs in a bowl with your hands"
+        },
+        {
+          "step": 5,
+          "text": "Add the rest of the ingredients in and mix thoroughly"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Cucumber salad/오이무짐 3",
+      "description": "A sweet and spicy cucumber salad side dish A sweet and spicy cucumber salad side dish A sweet and spicy cucumber salad side dish A sweet and spicy cucumber salad side dish",
+      "author": "me",
+      "image": "/recipe/korean_cucumber_salad.png",
+      "ingredients": [
+        {
+          "item": "cucumber",
+          "amount": 0.5,
+          "unit": "Pound"
+        },
+        {
+          "item": "coarse kosher salt",
+          "amount": 0.25,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "gochugaru/고춧가루",
+          "amount": 1,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "sugar",
+          "amount": 1,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "minced garlic",
+          "amount": 1,
+          "unit": "Teaspoon"
+        },
+        {
+          "item": "soy sauce",
+          "amount": 1,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "sesame oil",
+          "amount": 1,
+          "unit": "Teaspoon"
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Cut the cucumbers into semicircles, roughly 1/4 inches thick"
+        },
+        {
+          "step": 2,
+          "text": "Salt and toss the cucumbers (salting before adding the other stuff enhances texture and flavor)"
+        },
+        {
+          "step": 3,
+          "text": "Mix everything else into a sauce"
+        },
+        {
+          "step": 4,
+          "text": "Add sauce to cucumbers and toss/mix"
+        }
+      ]
     }
   ],
+  
   "total": 1
 }

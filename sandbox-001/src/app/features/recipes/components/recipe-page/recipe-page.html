@@ -1,0 +1,22 @@
+@if (recipe(); as recipe) {
+<div class="recipe-page-feature">
+    <div>recipe: {{recipe.name}}</div>
+    <div>Description: {{recipe.description}}</div>
+    <div>Author: {{recipe.author}}</div>
+
+    <div>Ingredients List</div>
+    <ul>
+        @for (ingredient of recipe.ingredients; track ingredient.item) {
+            <li>{{ingredient.amount}} {{ingredient.unit}} {{ingredient.item}}</li>
+        }
+    </ul>
+
+    <div>Instructions</div>
+    <ol>
+        @for (instruction of recipe.instructions; track instruction.step) {
+            <li>{{instruction.text}}</li>
+        }
+    </ol>
+</div>
+
+}

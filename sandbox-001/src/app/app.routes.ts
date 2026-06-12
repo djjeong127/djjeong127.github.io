@@ -4,6 +4,7 @@ import { Christmas } from './features/christmas/christmas';
 import { MoviesAndShows } from './features/movies-and-shows/movies-and-shows';
 import { Recipes } from './features/recipes/recipes';
 import { GiveUsThisDayOur } from './shared/components/give-us-this-day-our/give-us-this-day-our';
+import { RecipePage } from './features/recipes/components/recipe-page/recipe-page';
 
 export const routes: Routes = [
     {
@@ -20,7 +21,11 @@ export const routes: Routes = [
     },
     {
         path: 'recipes',
-        component: Recipes
+        component: Recipes,
+    },
+    {
+        path: 'recipes/:id',
+        component: RecipePage
     },
     {
         path: '**',

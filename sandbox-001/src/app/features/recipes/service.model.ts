@@ -8,6 +8,7 @@ export interface Recipe {
     name: string;
     description: string;
     author: string;
+    image: string;
     ingredients: Ingredient[];
     instructions: Instruction[];
 }

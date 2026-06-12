@@ -1,9 +1,11 @@
-<div class="christmas-feature" [style.background]="christmasService.isChristmas() ? 'linear-gradient(to bottom, #051026, #0f2b46, #1c3c63)' : null">
+<!-- <div class="christmas-feature" [style.background]="christmasService.isChristmas() ? 'linear-gradient(to bottom, #051026, #0f2b46, #1c3c63)' : null"> -->
+<div class="christmas-feature" [style.background]="'linear-gradient(to bottom, #051026, #0f2b46, #1c3c63)'">
+
     @if (christmasService.isChristmas()) {
         <div class="its-christmas">MERRY CHRISTMAS!</div>
-        @for (snowflake of christmasService.snowflakeArray(); track snowflake) {
+        <!-- @for (snowflake of christmasService.snowflakeArray(); track snowflake) {
             <div class="snow"></div>
-        }
+        } -->
     }
     @else {
         <div class="countdown">
@@ -28,6 +30,8 @@
             </div>
         </div>
     }
-    
+    @for (snowflake of christmasService.snowflakeArray(); track snowflake) {
+            <div class="snow"></div>
+        }
 </div>
 

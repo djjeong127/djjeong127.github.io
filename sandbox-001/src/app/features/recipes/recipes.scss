@@ -1,0 +1,42 @@
+.recipes-feature {
+    display: grid;
+    gap: 1em;
+    margin: 1em;
+
+    @media (orientation: landscape) {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        
+    }
+    @media (orientation: portrait) {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+
+mat-card {
+}
+
+mat-card-header {
+    padding: 1em;
+}
+
+mat-card-title-group {
+    display: block;
+}
+
+mat-card-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+mat-card-content {
+    height: 4lh;
+
+    p {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        overflow: hidden;
+    }
+}

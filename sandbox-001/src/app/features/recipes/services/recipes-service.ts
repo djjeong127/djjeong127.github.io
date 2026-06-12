@@ -1,6 +1,7 @@
 import { inject, Service, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Instruction, Recipe, RecipeResponse } from '../service.model';
 
 @Service()
@@ -8,8 +9,12 @@ export class RecipesService {
     private http = inject(HttpClient)
     private jsonUrl = '/recipes.data.json'
 
-    getRecipes(): Observable<Recipe[]> {
-        return this.http.get<RecipeResponse>(this.jsonUrl).pipe(
+    private getRecipesResponse(): Observable<RecipeResponse> {
+        return this.http.get<RecipeResponse>(this.jsonUrl)
+    }
+
+    public getRecipeList = toSignal(
+        this.getRecipesResponse().pipe(
             map(response => {
                 // make sure that the instructions are in the right order
                 for (const recipe of response.recipes) {
@@ -18,6 +23,11 @@ export class RecipesService {
                 // return the list of recipes
                 return response.recipes
             })
-        )
+        ),
+        { initialValue: null }
+    )
+
+    public getRecipe(id: number): Recipe | null {
+        return this.getRecipeList()?.find(recipe => recipe.id == id) ?? null
     }
 }

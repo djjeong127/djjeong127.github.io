@@ -1,21 +1,18 @@
-@for (recipe of (recipes$ | async); track recipe.id) {
-    <div>ID: {{recipe.id}}</div>
-    <div>Recipe: {{recipe.name}}</div>
-    <div>Description: {{recipe.description}}</div>
-    <div>Author: {{recipe.author}}</div>
-
-    <div>Ingredients List</div>
-    <ul>
-        @for (ingredient of recipe.ingredients; track ingredient.item) {
-            <li>{{ingredient.amount}} {{ingredient.unit}} {{ingredient.item}}</li>
+@if (recipesService.getRecipeList(); as recipes) {
+    <div class="recipes-feature">
+        @for (recipe of recipes; track recipe.id) {
+            <mat-card [routerLink]="['/recipes', recipe.id]">
+                <mat-card-header>
+                    <mat-card-title-group>
+                        <mat-card-title>{{ recipe.name }}</mat-card-title>
+                        <mat-card-subtitle>By: {{ recipe.author }}</mat-card-subtitle>
+                    </mat-card-title-group>
+                </mat-card-header>
+                <img class="recipe-image" matCardImage [src]="recipe.image">
+                <mat-card-content>
+                    <p>{{ recipe.description }}</p>
+                </mat-card-content>
+            </mat-card>
         }
-    </ul>
-
-    <div>Instructions</div>
-    <ol>
-        @for (instruction of recipe.instructions; track instruction.step) {
-            <li>{{instruction.text}}</li>
-        }
-    </ol>
-
+    </div>
 }
