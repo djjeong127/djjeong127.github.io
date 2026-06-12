@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Dates } from './services/dates';
+import { ChristmasService } from './services/christmas-service';
 
 @Component({
   selector: 'app-christmas',
@@ -8,7 +8,6 @@ import { Dates } from './services/dates';
   styleUrl: './christmas.scss',
 })
 export class Christmas {
-  dates = inject(Dates)
-centered: any;
+  christmasService = inject(ChristmasService)
 
 }
