@@ -5,7 +5,6 @@
                 <mat-card-title-group>
                     <mat-card-title>{{ recipe.name }}</mat-card-title>
                     <mat-card-subtitle>Author: {{ recipe.author }}</mat-card-subtitle>
-                    <!-- <img class="recipe-image" matCardImage [src]="recipe.image"> -->
                 </mat-card-title-group>
             </mat-card-header>
             <mat-card-content>
@@ -19,7 +18,6 @@
                     <mat-card-title>Ingredients</mat-card-title>
                 </mat-card-title-group>
             </mat-card-header>
-            <!-- <img class="recipe-image" matCardImage [src]="recipe.image"> -->
             <mat-card-content>
                 <ul>
                     @for (ingredient of recipe.ingredients; track ingredient.item) {
@@ -35,7 +33,6 @@
                     <mat-card-title>Instructions</mat-card-title>
                 </mat-card-title-group>
             </mat-card-header>
-            <!-- <img class="recipe-image" matCardImage [src]="recipe.image"> -->
             <mat-card-content>
                 <ol>
                     @for (instruction of recipe.instructions; track instruction.step) {
@@ -47,31 +44,10 @@
 
         <mat-card class="image-card">
 
-            <!-- <img class="recipe-image" matCardImage [src]="recipe.image"> -->
             <mat-card-content>
                                     <img class="recipe-image" matCardImage [src]="recipe.image">
 
             </mat-card-content>
         </mat-card>
-
-
-
-        <!-- <div>{{recipe.name}}</div>
-        <div>Description: {{recipe.description}}</div>
-        <div>Author: {{recipe.author}}</div>
-
-        <div>Ingredients List</div>
-        <ul>
-            @for (ingredient of recipe.ingredients; track ingredient.item) {
-                <li>{{ingredient.amount}} {{ingredient.unit}} {{ingredient.item}}</li>
-            }
-        </ul>
-
-        <div>Instructions</div>
-        <ol>
-            @for (instruction of recipe.instructions; track instruction.step) {
-                <li>{{instruction.text}}</li>
-            }
-        </ol> -->
     </div>
 }
