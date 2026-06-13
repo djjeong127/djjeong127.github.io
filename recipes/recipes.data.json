@@ -5,7 +5,7 @@
       "name": "Egg salad",
       "description": "A simple egg salad recipe.",
       "author": "me",
-      "image": "/recipe/egg_salad.png",
+      "image": "/recipes/images/egg_salad.png",
       "ingredients": [
         {
           "item": "eggs",
@@ -66,7 +66,7 @@
       "name": "Cucumber salad/오이무짐",
       "description": "A sweet and spicy cucumber side dish.",
       "author": "me",
-      "image": "/recipe/korean_cucumber_salad.png",
+      "image": "/recipes/images/korean_cucumber_salad.png",
       "ingredients": [
         {
           "item": "cucumber",
@@ -128,7 +128,7 @@
       "name": "Chipotle chicken",
       "description": "A chipotle chicken recipe from a former employee. Tastes pretty much the same.",
       "author": "me",
-      "image": "/recipe/chipotle_chicken.png",
+      "image": "/recipes/images/chipotle_chicken.png",
       "ingredients": [
         {
           "item": "skinless chicken thigh",
@@ -199,7 +199,7 @@
       "name": "Dumplings/만두",
       "description": "A simple, classic Korean dumpling recipe",
       "author": "me",
-      "image": "/recipe/dumplings.png",
+      "image": "/recipes/images/dumplings.png",
       "ingredients": [
         {
           "item": "dumpling skins",
@@ -308,7 +308,7 @@
       "name": "Jjajangmyeon/짜장면",
       "description": "Korean black bean noodles. Eat with danmuji/단무지 and lightly salted sunny side up eggs",
       "author": "me",
-      "image": "/recipe/jjajangmyeon.png",
+      "image": "/recipes/images/jjajangmyeon.png",
       "ingredients": [
         {
           "item": "jjajang powder (brand: Ottogi)",
