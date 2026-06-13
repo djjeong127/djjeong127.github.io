@@ -3,7 +3,7 @@
     {
       "id": 1,
       "name": "Egg salad",
-      "description": "A simple egg salad recipe",
+      "description": "A simple egg salad recipe.",
       "author": "me",
       "image": "/recipe/egg_salad.png",
       "ingredients": [
@@ -64,7 +64,7 @@
     {
       "id": 2,
       "name": "Cucumber salad/오이무짐",
-      "description": "A sweet and spicy cucumber salad side dish",
+      "description": "A sweet and spicy cucumber side dish.",
       "author": "me",
       "image": "/recipe/korean_cucumber_salad.png",
       "ingredients": [
@@ -126,7 +126,7 @@
     {
       "id": 3,
       "name": "Chipotle chicken",
-      "description": "A chipotle chicken recipe from a former employee",
+      "description": "A chipotle chicken recipe from a former employee. Tastes pretty much the same.",
       "author": "me",
       "image": "/recipe/chipotle_chicken.png",
       "ingredients": [
@@ -197,7 +197,7 @@
     {
       "id": 4,
       "name": "Dumplings/만두",
-      "description": "A simple, classic Korean dumplings recipe",
+      "description": "A simple, classic Korean dumpling recipe",
       "author": "me",
       "image": "/recipe/dumplings.png",
       "ingredients": [
@@ -306,7 +306,7 @@
     {
       "id": 5,
       "name": "Jjajangmyeon/짜장면",
-      "description": "Korean black bean noodles, one of my favorite noodle dishes. Eat with danmuji/단무지 and lightly salted sunny side up eggs",
+      "description": "Korean black bean noodles. Eat with danmuji/단무지 and lightly salted sunny side up eggs",
       "author": "me",
       "image": "/recipe/jjajangmyeon.png",
       "ingredients": [
