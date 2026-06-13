@@ -302,6 +302,74 @@
           "text": "Freeze on a baking sheet before putting them into a bag"
         }
       ]
+    },
+    {
+      "id": 5,
+      "name": "Jjajangmyeon/짜장면",
+      "description": "Korean black bean noodles. Eat with danmuji/단무지 and lightly salted sunny side up eggs",
+      "author": "me",
+      "image": "/recipe/jjajangmyeon.png",
+      "ingredients": [
+        {
+          "item": "jjajang powder (brand: Ottogi)",
+          "amount": 1,
+          "unit": "pack"
+        },
+        {
+          "item": "pork shoulder",
+          "amount": 2,
+          "unit": "Pounds"
+        },
+        {
+          "item": "onions",
+          "amount": 2,
+          "unit": ""
+        },
+        {
+          "item": "minced garlic",
+          "amount": 2,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "sesame oil",
+          "amount": 1,
+          "unit": "Tablespoon"
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Marinate the meat in some soy sauce (overnight)"
+        },
+        {
+          "step": 2,
+          "text": "Chop the onions into squares (about the size of your thumb fingernail)"
+        },
+        {
+          "step": 3,
+          "text": "Mix the jjajang powder and water to make a sludge/slurry (can be adjusted later depending on how thick you want the sauce)"
+        },
+        {
+          "step": 4,
+          "text": "Stir fry the meat and minced garlic in a pot until the liquid is reduced (if the meat is tough, pour some water and let it braise for a bit before stir frying again)"
+        },
+        {
+          "step": 5,
+          "text": "While there is still a little liquid left, throw the onions in and continue stir frying"
+        },
+        {
+          "step": 6,
+          "text": "Pour water into the pot, just enough to barely cover everything"
+        },
+        {
+          "step": 7,
+          "text": "Turn off the heat, mix the jjajang slurry and sesame oil in (should have the consistency of a thick porridge, it should pretty much glob off your spoon)"
+        },
+        {
+          "step": 8,
+          "text": "Cook some jjajang noodles and mix with jjajang sauce"
+        }
+      ]
     }
   ],
   
