@@ -64,8 +64,8 @@ export class ChristmasService {public now = signal(new Date());
         }
     });
 
-    numberOfSnowflakes = 300;
-    public snowflakeArray = signal(Array.from({ length: this.numberOfSnowflakes }));
+    numberOfSnowflakes = computed(() => (365 - this.timeUntilChristmas().days));
+    public snowflakeArray = signal(Array.from({ length: this.numberOfSnowflakes() }));
 
     
     private subscription: Subscription = timer(0, 1000).pipe(map(() => {
