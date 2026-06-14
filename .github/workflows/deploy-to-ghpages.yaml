@@ -1,0 +1,18 @@
+name: Deploy to GitHub Pages
+run-name: ${{ github.actor }} is deploying to GitHub Pages
+on: [push]
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - run: ls
+          
+      - name: Install angular-cli-ghpages
+        run: |
+          npm install -g @angular/cli
+          npm i angular-cli-ghpages
+      #- name: Build/Deploy Angular project to fit GitHub Pages format
+      #  run: npm run deploy-ghpages
+          
+    

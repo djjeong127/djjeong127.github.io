@@ -1,0 +1,60 @@
+<div class="vidsrc-page-grid">
+	<div class="search-grid" [class.hidden]="isSearchHidden">
+		<div class="search-bar">
+			<mat-form-field subscriptSizing="dynamic">
+				<input
+					matInput
+					placeholder="Search Movie/TV"
+					type="search"
+					(keydown.enter)="
+						searchTMDBMovieShow(searchInput.value); blur(searchInput)
+					"
+					#searchInput
+				/>
+				<button
+					matSuffix
+					mat-fab
+					(click)="searchTMDBMovieShow(searchInput.value); blur(searchInput)"
+				>
+					<mat-icon>search</mat-icon>
+				</button>
+			</mat-form-field>
+		</div>
+	</div>
+
+	<router-outlet></router-outlet>
+	@if (moviesShowsService.showSearchResults) {
+	<div class="content-grid">
+		@if(moviesShowsService.searchState$ | async; as searchState) {
+		@if(searchState.results.length > 0 ) {
+		<div class="content-items">
+			@for (mediaItem of searchState.results; track $index) {
+			<div
+				class="item-poster"
+				[matTooltip]="mediaItem.title"
+				matTooltipShowDelay="500"
+				matTooltipTouchGestures="off"
+				(click)="loadVideo(mediaItem)"
+			>
+				<div class="poster-image">
+					<img [src]="mediaItem.poster_path" />
+				</div>
+				<div class="poster-description">
+					<h4>{{ mediaItem.title }}</h4>
+					<p>{{ mediaItem.release_date }} | {{ mediaItem.media_type }}</p>
+					<p>{{ moviesShowsService.genreListToString(mediaItem) }}</p>
+				</div>
+			</div>
+			}
+		</div>
+		} @else {
+		<div class="no-result">
+			<mat-icon>sentiment_very_dissatisfied</mat-icon>
+			<div>NO RESULTS</div>
+		</div>
+		} } @else {
+		<div>... Loading</div>
+		}
+	</div>
+	}
+</div>

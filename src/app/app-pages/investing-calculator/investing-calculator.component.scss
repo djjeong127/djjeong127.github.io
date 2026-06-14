@@ -1,0 +1,10 @@
+.form {
+    display: grid;
+    grid-template-columns: repeat(2, 300px);
+    justify-self: center;
+    justify-items: center;
+}
+
+mat-form-field {
+    width: 200px;
+}
