@@ -1,7 +1,7 @@
 .recipes-feature {
     display: grid;
     gap: 1em;
-    margin: 1em;
+    padding: 1em;
 
     @media (orientation: landscape) {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
