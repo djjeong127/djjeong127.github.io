@@ -370,6 +370,87 @@
           "text": "Cook some jjajang noodles and mix with jjajang sauce"
         }
       ]
+    },
+    {
+      "id": 6,
+      "name": "고추장 돼지불고기",
+      "description": "Spicy pork bulgogi. Wrap it up in lettuce with some rice and ssamjang/쌈장",
+      "author": "me",
+      "image": "/recipes/images/spicy-pork-bulgogi.png",
+      "ingredients": [
+        {
+          "item": "pork shoulder (1/8 inch thick slices)",
+          "amount": 1,
+          "unit": "Pound"
+        },
+        {
+          "item": "onion (thinly sliced)",
+          "amount": 1,
+          "unit": ""
+        },
+        {
+          "item": "minced garlic",
+          "amount": 2,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "minced ginger",
+          "amount": 1,
+          "unit": "Teaspoon"
+        },
+        {
+          "item": "gochujang/고추장",
+          "amount": 3,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "gochugaru/고춧가루",
+          "amount": 1,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "black pepper",
+          "amount": 1,
+          "unit": "pinch"
+        },
+        {
+          "item": "mirin",
+          "amount": 2,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "plum extract/매실청",
+          "amount": 2,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "soy sauce",
+          "amount": 4,
+          "unit": "Tablespoon"
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Prep all the ingredients (except the onions) and mix to make marinade"
+        },
+        {
+          "step": 2,
+          "text": "Marinate pork overnight (12+ hours)"
+        },
+        {
+          "step": 3,
+          "text": "Get a pot or pan with a lid (needed to braise the pork shoulder a bit to tenderize it further)"
+        },
+        {
+          "step": 4,
+          "text": "Cook the pork until it's almost done, then add a little water and cover with a lid (braise on low for ~10 min)"
+        },
+        {
+          "step": 5,
+          "text": "Remove the lid, add the sliced onions, and finish cooking"
+        }
+      ]
     }
   ],
   
