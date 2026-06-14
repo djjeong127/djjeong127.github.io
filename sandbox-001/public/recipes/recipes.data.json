@@ -63,7 +63,7 @@
     },
     {
       "id": 2,
-      "name": "Cucumber salad/오이무짐",
+      "name": "오이무짐",
       "description": "A sweet and spicy cucumber side dish.",
       "author": "me",
       "image": "/recipes/images/korean_cucumber_salad.png",
@@ -196,7 +196,7 @@
     },
     {
       "id": 4,
-      "name": "Dumplings/만두",
+      "name": "만두",
       "description": "A simple, classic Korean dumpling recipe",
       "author": "me",
       "image": "/recipes/images/dumplings.png",
@@ -305,7 +305,7 @@
     },
     {
       "id": 5,
-      "name": "Jjajangmyeon/짜장면",
+      "name": "짜장면",
       "description": "Korean black bean noodles. Eat with danmuji/단무지 and lightly salted sunny side up eggs",
       "author": "me",
       "image": "/recipes/images/jjajangmyeon.png",
