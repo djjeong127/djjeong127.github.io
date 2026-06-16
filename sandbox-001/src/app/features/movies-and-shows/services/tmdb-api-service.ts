@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DiscoverSearchMovieResponse, GetMovieDetailResponse } from '../models/movie.model';
+import { DiscoverMovieSortBy, DiscoverMovieSortField, DiscoverSearchMovieResponse, GetMovieDetailResponse } from '../models/movie.model';
 import { DiscoverTVResponse, SearchTVResponse } from '../models/tv.model';
+import { Country, Genre, SortDirection } from '../models/movie-tv.model';
 
 @Service()
 export class TmdbApiService {
@@ -24,14 +25,23 @@ export class TmdbApiService {
 
 
 
-    discoverMovie(): Observable<DiscoverSearchMovieResponse> {
+    discoverMovie(page: number = 1, sort_by: DiscoverMovieSortBy = {field: DiscoverMovieSortField.Popularity, direction: SortDirection.Asc}, with_genres: Genre[] = [], with_origin_country: Country = {iso_3166_1: 'US', english_name: 'United States of America', native_name: 'United States'}, without_genres: Genre[] = []): Observable<DiscoverSearchMovieResponse> {
+        let withGenres: string = ''
+        if (with_genres.length > 0) {
+            with_genres?.forEach((genre) => withGenres += genre.id + ',')
+        }
+
+        let withoutGenres: string = ''
+        if (without_genres.length > 0) {
+            without_genres?.forEach((genre) => withoutGenres += genre.id + ',')
+        }
+
         const movieParams = this.params
-            .set('page', 1)
-            .set('sort_by', 'asd')
-            .set('with_genres', '')
-            .set('with_origin_country', '')
-            .set('with_original_language', '')
-            .set('without_genres', '')
+            .set('page', page)
+            .set('sort_by', `${sort_by.field}.${sort_by.direction}`)
+            .set('with_genres', withGenres.slice(0, -1))
+            .set('with_origin_country', with_origin_country.iso_3166_1)
+            .set('without_genres', withoutGenres.slice(0, -1))
 
         return this.http.get<DiscoverSearchMovieResponse>(this.discoverMovieUrl, {headers: this.header, params: movieParams})
     }

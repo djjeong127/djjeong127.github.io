@@ -13,7 +13,7 @@ export class MoviesAndShows {
   moviesAndShowsService = inject(MoviesAndShowsService)
   tmdbApiService = inject(TmdbApiService)
 
-  // discoverMovie = toSignal(this.tmdbApiService.discoverMovie(), {initialValue: null})
+  discoverMovie = toSignal(this.tmdbApiService.discoverMovie(undefined, undefined, [{id: 28, name: "Action"}, {id: 16, name: 'Animation'}], undefined, []), {initialValue: null})
   // // discoverTV = toSignal(this.tmdbApiService.discoverTV(), {initialValue: null})
 
   // stringDiscoverMovie = computed(() => JSON.stringify(this.discoverMovie()))
@@ -27,5 +27,5 @@ export class MoviesAndShows {
   //   return movieResults
   // }
 
-  getDetails = toSignal(this.tmdbApiService.getMovieDetail(2))
+  // getDetails = toSignal(this.tmdbApiService.getMovieDetail(2))
 }

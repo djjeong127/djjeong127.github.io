@@ -1,3 +1,5 @@
+import { Genre, SortDirection, SpokenLanguage } from "./movie-tv.model";
+
 export interface DiscoverSearchMovieResponse {
     page: number;
     results: DiscoverSearchMovieResult[];
@@ -58,11 +60,6 @@ export interface Collection {
     backdrop_path: string;
 }
 
-export interface Genre {
-    id: number;
-    name: string;
-}
-
 export interface ProductionCompany {
     id: number;
     logo_path: string;
@@ -75,8 +72,12 @@ export interface ProductionCountry {
     name: string;
 }
 
-export interface SpokenLanguage {
-    english_name: string;
-    iso_639_1: string;
-    name: string;
+export enum DiscoverMovieSortField {
+    'Popularity' = 'popularity',
+    'Title' = 'title',
+}
+
+export interface DiscoverMovieSortBy {
+    field: DiscoverMovieSortField;
+    direction: SortDirection;
 }

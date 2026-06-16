@@ -1,3 +1,5 @@
+import { SortDirection } from "./movie-tv.model";
+
 export interface DiscoverTVResponse {
     page: number;
     results: DiscoverTVResult[];
@@ -45,4 +47,14 @@ export interface SearchTVResult {
     name: string;
     vote_average: number;
     vote_count: number;
+}
+
+export enum DiscoverTVSortField {
+    'Name' = 'name',
+    'Popularity' = 'popularity'
+}
+
+export interface DiscoverTVSortBy {
+    field: SortDirection;
+    direction: DiscoverTVSortField;
 }
