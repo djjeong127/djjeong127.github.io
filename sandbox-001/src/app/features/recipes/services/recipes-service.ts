@@ -2,7 +2,7 @@ import { inject, Service, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Instruction, Recipe, RecipeResponse } from '../service.model';
+import { Instruction, Recipe, RecipeResponse } from '../models/service.model';
 
 @Service()
 export class RecipesService {
