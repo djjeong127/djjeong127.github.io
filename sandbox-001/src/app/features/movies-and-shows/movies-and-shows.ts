@@ -1,11 +1,12 @@
-import { Component, computed, HostListener, inject, signal } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, inject, signal, ViewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { MoviesAndShowsService, QueryMode, SearchMediaTypes } from './services/movies-and-shows-service';
+import { MoviesAndShowsService } from './services/movies-and-shows-service';
 import { TmdbApiService } from './services/tmdb-api-service';
 import { FormField } from '@angular/forms/signals';
 import { MatAnchor } from "@angular/material/button";
 import { ANGULAR_MATERIAL_MODULES } from '../../shared/modules/angular-material.module';
 import { MediaType } from './models/movie-tv.model';
+import { MultiFilter } from './models/multi.model';
 
 
 @Component({
@@ -15,43 +16,72 @@ import { MediaType } from './models/movie-tv.model';
   styleUrl: './movies-and-shows.scss',
 })
 export class MoviesAndShows {
+  @ViewChild('bottomSentinel') bottomSentinel!: ElementRef;
+
   moviesAndShowsService = inject(MoviesAndShowsService)
   tmdbApiService = inject(TmdbApiService)
 
-  searchMediaTypes = SearchMediaTypes
+  intersectionInterval: any = null;
 
-  // a = toSignal(this.tmdbApiService.getCountries())
-  // b = toSignal(this.tmdbApiService.getMovieGenres())
-  // c = this.b()
+  multiFilterMovie: MultiFilter = {
+    movie: MediaType.Movie
+  }
+  multiFilterTV: MultiFilter = {
+    tv: MediaType.TV
+  }
+  multiFilterMovieAndTV: MultiFilter = {
+    movie: MediaType.Movie,
+    tv: MediaType.TV
+  }
 
-  s = computed(() => JSON.stringify(this.moviesAndShowsService.searchModel().searchMedia))
 
-  @HostListener('window:scroll', [])
-  onWindowScroll() {
-    const windowBottomPosition = window.scrollY + window.innerHeight
-    const documentHeight = document.documentElement.scrollHeight
+  ngOnInit() {
+    this.multiFilterMovieAndTV = this.moviesAndShowsService.searchModel().multiFilter
+  }
 
-    const bottomHalf = documentHeight - windowBottomPosition <= window.innerHeight
+  ngAfterViewInit() {
+    this.initIntersectionObserver()
+  }
 
-    if (bottomHalf) {
-      if (this.moviesAndShowsService.queryMode() === QueryMode.Discover) {
-        if (this.moviesAndShowsService.discoverMode() === MediaType.Movie) {
-          this.moviesAndShowsService.discoverNextMoviePage()
+  initIntersectionObserver() {
+    const options = {
+      root: null,
+      rootMargin: '200px',
+      threshold: 0.0
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+
+          // if (this.moviesAndShowsService.combinedLoadedMediaResults().length > 0) {
+          //     this.moviesAndShowsService.loadNextPage()
+          // }
+
+
+          // start interval to keep getting new pages
+          this.intersectionInterval = setInterval(() => {
+            if (this.moviesAndShowsService.combinedLoadedMediaResults().length > 0 && this.moviesAndShowsService.existsMorePages()) {
+              this.moviesAndShowsService.loadNextPage()
+              console.log(this.moviesAndShowsService.existsMorePages())
+            }
+          }, 100)
+          
         }
         else {
-          this.moviesAndShowsService.discoverNextTVPage()
+          // clear interval to stop getting new pages
+          clearInterval(this.intersectionInterval)
+          this.intersectionInterval = null;
         }
-      }
-      else {
-        this.moviesAndShowsService.searchNextPage()
-      }
-    }
+      });
+    }, options);
+
+    observer.observe(this.bottomSentinel.nativeElement);
   }
 
   onSearchSubmit(event: Event) {
     event.preventDefault(); 
-    console.log(this.moviesAndShowsService.searchForm.searchMediaTypes().controlValue())
-    this.moviesAndShowsService.searchFresh()
+    this.moviesAndShowsService.searchMultiFresh()
   }
 }
 

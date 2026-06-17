@@ -45,13 +45,14 @@ export interface GenresResponse {
 
 export enum MediaType {
     'Movie' = 'movie',
-    'TV' = 'tv'
+    'TV' = 'tv',
+    'Person' = 'person'
 }
 
 export interface CombinedMediaResult {
     media_type: MediaType
     backdrop_path: string;
-    genre_ids: string[];
+    genre_ids: number[];
     id: number;
     original_language: string;
     original_title_name: string;

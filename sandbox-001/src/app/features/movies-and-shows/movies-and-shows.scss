@@ -48,3 +48,10 @@ mat-card-content {
         overflow: hidden;
     }
 }
+
+.bottom-sentinel {
+    display: grid;
+    height: 100%;
+    align-content: center;
+    justify-content: center;
+}

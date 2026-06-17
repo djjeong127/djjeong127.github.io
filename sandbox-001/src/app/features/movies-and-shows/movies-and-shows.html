@@ -12,10 +12,10 @@
 
             <button matButton="filled" type="submit">submit</button>
 
-            <mat-button-toggle-group [formField]="moviesAndShowsService.searchForm.searchMediaTypes">
-                <mat-button-toggle [value]="searchMediaTypes.Movie">Movie</mat-button-toggle>
-                <mat-button-toggle [value]="searchMediaTypes.MovieAndTV">Movie & TV</mat-button-toggle>
-                <mat-button-toggle [value]="searchMediaTypes.TV">TV</mat-button-toggle>
+            <mat-button-toggle-group [formField]="moviesAndShowsService.searchForm.multiFilter" hideSingleSelectionIndicator="true">
+                <mat-button-toggle [value]="multiFilterMovie">Movie</mat-button-toggle>
+                <mat-button-toggle [value]="multiFilterMovieAndTV">Movie & TV</mat-button-toggle>
+                <mat-button-toggle [value]="multiFilterTV">TV</mat-button-toggle>
             </mat-button-toggle-group>
         <!-- <button matButton="filled" (click)="moviesAndShowsService.searchMovieFresh()">Movie</button>
         <button matButton="filled" (click)="moviesAndShowsService.searchTVFresh()">TV</button>
@@ -23,7 +23,7 @@
 
         </form>
 
-        <div>{{s()}}</div>
+        <!-- <div>{{a()}}</div> -->
 
         <div>discover</div>
         <button matButton="filled" (click)="moviesAndShowsService.discoverMovieFresh()">DiscoverMovie</button>
@@ -31,32 +31,21 @@
 
     </div>
     <div class="media-cards">
-        @for (result of moviesAndShowsService.combinedLoadedMediaResults(); track result) {
+        @for (result of moviesAndShowsService.combinedLoadedMediaResults(); track (result.media_type + '_' + result.id)) {
             <mat-card  matRipple [matTooltip]="result.title_name" matTooltipTouchGestures="off">
                 <img class="recipe-image" matCardImage [src]="result.poster_path">
                 <mat-card-content>
+                    <div>{{ result.media_type}}</div>
                     <p>{{ result.overview}}</p>
                 </mat-card-content>
             </mat-card>
         }
+        <div class="bottom-sentinel" #bottomSentinel>
+            @if(moviesAndShowsService.combinedLoadedMediaResults().length > 0 && moviesAndShowsService.existsMorePages()) {
+                <mat-spinner></mat-spinner>
+            }
+        </div>
     </div>
-    
-
-    <!-- @for (page of moviesAndShowsService.loadedMediaPages().movie_pages; track page.page) {
-        <div>Movie {{page.page}}</div>
-        <div>
-        @for (result of page.results; track result.id) {
-            <div>{{result.title}}</div>
-        }
-        </div>
-    }
-    @for (page of moviesAndShowsService.loadedMediaPages().tv_pages; track page.page) {
-        <div>TV {{page.page}}</div>
-        <div>
-        @for (result of page.results; track result.id) {
-            <div>{{result.name}}</div>
-        }
-        </div>
-    } -->
+        
 </div>
 

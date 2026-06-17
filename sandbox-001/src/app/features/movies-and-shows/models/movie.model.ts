@@ -2,14 +2,14 @@ import { Country, DiscoverSortDirection, DiscoverSortField, Genre, SpokenLanguag
 
 
 
-export interface DiscoverSearchMovieResponse {
+export interface DiscoverMovieResponse {
     page: number;
-    results: DiscoverSearchMovieResult[];
+    results: DiscoverMovieResult[];
     total_pages: number;
     total_results: number;
 }
 
-export interface DiscoverSearchMovieResult {
+export interface DiscoverMovieResult {
     adult: boolean;
     backdrop_path: string;
     genre_ids: string[];

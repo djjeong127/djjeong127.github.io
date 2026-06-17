@@ -1,26 +1,16 @@
 import { computed, inject, Injector, runInInjectionContext, Service, signal } from '@angular/core';
 import { TmdbApiService } from './tmdb-api-service';
-import { DiscoverMovieParams, DiscoverSearchMovieResponse, DiscoverSearchMovieResult } from '../models/movie.model';
-import { DiscoverTVParams, DiscoverTVResponse, DiscoverTVResult, SearchTVResponse, SearchTVResult } from '../models/tv.model';
+import { DiscoverMovieParams, DiscoverMovieResponse, DiscoverMovieResult } from '../models/movie.model';
+import { DiscoverTVParams, DiscoverTVResponse, DiscoverTVResult } from '../models/tv.model';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { form } from '@angular/forms/signals';
 import { Country, Genre, DiscoverSortDirection, DiscoverSortField, CombinedMediaResult, MediaType, TmdbConfiguration } from '../models/movie-tv.model';
-import { forkJoin } from 'rxjs';
-
-export enum SearchMediaTypes {
-    'Movie' = 'movie',
-    'TV' = 'tv',
-    'MovieAndTV' = 'movie_and_tv'
-}
+import { delay, EMPTY, expand, filter, forkJoin, map, takeWhile, tap } from 'rxjs';
+import { MultiFilter, SearchMultiResponse, SearchMultiResult } from '../models/multi.model';
 
 export interface SearchModel {
   searchMedia: string;
-  searchMediaTypes: SearchMediaTypes
-}
-
-export interface LoadedMedia {
-    movie_pages: DiscoverSearchMovieResponse[];
-    tv_pages: DiscoverTVResponse[] | SearchTVResponse[];
+  multiFilter: MultiFilter;
 }
 
 export enum QueryMode {
@@ -28,49 +18,69 @@ export enum QueryMode {
     'Discover' = 'discover'
 }
 
-
 @Service()
 export class MoviesAndShowsService {
     tmdbApiService = inject(TmdbApiService)
 
     isLoadingMoviePages = signal<boolean>(false)
     isLoadingTVPages = signal<boolean>(false)
+    isLoadingMultiPages = signal<boolean>(false)
 
     queryMode = signal<QueryMode>(QueryMode.Discover)
     discoverMode = signal<MediaType>(MediaType.Movie)
 
-    loadedMoviePages = signal<DiscoverSearchMovieResponse[]>([])
-    loadedTVPages = signal<DiscoverTVResponse[] | SearchTVResponse[]>([])
-    loadedMediaPages = computed<LoadedMedia>(() => {
-        return {
-            movie_pages: this.loadedMoviePages(),
-            tv_pages: this.loadedTVPages()}
-    })
+    loadedMoviePages = signal<DiscoverMovieResponse[]>([])
+    loadedTVPages = signal<DiscoverTVResponse[]>([])
+    loadedMultiPages = signal<SearchMultiResponse[]>([])
 
     combinedLoadedMediaResults = computed<CombinedMediaResult[]>(() => {
         const combinedResults: CombinedMediaResult[] = [];
-        
-        this.loadedMediaPages().movie_pages.forEach(
+
+        this.loadedMoviePages().forEach(
             (page) => page.results.forEach(
-                (result) => combinedResults.push(this.convertMovieResultToCombinedResult(result))
+                (result) => {
+                    const newCombinedResult = this.convertMovieResultToCombinedResult(result)
+                    if (!combinedResults.some((result) => (result.media_type === newCombinedResult.media_type && result.id === newCombinedResult.id))) {
+                        combinedResults.push(newCombinedResult)
+                    }
+                }
             )
         );
-        this.loadedMediaPages().tv_pages.forEach(
+        this.loadedTVPages().forEach(
             (page) => page.results.forEach(
-                (result) => combinedResults.push(this.convertTVResultToCombinedResult(result))
+                (result) => {
+                    const newCombinedResult = this.convertTVResultToCombinedResult(result)
+                    if (!combinedResults.some((result) => (result.media_type === newCombinedResult.media_type && result.id === newCombinedResult.id))) {
+                        combinedResults.push(newCombinedResult)
+                    }
+                }
             )
         );
 
-        // combinedResults.sort((a, b) => b.popularity - a.popularity);
+        this.loadedMultiPages().forEach(
+            (page) => page.results.forEach(
+                (result) => {
+                    const newCombinedResult = this.convertMultiResultToCombinedResult(result)
+                    if (Object.values(this.searchModel().multiFilter).includes(newCombinedResult.media_type) && !combinedResults.some((result) => (result.media_type === newCombinedResult.media_type && result.id === newCombinedResult.id))) {
+                        combinedResults.push(newCombinedResult)
+                    }
+                }
+            )
+        )
         return combinedResults;
     })
 
     nextMoviePageNumber = computed(() => this.loadedMoviePages().length === 0 ? 1 : this.loadedMoviePages().at(-1)!.page + 1)
     nextTVPageNumber = computed(() => this.loadedTVPages().length === 0 ? 1 : this.loadedTVPages().at(-1)!.page + 1)
+    nextMultiPageNumber = computed(() => this.loadedMultiPages().length === 0 ? 1 : this.loadedMultiPages().at(-1)!.page + 1)
+
 
     searchModel = signal<SearchModel>({
         searchMedia: '',
-        searchMediaTypes: SearchMediaTypes.MovieAndTV
+        multiFilter: {
+            movie: MediaType.Movie,
+            tv: MediaType.TV
+        }
     })
     searchForm = form(this.searchModel)
 
@@ -81,7 +91,7 @@ export class MoviesAndShowsService {
     movieAndTVGenreNames = computed<string[]>(() => {
         const moviesGenreNames: string[] = this.movieGenres().map((genre) => genre.name)
         const tvGenreNames: string[] = this.tvGenres().map((genre) => genre.name)
-        
+
         const intersectionNames = moviesGenreNames.filter((name) => tvGenreNames.includes(name))
         return intersectionNames
     })
@@ -125,17 +135,17 @@ export class MoviesAndShowsService {
     updateDiscoverMode(mediaType: MediaType) {
         this.discoverMode.set(mediaType)
     }
-    
+
     getFullPosterUrl(posterPath: string, posterSize: string = this.tmdbConfiguration()?.images.poster_sizes.find((size) => size === 'original')!): string {
         const fullUrl = this.tmdbConfiguration()?.images.secure_base_url + posterSize + posterPath
         return fullUrl
     }
 
-    convertMovieResultToCombinedResult(movieResult: DiscoverSearchMovieResult): CombinedMediaResult {
+    convertMovieResultToCombinedResult(movieResult: DiscoverMovieResult): CombinedMediaResult {
         const newCombinedResult: CombinedMediaResult = {
             media_type: MediaType.Movie,
             backdrop_path: movieResult.backdrop_path,
-            genre_ids: movieResult.genre_ids,
+            genre_ids: movieResult.genre_ids.map(Number),
             id: movieResult.id,
             original_language: movieResult.original_language,
             original_title_name: movieResult.original_title,
@@ -149,11 +159,11 @@ export class MoviesAndShowsService {
         return newCombinedResult
     }
 
-    convertTVResultToCombinedResult(TVResult: DiscoverTVResult | SearchTVResult): CombinedMediaResult {
+    convertTVResultToCombinedResult(TVResult: DiscoverTVResult): CombinedMediaResult {
         const newCombinedResult: CombinedMediaResult = {
             media_type: MediaType.TV,
             backdrop_path: TVResult.backdrop_path,
-            genre_ids: TVResult.genre_ids,
+            genre_ids: TVResult.genre_ids.map(Number),
             id: TVResult.id,
             original_language: TVResult.original_language,
             original_title_name: TVResult.original_name,
@@ -165,6 +175,28 @@ export class MoviesAndShowsService {
             vote_count: TVResult.vote_count
         }
         return newCombinedResult
+    }
+
+    convertMultiResultToCombinedResult(multiResult: SearchMultiResult): CombinedMediaResult {
+        const newCombinedResult: CombinedMediaResult = {
+            media_type: this.getMediaTypeEnum(multiResult.media_type),
+            backdrop_path: multiResult.backdrop_path,
+            genre_ids: multiResult.genre_ids,
+            id: multiResult.id,
+            original_language: multiResult.original_language,
+            original_title_name: multiResult.original_name,
+            overview: multiResult.overview,
+            popularity: multiResult.popularity,
+            poster_path: this.getFullPosterUrl(multiResult.poster_path),
+            title_name: multiResult.name,
+            vote_average: multiResult.vote_average,
+            vote_count: multiResult.vote_count
+        }
+        return newCombinedResult
+    }
+
+    getMediaTypeEnum(mediaType: string): MediaType {
+        return Object.values(MediaType).find((enumValue) => enumValue === mediaType) as MediaType
     }
 
     getMetaData() {
@@ -221,103 +253,53 @@ export class MoviesAndShowsService {
         this.clearLoadedTVPages()
     }
 
-    addMoviePage(moviePage: DiscoverSearchMovieResponse) {
+    clearLoadedMultiPages() {
+        this.loadedMultiPages.set([])
+    }
+
+    clearAllLoadedPages() {
+        this.clearLoadedMovieAndTVPages()
+        this.clearLoadedMultiPages()
+    }
+
+    addMoviePage(moviePage: DiscoverMovieResponse) {
 
         this.loadedMoviePages.update((loadedMoviePages) => [...loadedMoviePages, moviePage])
     }
 
-    addTVPage(tvPage: DiscoverTVResponse | SearchTVResponse) {
+    addTVPage(tvPage: DiscoverTVResponse) {
         this.loadedTVPages.update((loadedTVPages) => [...loadedTVPages, tvPage])
     }
 
-    searchNextMoviePage() {
-        if(this.isLoadingMoviePages()) {
+    addMultiPage(multiPage: SearchMultiResponse) {
+        this.loadedMultiPages.update((loadedMultiPages) => [...loadedMultiPages, multiPage])
+    }
+
+    searchNextMultiPage() {
+        if(this.isLoadingMultiPages()) {
             return
         }
         else {
-            this.isLoadingMoviePages.set(true)
+            this.isLoadingMultiPages.set(true)
         }
-        this.tmdbApiService.searchMovie(this.searchModel().searchMedia, this.nextMoviePageNumber()).subscribe({
+
+        this.tmdbApiService.searchMulti(this.searchModel().searchMedia, this.nextMultiPageNumber()).subscribe({
             next: (response) => {
-                if (response.total_results !== 0) {
-                    this.addMoviePage(response)
-                }
+                this.addMultiPage(response)
             },
             error: (err) => {
                 console.error(err)
             },
             complete: () => {
-                this.isLoadingMoviePages.set(false)
+                this.isLoadingMultiPages.set(false)
             }
         })
     }
 
-    searchMovieFresh() {
-        this.clearLoadedMovieAndTVPages()
-        this.searchNextMoviePage()
-    }
-
-    searchNextTVPage() {
-        if(this.isLoadingTVPages()) {
-            return
-        }
-        else {
-            this.isLoadingTVPages.set(true)
-        }
-        this.tmdbApiService.searchTV(this.searchModel().searchMedia, this.nextTVPageNumber()).subscribe({
-            next: (response) => {
-                if (response.total_results !== 0) {
-                    this.addTVPage(response)
-                }
-            },
-            error: (err) => {
-                console.error(err)
-            },
-            complete: () => {
-                this.isLoadingTVPages.set(false)
-            }
-        })
-    }
-
-    searchTVFresh() {
-        this.clearLoadedMovieAndTVPages()
-        this.searchNextTVPage()
-    }
-
-    searchNextMovieAndTVPage() {
-        this.searchNextMoviePage()
-        this.searchNextTVPage()
-        console.log(this.loadedMediaPages())
-    }
-
-    searchMovieAndTVFresh() {
-        this.clearLoadedMovieAndTVPages()
-        this.searchNextMovieAndTVPage()
-    }
-
-    searchFresh() {
+    searchMultiFresh() {
         this.updateQueryMode(QueryMode.Search)
-        if (this.searchModel().searchMediaTypes === SearchMediaTypes.Movie) {
-            this.searchMovieFresh()
-        }
-        else if (this.searchModel().searchMediaTypes === SearchMediaTypes.TV) {
-            this.searchTVFresh()
-        }
-        else {
-            this.searchMovieAndTVFresh()
-        }
-    }
-
-    searchNextPage() {
-        if (this.searchModel().searchMediaTypes === SearchMediaTypes.Movie) {
-            this.searchNextMoviePage()
-        }
-        else if (this.searchModel().searchMediaTypes === SearchMediaTypes.TV) {
-            this.searchNextTVPage()
-        }
-        else {
-            this.searchNextMovieAndTVPage()
-        }
+        this.clearAllLoadedPages()
+        this.searchNextMultiPage()
     }
 
     discoverNextMoviePage() {
@@ -344,7 +326,7 @@ export class MoviesAndShowsService {
     discoverMovieFresh() {
         this.updateQueryMode(QueryMode.Discover)
         this.updateDiscoverMode(MediaType.Movie)
-        this.clearLoadedMovieAndTVPages()
+        this.clearAllLoadedPages()
         this.discoverNextMoviePage()
     }
 
@@ -372,7 +354,40 @@ export class MoviesAndShowsService {
     discoverTVFresh() {
         this.updateQueryMode(QueryMode.Discover)
         this.updateDiscoverMode(MediaType.TV)
-        this.clearLoadedMovieAndTVPages()
+        this.clearAllLoadedPages()
         this.discoverNextTVPage()
     }
+
+    loadNextPage() {
+        if(this.queryMode() === QueryMode.Discover) {
+            if (this.discoverMode() === MediaType.Movie) {
+                this.discoverNextMoviePage()
+            }
+            else if (this.discoverMode() === MediaType.TV) {
+                this.discoverNextTVPage()
+            }
+        }
+        else if (this.queryMode() === QueryMode.Search) {
+            this.searchNextMultiPage()
+        }
+    }
+
+    existsMorePages(): boolean {
+        if(this.queryMode() === QueryMode.Discover) {
+            if (this.discoverMode() === MediaType.Movie) {
+                const lastMoviePage: DiscoverMovieResponse | undefined = this.loadedMoviePages().at(-1)
+                return lastMoviePage?.page !== lastMoviePage?.total_pages
+            }
+            else if (this.discoverMode() === MediaType.TV) {
+                const lastTVPage: DiscoverTVResponse | undefined = this.loadedTVPages().at(-1)
+                return lastTVPage?.page !== lastTVPage?.total_pages
+            }
+        }
+        else if (this.queryMode() === QueryMode.Search) {
+            const lastMultiPage: SearchMultiResponse | undefined = this.loadedMultiPages().at(-1)
+            return lastMultiPage?.page !== lastMultiPage?.total_pages
+        }
+        return false
+    }
+    
 }
