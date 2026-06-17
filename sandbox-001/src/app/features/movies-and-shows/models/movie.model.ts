@@ -1,4 +1,6 @@
-import { Genre, SortDirection, SpokenLanguage } from "./movie-tv.model";
+import { Country, DiscoverSortDirection, DiscoverSortField, Genre, SpokenLanguage } from "./movie-tv.model";
+
+
 
 export interface DiscoverSearchMovieResponse {
     page: number;
@@ -72,12 +74,17 @@ export interface ProductionCountry {
     name: string;
 }
 
-export enum DiscoverMovieSortField {
-    'Popularity' = 'popularity',
-    'Title' = 'title',
-}
+
 
 export interface DiscoverMovieSortBy {
-    field: DiscoverMovieSortField;
-    direction: SortDirection;
+    field: DiscoverSortField;
+    direction: DiscoverSortDirection;
+}
+
+export interface DiscoverMovieParams {
+    page: number;
+    sort_by: DiscoverMovieSortBy;
+    with_genres: Genre[];
+    with_origin_country: Country;
+    without_genres: Genre[];
 }

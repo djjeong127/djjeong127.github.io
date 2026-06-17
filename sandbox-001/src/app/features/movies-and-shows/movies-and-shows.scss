@@ -1,0 +1,50 @@
+.movies-and-shows {
+
+}
+
+.media-cards {
+    display: grid;
+    gap: 1em;
+    padding: 1em;
+
+    @media (orientation: landscape) {
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        
+    }
+    @media (orientation: portrait) {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    }
+}
+
+mat-card:hover {
+        cursor: pointer;
+        opacity: 50%;
+}
+
+mat-card-header {
+    padding: 1em;
+}
+
+mat-card-title-group {
+    display: block;
+
+}
+
+mat-card-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+mat-card-content {
+    height: 4lh;
+
+    p {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        overflow: hidden;
+    }
+}

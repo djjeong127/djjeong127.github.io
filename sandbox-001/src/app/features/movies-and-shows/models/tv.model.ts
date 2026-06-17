@@ -1,4 +1,4 @@
-import { SortDirection } from "./movie-tv.model";
+import { Country, DiscoverSortField, Genre, DiscoverSortDirection } from "./movie-tv.model";
 
 export interface DiscoverTVResponse {
     page: number;
@@ -49,12 +49,16 @@ export interface SearchTVResult {
     vote_count: number;
 }
 
-export enum DiscoverTVSortField {
-    'Name' = 'name',
-    'Popularity' = 'popularity'
-}
 
 export interface DiscoverTVSortBy {
-    field: SortDirection;
-    direction: DiscoverTVSortField;
+    field: DiscoverSortField;
+    direction: DiscoverSortDirection;
+}
+
+export interface DiscoverTVParams {
+    page: number;
+    sort_by: DiscoverTVSortBy;
+    with_genres: Genre[];
+    with_origin_country: Country;
+    without_genres: Genre[];
 }
