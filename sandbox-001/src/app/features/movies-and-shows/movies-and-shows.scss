@@ -15,10 +15,15 @@
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
 }
-img {
+
+
+mat-card {
+
+    img {
         height: 100%;
         object-fit: cover;
     }
+}
 
 
 mat-card:hover {
