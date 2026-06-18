@@ -4,8 +4,8 @@
 
 .media-cards {
     display: grid;
-    gap: 1em;
-    padding: 1em;
+    gap: 0.5em;
+    padding: 0.5em;
 
     @media (orientation: landscape) {
         grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
@@ -30,7 +30,7 @@
     cursor: pointer;
     opacity: 75%;
 
-    transform: scale(1.05);
+    transform: scale(1.03);
     transition: transform 0.2s ease-out;
 }
 
@@ -46,6 +46,7 @@ mat-card {
 mat-card-content {
 
     p {
+        line-height: 0.8;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 1;
