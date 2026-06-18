@@ -20,10 +20,6 @@ img {
         object-fit: cover;
     }
 
-mat-card {
-
-    
-}
 
 mat-card:hover {
         cursor: pointer;
@@ -61,7 +57,7 @@ mat-card-title {
 }
 
 mat-card-content {
-    height: 3em;
+    height: 3.5em;
 
     p {
         // line-height: 1em;
