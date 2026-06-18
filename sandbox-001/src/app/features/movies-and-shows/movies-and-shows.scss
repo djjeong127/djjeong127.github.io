@@ -44,9 +44,10 @@ mat-card {
 }
 
 mat-card-content {
+    padding: 0.5em;
 
     p {
-        line-height: 0.8;
+        margin: 0.5em;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 1;
