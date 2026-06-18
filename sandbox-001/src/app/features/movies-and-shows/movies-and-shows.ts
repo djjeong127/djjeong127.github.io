@@ -7,12 +7,13 @@ import { MatAnchor } from "@angular/material/button";
 import { ANGULAR_MATERIAL_MODULES } from '../../shared/modules/angular-material.module';
 import { MediaType } from './models/movie-tv.model';
 import { MultiFilter } from './models/multi.model';
-import { DatePipe } from '@angular/common';
+import { DatePipe, UpperCasePipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
   selector: 'app-movies-and-shows',
-  imports: [ANGULAR_MATERIAL_MODULES, FormField, DatePipe],
+  imports: [ANGULAR_MATERIAL_MODULES, FormField, DatePipe, UpperCasePipe, RouterLink],
   templateUrl: './movies-and-shows.html',
   styleUrl: './movies-and-shows.scss',
 })

@@ -1,27 +1,14 @@
-import { computed, inject, Injector, runInInjectionContext, Service, signal } from '@angular/core';
+import { computed, inject, Service, signal } from '@angular/core';
 import { TmdbApiService } from './tmdb-api-service';
 import { DiscoverMovieParams, DiscoverMovieResponse, DiscoverMovieResult } from '../models/movie.model';
 import { DiscoverTVParams, DiscoverTVResponse, DiscoverTVResult } from '../models/tv.model';
-import { toSignal } from '@angular/core/rxjs-interop';
+
 import { form } from '@angular/forms/signals';
-import { Country, Genre, DiscoverSortDirection, DiscoverSortField, CombinedMediaResult, MediaType, TmdbConfiguration } from '../models/movie-tv.model';
-import { delay, EMPTY, expand, filter, forkJoin, map, takeWhile, tap } from 'rxjs';
-import { MultiFilter, SearchMultiResponse, SearchMultiResult, TimeWindow, TrendingMultiResponse, TrendingMultiResult } from '../models/multi.model';
+import { Country, Genre, DiscoverSortDirection, DiscoverSortField, CombinedMediaResult, MediaType, TmdbConfiguration, QueryMode, SearchMode, SearchModel } from '../models/movie-tv.model';
+import { forkJoin } from 'rxjs';
+import { SearchMultiResponse, SearchMultiResult, TimeWindow, TrendingMultiResponse, TrendingMultiResult } from '../models/multi.model';
 
-export interface SearchModel {
-  searchMedia: string;
-  multiFilter: MultiFilter;
-}
 
-export enum QueryMode {
-    'Search' = 'search',
-    'Discover' = 'discover'
-}
-
-export enum SearchMode {
-    'Populated' = 'populated',
-    'Unpopulated' = 'unpopulated'
-}
 
 @Service()
 export class MoviesAndShowsService {

@@ -5,6 +5,7 @@ import { MoviesAndShows } from './features/movies-and-shows/movies-and-shows';
 import { Recipes } from './features/recipes/recipes';
 import { GiveUsThisDayOur } from './shared/components/give-us-this-day-our/give-us-this-day-our';
 import { RecipePage } from './features/recipes/components/recipe-page/recipe-page';
+import { MediaPlayer } from './features/movies-and-shows/components/media-player/media-player';
 
 export const routes: Routes = [
     {
@@ -18,6 +19,10 @@ export const routes: Routes = [
     {
         path: 'movies-and-shows',
         component: MoviesAndShows
+    },
+    {
+        path: 'movies-and-shows/:media_type/:id',
+        component: MediaPlayer
     },
     {
         path: 'recipes',

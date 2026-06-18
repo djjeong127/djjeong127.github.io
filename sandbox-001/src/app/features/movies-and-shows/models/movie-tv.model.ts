@@ -1,3 +1,5 @@
+import { MultiFilter } from "./multi.model";
+
 export interface TmdbConfiguration {
     images: TmdbImage;
     change_keys: string[]
@@ -63,4 +65,19 @@ export interface CombinedMediaResult {
     title_name: string;
     vote_average: number;
     vote_count: number;
+}
+
+export interface SearchModel {
+  searchMedia: string;
+  multiFilter: MultiFilter;
+}
+
+export enum QueryMode {
+    'Search' = 'search',
+    'Discover' = 'discover'
+}
+
+export enum SearchMode {
+    'Populated' = 'populated',
+    'Unpopulated' = 'unpopulated'
 }
