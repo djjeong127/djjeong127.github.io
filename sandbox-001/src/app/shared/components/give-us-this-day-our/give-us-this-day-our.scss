@@ -36,8 +36,8 @@
   border-radius: 50%;
   
   /* position of element in regards to the mouse */
-  margin-top: 1em;
-  margin-left: 1em;
+  margin-top: -1.5em;
+  margin-left: -1.5em;
   
   pointer-events: none; /* Crucial: stops the follower from hijacking mouseover states */
   will-change: transform; /* Signals the browser to optimize this layer for motion */
