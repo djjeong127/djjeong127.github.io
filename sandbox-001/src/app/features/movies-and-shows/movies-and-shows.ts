@@ -7,11 +7,12 @@ import { MatAnchor } from "@angular/material/button";
 import { ANGULAR_MATERIAL_MODULES } from '../../shared/modules/angular-material.module';
 import { MediaType } from './models/movie-tv.model';
 import { MultiFilter } from './models/multi.model';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
   selector: 'app-movies-and-shows',
-  imports: [ANGULAR_MATERIAL_MODULES, FormField],
+  imports: [ANGULAR_MATERIAL_MODULES, FormField, DatePipe],
   templateUrl: './movies-and-shows.html',
   styleUrl: './movies-and-shows.scss',
 })
@@ -19,7 +20,8 @@ export class MoviesAndShows {
   @ViewChild('bottomSentinel') bottomSentinel!: ElementRef;
 
   moviesAndShowsService = inject(MoviesAndShowsService)
-  tmdbApiService = inject(TmdbApiService)
+
+  mediaType = MediaType;
 
   intersectionInterval: any = null;
 
@@ -36,7 +38,8 @@ export class MoviesAndShows {
 
 
   ngOnInit() {
-    this.multiFilterMovieAndTV = this.moviesAndShowsService.searchModel().multiFilter
+    this.multiFilterMovieAndTV = this.moviesAndShowsService.searchModel().multiFilter;
+    this.moviesAndShowsService.loadPageFresh()
   }
 
   ngAfterViewInit() {
@@ -54,19 +57,16 @@ export class MoviesAndShows {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
 
-          // if (this.moviesAndShowsService.combinedLoadedMediaResults().length > 0) {
-          //     this.moviesAndShowsService.loadNextPage()
-          // }
-
-
           // start interval to keep getting new pages
           this.intersectionInterval = setInterval(() => {
             if (this.moviesAndShowsService.combinedLoadedMediaResults().length > 0 && this.moviesAndShowsService.existsMorePages()) {
               this.moviesAndShowsService.loadNextPage()
-              console.log(this.moviesAndShowsService.existsMorePages())
+              
+            }
+            else {
+             
             }
           }, 100)
-          
         }
         else {
           // clear interval to stop getting new pages

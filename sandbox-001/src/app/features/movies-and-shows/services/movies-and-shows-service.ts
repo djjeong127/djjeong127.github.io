@@ -6,7 +6,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { form } from '@angular/forms/signals';
 import { Country, Genre, DiscoverSortDirection, DiscoverSortField, CombinedMediaResult, MediaType, TmdbConfiguration } from '../models/movie-tv.model';
 import { delay, EMPTY, expand, filter, forkJoin, map, takeWhile, tap } from 'rxjs';
-import { MultiFilter, SearchMultiResponse, SearchMultiResult } from '../models/multi.model';
+import { MultiFilter, SearchMultiResponse, SearchMultiResult, TimeWindow, TrendingMultiResponse, TrendingMultiResult } from '../models/multi.model';
 
 export interface SearchModel {
   searchMedia: string;
@@ -18,20 +18,30 @@ export enum QueryMode {
     'Discover' = 'discover'
 }
 
+export enum SearchMode {
+    'Populated' = 'populated',
+    'Unpopulated' = 'unpopulated'
+}
+
 @Service()
 export class MoviesAndShowsService {
     tmdbApiService = inject(TmdbApiService)
 
     isLoadingMoviePages = signal<boolean>(false)
     isLoadingTVPages = signal<boolean>(false)
-    isLoadingMultiPages = signal<boolean>(false)
+    isLoadingSearchMultiPages = signal<boolean>(false)
+    isLoadingTrendingMultiPages = signal<boolean>(false)
 
-    queryMode = signal<QueryMode>(QueryMode.Discover)
+    queryMode = signal<QueryMode>(QueryMode.Search)
+    searchMode = signal<SearchMode>(SearchMode.Unpopulated)
     discoverMode = signal<MediaType>(MediaType.Movie)
 
     loadedMoviePages = signal<DiscoverMovieResponse[]>([])
     loadedTVPages = signal<DiscoverTVResponse[]>([])
-    loadedMultiPages = signal<SearchMultiResponse[]>([])
+    loadedSearchMultiPages = signal<SearchMultiResponse[]>([])
+    loadedTrendingMultiPages = signal<TrendingMultiResponse[]>([])
+
+    timeWindow = signal<TimeWindow>(TimeWindow.Day)
 
     combinedLoadedMediaResults = computed<CombinedMediaResult[]>(() => {
         const combinedResults: CombinedMediaResult[] = [];
@@ -57,10 +67,21 @@ export class MoviesAndShowsService {
             )
         );
 
-        this.loadedMultiPages().forEach(
+        this.loadedSearchMultiPages().forEach(
             (page) => page.results.forEach(
                 (result) => {
-                    const newCombinedResult = this.convertMultiResultToCombinedResult(result)
+                    const newCombinedResult = this.convertSearchMultiResultToCombinedResult(result)
+                    if (Object.values(this.searchModel().multiFilter).includes(newCombinedResult.media_type) && !combinedResults.some((result) => (result.media_type === newCombinedResult.media_type && result.id === newCombinedResult.id))) {
+                        combinedResults.push(newCombinedResult)
+                    }
+                }
+            )
+        )
+
+        this.loadedTrendingMultiPages().forEach(
+            (page) => page.results.forEach(
+                (result) => {
+                    const newCombinedResult = this.convertTrendingMultiResultToCombinedResult(result)
                     if (Object.values(this.searchModel().multiFilter).includes(newCombinedResult.media_type) && !combinedResults.some((result) => (result.media_type === newCombinedResult.media_type && result.id === newCombinedResult.id))) {
                         combinedResults.push(newCombinedResult)
                     }
@@ -72,8 +93,8 @@ export class MoviesAndShowsService {
 
     nextMoviePageNumber = computed(() => this.loadedMoviePages().length === 0 ? 1 : this.loadedMoviePages().at(-1)!.page + 1)
     nextTVPageNumber = computed(() => this.loadedTVPages().length === 0 ? 1 : this.loadedTVPages().at(-1)!.page + 1)
-    nextMultiPageNumber = computed(() => this.loadedMultiPages().length === 0 ? 1 : this.loadedMultiPages().at(-1)!.page + 1)
-
+    nextSearchMultiPageNumber = computed(() => this.loadedSearchMultiPages().length === 0 ? 1 : this.loadedSearchMultiPages().at(-1)!.page + 1)
+    nextTrendingMultiPageNumber = computed(() => this.loadedTrendingMultiPages().length === 0 ? 1 : this.loadedTrendingMultiPages().at(-1)!.page + 1)
 
     searchModel = signal<SearchModel>({
         searchMedia: '',
@@ -88,13 +109,6 @@ export class MoviesAndShowsService {
     countries = signal<Country[]>([])
     movieGenres = signal<Genre[]>([])
     tvGenres = signal<Genre[]>([])
-    movieAndTVGenreNames = computed<string[]>(() => {
-        const moviesGenreNames: string[] = this.movieGenres().map((genre) => genre.name)
-        const tvGenreNames: string[] = this.tvGenres().map((genre) => genre.name)
-
-        const intersectionNames = moviesGenreNames.filter((name) => tvGenreNames.includes(name))
-        return intersectionNames
-    })
 
     discoverMovieModel = signal<DiscoverMovieParams>({
         page: this.nextMoviePageNumber(),
@@ -132,6 +146,10 @@ export class MoviesAndShowsService {
         this.queryMode.set(queryMode)
     }
 
+    updateSearchMode(searchMode: SearchMode) {
+        this.searchMode.set(searchMode)
+    }
+
     updateDiscoverMode(mediaType: MediaType) {
         this.discoverMode.set(mediaType)
     }
@@ -141,11 +159,34 @@ export class MoviesAndShowsService {
         return fullUrl
     }
 
+    getMovieGenreName(genreId: number): string {
+        return this.movieGenres().find((genre) => genre.id === genreId)!.name
+    }
+
+    getTVGenreName(genreId: number): string {
+        return this.tvGenres().find((genre) => genre.id === genreId)!.name
+    }
+
+    movieGenreNamesStringFromIdList(genreIdList: number[]): string {
+        let movieGenreNames = ''
+        genreIdList.forEach((id) => movieGenreNames += this.getMovieGenreName(id) + ', ')
+        movieGenreNames = movieGenreNames.slice(0, -2)
+        return movieGenreNames
+    }
+
+    TVGenreNamesStringFromIdList(genreIdList: number[]): string {
+        let tvGenreNames = ''
+        genreIdList.forEach((id) => tvGenreNames += this.getTVGenreName(id) + ', ')
+        tvGenreNames = tvGenreNames.slice(0, -2)
+        return tvGenreNames
+    }
+
     convertMovieResultToCombinedResult(movieResult: DiscoverMovieResult): CombinedMediaResult {
         const newCombinedResult: CombinedMediaResult = {
             media_type: MediaType.Movie,
             backdrop_path: movieResult.backdrop_path,
             genre_ids: movieResult.genre_ids.map(Number),
+            release_date: movieResult.release_date,
             id: movieResult.id,
             original_language: movieResult.original_language,
             original_title_name: movieResult.original_title,
@@ -164,6 +205,7 @@ export class MoviesAndShowsService {
             media_type: MediaType.TV,
             backdrop_path: TVResult.backdrop_path,
             genre_ids: TVResult.genre_ids.map(Number),
+            release_date: TVResult.first_air_date,
             id: TVResult.id,
             original_language: TVResult.original_language,
             original_title_name: TVResult.original_name,
@@ -177,20 +219,40 @@ export class MoviesAndShowsService {
         return newCombinedResult
     }
 
-    convertMultiResultToCombinedResult(multiResult: SearchMultiResult): CombinedMediaResult {
+    convertSearchMultiResultToCombinedResult(searchMultiResult: SearchMultiResult): CombinedMediaResult {
         const newCombinedResult: CombinedMediaResult = {
-            media_type: this.getMediaTypeEnum(multiResult.media_type),
-            backdrop_path: multiResult.backdrop_path,
-            genre_ids: multiResult.genre_ids,
-            id: multiResult.id,
-            original_language: multiResult.original_language,
-            original_title_name: multiResult.original_name,
-            overview: multiResult.overview,
-            popularity: multiResult.popularity,
-            poster_path: this.getFullPosterUrl(multiResult.poster_path),
-            title_name: multiResult.name,
-            vote_average: multiResult.vote_average,
-            vote_count: multiResult.vote_count
+            media_type: this.getMediaTypeEnum(searchMultiResult.media_type),
+            backdrop_path: searchMultiResult.backdrop_path,
+            genre_ids: searchMultiResult.genre_ids,
+            release_date: searchMultiResult.release_date ? searchMultiResult.release_date : searchMultiResult.first_air_date,
+            id: searchMultiResult.id,
+            original_language: searchMultiResult.original_language,
+            original_title_name: searchMultiResult.original_title ? searchMultiResult.original_title : searchMultiResult.original_name,
+            overview: searchMultiResult.overview,
+            popularity: searchMultiResult.popularity,
+            poster_path: this.getFullPosterUrl(searchMultiResult.poster_path),
+            title_name: searchMultiResult.title ? searchMultiResult.title : searchMultiResult.name,
+            vote_average: searchMultiResult.vote_average,
+            vote_count: searchMultiResult.vote_count
+        }
+        return newCombinedResult
+    }
+
+    convertTrendingMultiResultToCombinedResult(trendingMultiResult: TrendingMultiResult): CombinedMediaResult {
+        const newCombinedResult: CombinedMediaResult = {
+            media_type: this.getMediaTypeEnum(trendingMultiResult.media_type),
+            backdrop_path: trendingMultiResult.backdrop_path,
+            genre_ids: trendingMultiResult.genre_ids,
+            release_date: trendingMultiResult.release_date ? trendingMultiResult.release_date : trendingMultiResult.first_air_date,
+            id: trendingMultiResult.id,
+            original_language: trendingMultiResult.original_language,
+            original_title_name: trendingMultiResult.original_title ? trendingMultiResult.original_title : trendingMultiResult.original_name,
+            overview: trendingMultiResult.overview,
+            popularity: trendingMultiResult.popularity,
+            poster_path: this.getFullPosterUrl(trendingMultiResult.poster_path),
+            title_name: trendingMultiResult.title ? trendingMultiResult.title : trendingMultiResult.name,
+            vote_average: trendingMultiResult.vote_average,
+            vote_count: trendingMultiResult.vote_count
         }
         return newCombinedResult
     }
@@ -253,13 +315,22 @@ export class MoviesAndShowsService {
         this.clearLoadedTVPages()
     }
 
-    clearLoadedMultiPages() {
-        this.loadedMultiPages.set([])
+    clearLoadedSearchMultiPages() {
+        this.loadedSearchMultiPages.set([])
+    }
+
+    clearLoadedTrendingMultiPages() {
+        this.loadedTrendingMultiPages.set([])
+    }
+
+    clearLoadedSearchMultiAndTrendingMultiPages() {
+        this.clearLoadedSearchMultiPages()
+        this.clearLoadedTrendingMultiPages()
     }
 
     clearAllLoadedPages() {
         this.clearLoadedMovieAndTVPages()
-        this.clearLoadedMultiPages()
+        this.clearLoadedSearchMultiAndTrendingMultiPages()
     }
 
     addMoviePage(moviePage: DiscoverMovieResponse) {
@@ -271,35 +342,68 @@ export class MoviesAndShowsService {
         this.loadedTVPages.update((loadedTVPages) => [...loadedTVPages, tvPage])
     }
 
-    addMultiPage(multiPage: SearchMultiResponse) {
-        this.loadedMultiPages.update((loadedMultiPages) => [...loadedMultiPages, multiPage])
+    addSearchMultiPage(searchMultiPage: SearchMultiResponse) {
+        this.loadedSearchMultiPages.update((loadedSearchMultiPages) => [...loadedSearchMultiPages, searchMultiPage])
+    }
+
+    addTrendingMultiPage(trendingMultiPage: TrendingMultiResponse) {
+        this.loadedTrendingMultiPages.update((loadedTrendingMultiPages) => [...loadedTrendingMultiPages, trendingMultiPage])
     }
 
     searchNextMultiPage() {
-        if(this.isLoadingMultiPages()) {
+        if(this.isLoadingSearchMultiPages()) {
             return
         }
         else {
-            this.isLoadingMultiPages.set(true)
+            this.isLoadingSearchMultiPages.set(true)
         }
 
-        this.tmdbApiService.searchMulti(this.searchModel().searchMedia, this.nextMultiPageNumber()).subscribe({
+        this.tmdbApiService.searchMulti(this.searchModel().searchMedia, this.nextSearchMultiPageNumber()).subscribe({
             next: (response) => {
-                this.addMultiPage(response)
+                this.addSearchMultiPage(response)
             },
             error: (err) => {
                 console.error(err)
             },
             complete: () => {
-                this.isLoadingMultiPages.set(false)
+                this.isLoadingSearchMultiPages.set(false)
             }
         })
     }
 
     searchMultiFresh() {
         this.updateQueryMode(QueryMode.Search)
+        this.updateSearchMode(SearchMode.Populated)
         this.clearAllLoadedPages()
         this.searchNextMultiPage()
+    }
+
+    trendingNextMultiPage() {
+        if(this.isLoadingTrendingMultiPages()) {
+            return
+        }
+        else {
+            this.isLoadingTrendingMultiPages.set(true)
+        }
+
+        this.tmdbApiService.trendingMulti(this.timeWindow(), this.nextTrendingMultiPageNumber()).subscribe({
+            next: (response) => {
+                this.addTrendingMultiPage(response)
+            },
+            error: (err) => {
+                console.error(err)
+            },
+            complete: () => {
+                this.isLoadingTrendingMultiPages.set(false)
+            }
+        })
+    }
+
+    trendingMultiFresh() {
+        this.updateQueryMode(QueryMode.Search)
+        this.updateSearchMode(SearchMode.Unpopulated)
+        this.clearAllLoadedPages()
+        this.trendingNextMultiPage()
     }
 
     discoverNextMoviePage() {
@@ -358,6 +462,25 @@ export class MoviesAndShowsService {
         this.discoverNextTVPage()
     }
 
+    loadPageFresh() {
+        if(this.queryMode() === QueryMode.Discover) {
+            if (this.discoverMode() === MediaType.Movie) {
+                this.discoverMovieFresh()
+            }
+            else if (this.discoverMode() === MediaType.TV) {
+                this.discoverTVFresh()
+            }
+        }
+        else if (this.queryMode() === QueryMode.Search) {
+            if (this.searchMode() === SearchMode.Populated) {
+                this.searchMultiFresh()
+            }
+            else if (this.searchMode() === SearchMode.Unpopulated) {
+                this.trendingMultiFresh()
+            }
+        }
+    }
+
     loadNextPage() {
         if(this.queryMode() === QueryMode.Discover) {
             if (this.discoverMode() === MediaType.Movie) {
@@ -368,7 +491,12 @@ export class MoviesAndShowsService {
             }
         }
         else if (this.queryMode() === QueryMode.Search) {
-            this.searchNextMultiPage()
+            if (this.searchMode() === SearchMode.Populated) {
+                this.searchNextMultiPage()
+            }
+            else if (this.searchMode() === SearchMode.Unpopulated) {
+                this.trendingNextMultiPage()
+            }
         }
     }
 
@@ -384,8 +512,15 @@ export class MoviesAndShowsService {
             }
         }
         else if (this.queryMode() === QueryMode.Search) {
-            const lastMultiPage: SearchMultiResponse | undefined = this.loadedMultiPages().at(-1)
-            return lastMultiPage?.page !== lastMultiPage?.total_pages
+            if (this.searchMode() === SearchMode.Populated) {
+                const lastMultiPage: SearchMultiResponse | undefined = this.loadedSearchMultiPages().at(-1)
+                return lastMultiPage?.page !== lastMultiPage?.total_pages
+            }
+            else if (this.searchMode() === SearchMode.Unpopulated) {
+                const lastMultiPage: TrendingMultiResponse | undefined = this.loadedTrendingMultiPages().at(-1)
+                return lastMultiPage?.page !== lastMultiPage?.total_pages
+            }
+            
         }
         return false
     }

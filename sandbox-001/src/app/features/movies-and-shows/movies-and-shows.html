@@ -35,8 +35,20 @@
             <mat-card  matRipple [matTooltip]="result.title_name" matTooltipTouchGestures="off">
                 <img class="recipe-image" matCardImage [src]="result.poster_path">
                 <mat-card-content>
-                    <div>{{ result.media_type}}</div>
-                    <p>{{ result.overview}}</p>
+                    <p>{{ result.title_name ? result.title_name : result.original_title_name }}</p>
+                    <p>
+                        @if (result.release_date){
+                            {{result.release_date | date: 'yyyy'}} | 
+                        }
+                        {{ result.media_type }}</p>
+                    <p>
+                        @if (result.media_type === mediaType.Movie) {
+                            {{moviesAndShowsService.movieGenreNamesStringFromIdList(result.genre_ids) ? moviesAndShowsService.movieGenreNamesStringFromIdList(result.genre_ids) : 'N/A'}}
+                        }
+                        @else if (result.media_type === mediaType.TV) {
+                            {{moviesAndShowsService.TVGenreNamesStringFromIdList(result.genre_ids) ? moviesAndShowsService.TVGenreNamesStringFromIdList(result.genre_ids) : 'N/A'}}
+                        }
+                    </p>
                 </mat-card-content>
             </mat-card>
         }

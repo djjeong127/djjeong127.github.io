@@ -5,7 +5,7 @@ import { DiscoverMovieParams, DiscoverMovieResponse, DiscoverMovieSortBy, GetMov
 import { DiscoverTVParams, DiscoverTVResponse, DiscoverTVSortBy } from '../models/tv.model';
 import { Country, Genre, GenresResponse, TmdbConfiguration } from '../models/movie-tv.model';
 import { shareReplay } from 'rxjs';
-import { SearchMultiResponse } from '../models/multi.model';
+import { SearchMultiResponse, TimeWindow, TrendingMultiResponse } from '../models/multi.model';
 
 @Service()
 export class TmdbApiService {
@@ -21,9 +21,10 @@ export class TmdbApiService {
 
     private discoverMovieUrl = this.baseUrl + '/discover/movie';
     private discoverTVUrl = this.baseUrl + '/discover/tv';
-    private searchMovieUrl = this.baseUrl + '/search/movie';
-    private searchTVUrl = this.baseUrl + '/search/tv';
+
     private searchMultiUrl = this.baseUrl + '/search/multi';
+    private trendingMultiUrl = this.baseUrl + '/trending/all'
+
     private getMovieDetailUrl = this.baseUrl + '/movie';
 
     private header = new HttpHeaders().set('Authorization', 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0MjIzNjlmZTRjOWU0NmUyZjk3YjExM2ZkODM2ZWZkOSIsIm5iZiI6MTcwMTI5NDQzMC40NzksInN1YiI6IjY1NjdiMTVlNmMwYjM2MDBhZTUwNGI4NiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.w9CbNfyRS54DMDwag6-YcAmGjVqbi3KZj1S3UdelaPw')
@@ -95,27 +96,18 @@ export class TmdbApiService {
         return this.http.get<DiscoverTVResponse>(this.discoverTVUrl, {headers: this.header, params: tvParams})
     }
 
-    // searchMovie(movie: string, page: number): Observable<DiscoverSearchMovieResponse> {
-    //     const movieParams = this.params
-    //         .set('query', movie)
-    //         .set('page', page)
-    //     return this.http.get<DiscoverSearchMovieResponse>(this.searchMovieUrl, {headers: this.header, params: movieParams}).pipe(
-    //         shareReplay({bufferSize: 10, refCount: true})
-    //     )
-    // }
-
-    // searchTV(tv: string, page: number): Observable<SearchTVResponse> {
-    //     const tvParams = this.params
-    //         .set('query', tv)
-    //         .set('page', page)
-    //     return this.http.get<SearchTVResponse>(this.searchTVUrl, {headers: this.header, params: tvParams})
-    // }
-
     searchMulti(searchMedia: string, page: number): Observable<SearchMultiResponse> {
-        const multiParams = this.params
+        const searchMultiParams = this.params
             .set('query', searchMedia)
             .set('page', page)
-        return this.http.get<SearchMultiResponse>(this.searchMultiUrl, {headers: this.header, params: multiParams})
+        return this.http.get<SearchMultiResponse>(this.searchMultiUrl, {headers: this.header, params: searchMultiParams})
+    }
+
+    trendingMulti(timeWindow: TimeWindow, page: number): Observable<TrendingMultiResponse> {
+        const trendingMultiParams = this.params
+            .delete('include_adult')
+            .set('page', page)
+        return this.http.get<TrendingMultiResponse>(this.trendingMultiUrl + `/${timeWindow}`, {headers: this.header, params: trendingMultiParams})
     }
     
     getMovieDetail(movieId: number): Observable<GetMovieDetailResponse> {
