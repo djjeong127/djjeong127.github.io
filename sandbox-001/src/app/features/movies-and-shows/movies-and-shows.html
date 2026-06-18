@@ -17,18 +17,14 @@
                 <mat-button-toggle [value]="multiFilterMovieAndTV">Movie & TV</mat-button-toggle>
                 <mat-button-toggle [value]="multiFilterTV">TV</mat-button-toggle>
             </mat-button-toggle-group>
-        <!-- <button matButton="filled" (click)="moviesAndShowsService.searchMovieFresh()">Movie</button>
-        <button matButton="filled" (click)="moviesAndShowsService.searchTVFresh()">TV</button>
-        <button matButton="filled" (click)="moviesAndShowsService.searchMovieAndTVFresh()">Movie And TV</button> -->
 
         </form>
+            <button matButton="filled" (click)="moviesAndShowsService.discoverMovieFresh()">DiscoverMovie</button>
+            <button matButton="filled" (click)="moviesAndShowsService.discoverTVFresh()">DiscoverTV</button>
+        <form>
 
-        <!-- <div>{{a()}}</div> -->
-
-        <div>discover</div>
-        <button matButton="filled" (click)="moviesAndShowsService.discoverMovieFresh()">DiscoverMovie</button>
-        <button matButton="filled" (click)="moviesAndShowsService.discoverTVFresh()">DiscoverTV</button>
-
+        </form>
+        
     </div>
     <div class="media-cards">
         @for (result of moviesAndShowsService.combinedLoadedMediaResults(); track (result.media_type + '_' + result.id)) {
@@ -47,14 +43,7 @@
                             {{result.media_type | uppercase}}
                         }
                     </p>
-                    <p>
-                        @if (result.media_type === mediaType.Movie) {
-                            {{moviesAndShowsService.movieGenreNamesStringFromIdList(result.genre_ids) ? moviesAndShowsService.movieGenreNamesStringFromIdList(result.genre_ids) : 'N/A'}}
-                        }
-                        @else if (result.media_type === mediaType.TV) {
-                            {{moviesAndShowsService.TVGenreNamesStringFromIdList(result.genre_ids) ? moviesAndShowsService.TVGenreNamesStringFromIdList(result.genre_ids) : 'N/A'}}
-                        }
-                    </p>
+
                 </mat-card-content>
             </mat-card>
         }
