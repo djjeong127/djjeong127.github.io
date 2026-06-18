@@ -5,7 +5,7 @@ import { TmdbApiService } from './services/tmdb-api-service';
 import { FormField } from '@angular/forms/signals';
 import { MatAnchor } from "@angular/material/button";
 import { ANGULAR_MATERIAL_MODULES } from '../../shared/modules/angular-material.module';
-import { MediaType } from './models/movie-tv.model';
+import { MediaType, QueryMode, SearchMode } from './models/movie-tv.model';
 import { MultiFilter } from './models/multi.model';
 import { DatePipe, UpperCasePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -22,6 +22,8 @@ export class MoviesAndShows {
 
   moviesAndShowsService = inject(MoviesAndShowsService)
 
+  queryMode = QueryMode;
+  searchMode = SearchMode;
   mediaType = MediaType;
 
   intersectionInterval: any = null;
@@ -81,8 +83,17 @@ export class MoviesAndShows {
   }
 
   onSearchSubmit(event: Event) {
-    event.preventDefault(); 
-    this.moviesAndShowsService.searchMultiFresh()
+    event.preventDefault();
+    
+    this.moviesAndShowsService.updateQueryMode(this.queryMode.Search)
+
+    if (this.moviesAndShowsService.searchModel().searchMedia === '') {
+      this.moviesAndShowsService.updateSearchMode(this.searchMode.Unpopulated)
+    }
+    else {
+      this.moviesAndShowsService.updateSearchMode(this.searchMode.Populated)
+    }
+    this.moviesAndShowsService.loadPageFresh()
   }
 }
 
