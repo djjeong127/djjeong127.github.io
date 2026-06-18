@@ -17,56 +17,35 @@
 }
 
 
+.media-card {
+    border-radius: var(--mat-sys-corner-medium);
+
+    transform: scale(1);
+    transition: transform 0.5s ease-out;
+
+    
+}
+
+.media-card:hover {
+    cursor: pointer;
+    opacity: 75%;
+
+    transform: scale(1.05);
+    transition: transform 0.2s ease-out;
+}
+
 mat-card {
+    height: 100%;
 
     img {
-        height: 100%;
+        height: inherit;
         object-fit: cover;
     }
 }
 
-
-mat-card:hover {
-        cursor: pointer;
-        opacity: 75%;
-
-}
-
-@media (min-width: 769px) {
-    mat-card {
-        transform: scale(1);
-        transition: transform 0.5s ease-out;
-    }
-
-    mat-card:hover {
-            transform: scale(1.05);
-            transition: transform 0.2s ease-out;
-    }
-}
-
-
-mat-card-header {
-    padding: 1em;
-}
-
-mat-card-title-group {
-    display: block;
-
-}
-
-mat-card-title {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    text-align: center;
-}
-
 mat-card-content {
-    height: 3em;
 
     p {
-        // line-height: 1em;
-        margin: 0.3em 0;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 1;
