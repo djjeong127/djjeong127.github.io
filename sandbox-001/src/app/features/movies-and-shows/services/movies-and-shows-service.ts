@@ -14,17 +14,17 @@ import { SearchMultiResponse, SearchMultiResult, TimeWindow, TrendingMultiRespon
 export class MoviesAndShowsService {
     tmdbApiService = inject(TmdbApiService)
 
-    ListOfCountriesIWant_iso_639_1: string[] = ['00', 'US', 'KR', 'JP', 'CN', 'IT', 'GB', 'CA', 'AU']
+    ListOfCountriesIWant_iso_639_1: string[] = ['00', 'US', 'KR']
 
     customAllCountries: Country = {
         iso_3166_1: '00',
-        english_name: 'All Countries',
-        native_name: 'All Countries'
+        english_name: '-- All Countries --',
+        native_name: '-- All Countries --'
     }
 
     customAllGenres: Genre = {
         id: 0,
-        name: 'All Genres'
+        name: '-- All Genres --'
     }
 
     isLoadingMoviePages = signal<boolean>(false)
@@ -151,7 +151,12 @@ export class MoviesAndShowsService {
     }
 
     getFullPosterUrl(posterPath: string, posterSize: string = this.tmdbConfiguration()?.images.poster_sizes.find((size) => size === 'original')!): string {
-        const fullUrl = this.tmdbConfiguration()?.images.secure_base_url + posterSize + posterPath
+        let fullUrl = this.tmdbConfiguration()?.images.secure_base_url + posterSize + posterPath
+
+        if (posterPath === null || posterPath === undefined) {
+            fullUrl = '/no_image.png'
+        }
+        
         return fullUrl
     }
 
@@ -286,7 +291,7 @@ export class MoviesAndShowsService {
                 this.countries.update(() => [...this.countries(), ...getCountriesResponse])
                 
                 // reduce list of countries to a few selected countries
-                this.countries.set(this.countries().filter((country) => this.ListOfCountriesIWant_iso_639_1.includes(country.iso_3166_1)))
+                // this.countries.set(this.countries().filter((country) => this.ListOfCountriesIWant_iso_639_1.includes(country.iso_3166_1)))
 
                 // order list of countries by name
                 this.countries.update((country) => country.sort((a, b) => a.english_name.localeCompare(b.english_name)))
@@ -298,9 +303,9 @@ export class MoviesAndShowsService {
                 this.tvGenres.update(() => [...this.tvGenres(), ...getTVGenresResponse.genres])
 
 
-                // Set default country filter to United States
-                this.discoverMovieModel.update((model) => ({...model, with_origin_country: this.getCountry('US')}))
-                this.discoverTVModel.update((model) => ({...model, with_origin_country: this.getCountry('US')}))
+                // Set default country filter to All Countries
+                this.discoverMovieModel.update((model) => ({...model, with_origin_country: this.getCountry('00')}))
+                this.discoverTVModel.update((model) => ({...model, with_origin_country: this.getCountry('00')}))
             },
             error: (err) => {
                 console.error(err)
@@ -382,8 +387,6 @@ export class MoviesAndShowsService {
     }
 
     searchMultiFresh() {
-        // this.updateQueryMode(QueryMode.Search)
-        // this.updateSearchMode(SearchMode.Populated)
         this.clearAllLoadedPages()
         this.searchNextMultiPage()
     }
