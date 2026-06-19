@@ -460,7 +460,7 @@
       "image": "/recipes/images/chicken_juk.png",
       "ingredients": [
         {
-          "item": "cooked rice (about the size of 2 fists put together)",
+          "item": "cooked rice",
           "amount": 4,
           "unit": "Cups"
         },
