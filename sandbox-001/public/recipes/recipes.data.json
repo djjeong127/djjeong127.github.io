@@ -376,7 +376,7 @@
       "name": "고추장 돼지불고기",
       "description": "Spicy pork bulgogi. Wrap it up in lettuce with some rice and ssamjang/쌈장",
       "author": "me",
-      "image": "/recipes/images/spicy-pork-bulgogi.png",
+      "image": "/recipes/images/spicy_pork_bulgogi.png",
       "ingredients": [
         {
           "item": "pork shoulder (1/8 inch thick slices)",
@@ -449,6 +449,81 @@
         {
           "step": 5,
           "text": "Remove the lid, add the sliced onions, and finish cooking"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "닭죽",
+      "description": "Chicken juk. Very soft and has nice chunks of geometric protein. Be prepared to eat a lot of this.",
+      "author": "me",
+      "image": "/recipes/images/chicken_juk.png",
+      "ingredients": [
+        {
+          "item": "cooked rice (about the size of 2 fists put together)",
+          "amount": 4,
+          "unit": "Cups"
+        },
+        {
+          "item": "chicken breast (cubed roughly 1/2 inch thick)",
+          "amount": 4,
+          "unit": "Pound"
+        },
+        {
+          "item": "carrots (cubed roughly 1/2 thick)",
+          "amount": 1,
+          "unit": "Pound"
+        },
+        {
+          "item": "frozen peas",
+          "amount": 0.5,
+          "unit": "Cup"
+        },
+        {
+          "item": "minced ginger",
+          "amount": 0.5,
+          "unit": "Teaspoon"
+        },
+        {
+          "item": "minced garlic",
+          "amount": 3,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "soy sauce",
+          "amount": 0.25,
+          "unit": "Cup"
+        },
+        {
+          "item": "salt",
+          "amount": 1,
+          "unit": "Teaspoon"
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Cube the chicken and marinate with salt and soy sauce (1-2 hours)"
+        },
+        {
+          "step": 2,
+          "text": "In a large pot (5.5 quarts) bring some water to a boil (just enough to cover the chicken)"
+        },
+        {
+          "step": 3,
+          "text": "Put the chicken into the boiling pot and immediately turn down the heat. Put a lid on the pot and simmer for 30 minutes."
+        },
+        {
+          "step": 4,
+          "text": "Put in the carrots, peas, and cooked rice. Make sure to break up the clumps of rice in the pot."
+        },
+        {
+          "step": 5,
+          "text": "Put the lid back on and simmer for 1+ hour (stir occasionally)"
+        },
+        {
+          "step": 6,
+          "text": "Add more salt or soy sauce if needed. Melt some slices of American cheese in a bowl of juk too."
         }
       ]
     }
