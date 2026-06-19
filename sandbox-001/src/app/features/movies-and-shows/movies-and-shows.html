@@ -2,7 +2,7 @@
     <div class="movies-and-shows-header" [class.scroll-down]="scrollDown()" [class.relative]="relative()">
         <div class="mode">
             <div class="query-mode">
-                <mat-button-toggle-group (change)="triggerDiscoverSubmit()" [formField]="moviesAndShowsService.queryModeForm.queryMode" hideSingleSelectionIndicator="true">
+                <mat-button-toggle-group (change)="onDiscoverSubmit()" [formField]="moviesAndShowsService.queryModeForm.queryMode" hideSingleSelectionIndicator="true">
                     <mat-button-toggle [value]="queryMode.Search">Search</mat-button-toggle>
                     <mat-button-toggle [value]="queryMode.Discover">Discover</mat-button-toggle>
                 </mat-button-toggle-group>
@@ -10,7 +10,7 @@
 
             <div class="search-discover-mode">
                 @if (moviesAndShowsService.queryModeModel().queryMode === queryMode.Search) {
-                    <form class="search-mode" (submit)="onSearchSubmit($event)">
+                    <form class="search-mode" (submit)="onSearchSubmitForm($event)">
                         <mat-form-field subscriptSizing="dynamic">
                             <input placeholder="Search" matInput [formField]="moviesAndShowsService.searchForm.searchMedia">
                             <button matSuffix matIconButton type="submit">
@@ -19,7 +19,7 @@
                         </mat-form-field>
 
 
-                        <mat-button-toggle-group [formField]="moviesAndShowsService.searchForm.multiFilter" hideSingleSelectionIndicator="true">
+                        <mat-button-toggle-group (change)="onSearchSubmit()" [formField]="moviesAndShowsService.searchForm.multiFilter" hideSingleSelectionIndicator="true">
                             <mat-button-toggle [value]="multiFilterMovie">Movie</mat-button-toggle>
                             <mat-button-toggle [value]="multiFilterMovieAndTV">Movie & TV</mat-button-toggle>
                             <mat-button-toggle [value]="multiFilterTV">TV</mat-button-toggle>
@@ -29,7 +29,7 @@
                 @else {
                     <div class="discover-mode">
 
-                        <mat-button-toggle-group class="discover-media-type" (change)="triggerDiscoverSubmit()" [formField]="moviesAndShowsService.queryModeForm.discoverMode" hideSingleSelectionIndicator="true">
+                        <mat-button-toggle-group class="discover-media-type" (change)="onDiscoverSubmit()" [formField]="moviesAndShowsService.queryModeForm.discoverMode" hideSingleSelectionIndicator="true">
                             <mat-button-toggle [value]="mediaType.Movie">Movie</mat-button-toggle>
                             <mat-button-toggle [value]="mediaType.TV">TV</mat-button-toggle>
                         </mat-button-toggle-group>

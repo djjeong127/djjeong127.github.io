@@ -156,18 +156,13 @@ export class MoviesAndShows {
     observer.observe(this.bottomSentinel.nativeElement);
   }
 
-  onModeSubmit(event: Event) {
+  onSearchSubmitForm(event: Event) {
+    event.preventDefault()
 
-    if (this.moviesAndShowsService.queryModeModel().queryMode === this.queryMode.Search) {
-      this.onSearchSubmit(event)
-    }
-    else {
-      this.triggerDiscoverSubmit()
-    }
+    this.onSearchSubmit()
   }
 
-  onSearchSubmit(event: Event) {
-    event.preventDefault();
+  onSearchSubmit() {
 
     if (this.moviesAndShowsService.searchModel().searchMedia === '') {
       this.moviesAndShowsService.updateSearchMode(this.searchMode.Unpopulated)
@@ -178,13 +173,7 @@ export class MoviesAndShows {
     this.moviesAndShowsService.loadPageFresh()
   }
 
-  onDiscoverSubmit(event: Event) {
-    event.preventDefault();
-    this.moviesAndShowsService.loadPageFresh()
-
-  }
-
-  triggerDiscoverSubmit() {
+  onDiscoverSubmit() {
     this.moviesAndShowsService.loadPageFresh()
   }
 
@@ -196,7 +185,7 @@ export class MoviesAndShows {
       this.moviesAndShowsService.discoverMovieModel.update((movieModel) => ({...movieModel, with_origin_country: this.moviesAndShowsService.discoverTVModel().with_origin_country}))
     }
     
-    this.triggerDiscoverSubmit()
+    this.onDiscoverSubmit()
   }
 
   triggerDiscoverSubmitSyncGenreIfPossible() {
@@ -211,7 +200,7 @@ export class MoviesAndShows {
       }
     }
 
-    this.triggerDiscoverSubmit()
+    this.onDiscoverSubmit()
   }
 
   genreOverlaps(with_genre: Genre | null): boolean {
@@ -236,6 +225,6 @@ export class MoviesAndShows {
 
     return (movieGenreExists && tvGenreExists)
   }
-
+  
 }
 
