@@ -57,42 +57,36 @@ export class TmdbApiService {
     }
 
     discoverMovie(params: DiscoverMovieParams): Observable<DiscoverMovieResponse> {
-        let withGenres: string = ''
-        if (params.with_genres.length > 0) {
-            params.with_genres?.forEach((genre) => withGenres += genre.id + ',')
-        }
 
-        let withoutGenres: string = ''
-        if (params.without_genres.length > 0) {
-            params.without_genres?.forEach((genre) => withoutGenres += genre.id + ',')
-        }
-
-        const movieParams = this.params
+        let movieParams = this.params
             .set('page', params.page)
             .set('sort_by', `${params.sort_by.field}.${params.sort_by.direction}`)
-            .set('with_genres', withGenres.slice(0, -1))
-            .set('with_origin_country', params.with_origin_country.iso_3166_1)
-            .set('without_genres', withoutGenres.slice(0, -1))
+        
+        if (params.with_origin_country.iso_3166_1 !== '00')  {
+            movieParams = movieParams.set('with_origin_country', params.with_origin_country.iso_3166_1)
+        }
+
+        if (params.with_genre.id !== 0)  {
+            movieParams = movieParams.set('with_genres', params.with_genre.id)
+        }
 
         return this.http.get<DiscoverMovieResponse>(this.discoverMovieUrl, {headers: this.header, params: movieParams})
     }
 
     discoverTV(params: DiscoverTVParams): Observable<DiscoverTVResponse> {
-        let withGenres: string = ''
-        if (params.with_genres.length > 0) {
-            params.with_genres?.forEach((genre) => withGenres += genre.id + ',')
-        }
 
-        let withoutGenres: string = ''
-        if (params.without_genres.length > 0) {
-            params.without_genres?.forEach((genre) => withoutGenres += genre.id + ',')
-        }
-        const tvParams = this.params
+        let tvParams = this.params
             .set('page', params.page)
             .set('sort_by', `${params.sort_by.field}.${params.sort_by.direction}`)
-            .set('with_genres', withGenres.slice(0, -1))
-            .set('with_origin_country', params.with_origin_country.iso_3166_1)
-            .set('without_genres', withoutGenres.slice(0, -1))
+        
+        if (params.with_origin_country.iso_3166_1 !== '00')  {
+            tvParams = tvParams.set('with_origin_country', params.with_origin_country.iso_3166_1)
+        }
+
+        if (params.with_genre.id !== 0)  {
+            tvParams = tvParams.set('with_genres', params.with_genre.id)
+        }
+        
         return this.http.get<DiscoverTVResponse>(this.discoverTVUrl, {headers: this.header, params: tvParams})
     }
 

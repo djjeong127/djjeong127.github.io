@@ -1,6 +1,66 @@
-.movies-and-shows {
+.movies-and-shows-feature {
+    display: grid;
 
 }
+
+.movies-and-shows-header {
+    display: grid;
+    gap: 1em;
+    padding: 0.5em;
+    background-color: var(--mat-sys-inverse-on-surface)
+    
+}
+
+.query-mode {
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+
+    mat-button-toggle-group {
+
+        mat-button-toggle {
+            width: 45vw;
+        }
+    }
+}
+
+.search-discover-mode {
+
+    .search-mode {
+        display: grid;
+        justify-content: center;
+        justify-items: center;
+
+        mat-form-field {
+            width: 80vw;
+        }
+
+        mat-button-toggle-group {
+            // width: 50%;
+            mat-button-toggle {
+                text-justify: center;
+                width: 20vw;
+                overflow: hidden;
+            }
+        }
+
+    }
+    .discover-mode {
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 .media-cards {
     display: grid;

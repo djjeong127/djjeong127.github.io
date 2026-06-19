@@ -4,8 +4,8 @@ import { DiscoverMovieParams, DiscoverMovieResponse, DiscoverMovieResult } from 
 import { DiscoverTVParams, DiscoverTVResponse, DiscoverTVResult } from '../models/tv.model';
 
 import { form } from '@angular/forms/signals';
-import { Country, Genre, DiscoverSortDirection, DiscoverSortField, CombinedMediaResult, MediaType, TmdbConfiguration, QueryMode, SearchMode, SearchModel } from '../models/movie-tv.model';
-import { forkJoin } from 'rxjs';
+import { Country, Genre, DiscoverSortDirection, DiscoverSortField, CombinedMediaResult, MediaType, TmdbConfiguration, QueryMode, SearchMode, SearchModel, QueryModeModel } from '../models/movie-tv.model';
+import { count, forkJoin } from 'rxjs';
 import { SearchMultiResponse, SearchMultiResult, TimeWindow, TrendingMultiResponse, TrendingMultiResult } from '../models/multi.model';
 
 
@@ -14,14 +14,36 @@ import { SearchMultiResponse, SearchMultiResult, TimeWindow, TrendingMultiRespon
 export class MoviesAndShowsService {
     tmdbApiService = inject(TmdbApiService)
 
+    ListOfCountriesIWant_iso_639_1: string[] = ['00', 'US', 'KR', 'JP', 'CN', 'IT', 'GB', 'CA', 'AU']
+
+    customAllCountries: Country = {
+        iso_3166_1: '00',
+        english_name: 'All Countries',
+        native_name: 'All Countries'
+    }
+
+    customAllGenres: Genre = {
+        id: 0,
+        name: 'All Genres'
+    }
+
     isLoadingMoviePages = signal<boolean>(false)
     isLoadingTVPages = signal<boolean>(false)
     isLoadingSearchMultiPages = signal<boolean>(false)
     isLoadingTrendingMultiPages = signal<boolean>(false)
 
-    queryMode = signal<QueryMode>(QueryMode.Search)
-    searchMode = signal<SearchMode>(SearchMode.Unpopulated)
-    discoverMode = signal<MediaType>(MediaType.Movie)
+    tmdbConfiguration = signal<TmdbConfiguration | undefined>(undefined)
+    countries = signal<Country[]>([])
+    movieGenres = signal<Genre[]>([])
+    tvGenres = signal<Genre[]>([])
+
+    queryModeModel = signal<QueryModeModel>({
+        queryMode: QueryMode.Search,
+        searchMode: SearchMode.Unpopulated,
+        discoverMode: MediaType.Movie
+    })
+
+    queryModeForm = form(this.queryModeModel)
 
     loadedMoviePages = signal<DiscoverMovieResponse[]>([])
     loadedTVPages = signal<DiscoverTVResponse[]>([])
@@ -92,10 +114,6 @@ export class MoviesAndShowsService {
     })
     searchForm = form(this.searchModel)
 
-    tmdbConfiguration = signal<TmdbConfiguration | undefined>(undefined)
-    countries = signal<Country[]>([])
-    movieGenres = signal<Genre[]>([])
-    tvGenres = signal<Genre[]>([])
 
     discoverMovieModel = signal<DiscoverMovieParams>({
         page: this.nextMoviePageNumber(),
@@ -103,9 +121,8 @@ export class MoviesAndShowsService {
             field: DiscoverSortField.Popularity,
             direction: DiscoverSortDirection.Desc
         },
-        with_genres: [],
-        with_origin_country: this.getCountry('US'),
-        without_genres: []
+        with_genre: this.customAllGenres,
+        with_origin_country: this.customAllCountries,
     })
 
     discoverMovieForm = form(this.discoverMovieModel)
@@ -116,9 +133,8 @@ export class MoviesAndShowsService {
             field: DiscoverSortField.Popularity,
             direction: DiscoverSortDirection.Desc
         },
-        with_genres: [],
-        with_origin_country: this.getCountry('US'),
-        without_genres: []
+        with_genre: this.customAllGenres,
+        with_origin_country: this.customAllCountries,
     })
 
     discoverTVForm = form(this.discoverTVModel)
@@ -129,21 +145,30 @@ export class MoviesAndShowsService {
         this.getMetaData()
     }
 
-    updateQueryMode(queryMode: QueryMode) {
-        this.queryMode.set(queryMode)
-    }
 
-    updateSearchMode(searchMode: SearchMode) {
-        this.searchMode.set(searchMode)
-    }
-
-    updateDiscoverMode(mediaType: MediaType) {
-        this.discoverMode.set(mediaType)
+    updateSearchMode(newSearchMode: SearchMode) {
+        this.queryModeModel.update((mode) => ({...mode, searchMode: newSearchMode}))
     }
 
     getFullPosterUrl(posterPath: string, posterSize: string = this.tmdbConfiguration()?.images.poster_sizes.find((size) => size === 'original')!): string {
         const fullUrl = this.tmdbConfiguration()?.images.secure_base_url + posterSize + posterPath
         return fullUrl
+    }
+
+    getMovieGenreFromId(genreId: number): Genre {
+        return this.movieGenres().find((genre) => genre.id === genreId)!
+    }
+
+    getTVGenreFromId(genreId: number): Genre {
+        return this.tvGenres().find((genre) => genre.id === genreId)!
+    }
+
+    getMovieGenreFromName(genreName: string): Genre {
+        return this.movieGenres().find((genre) => genre.name === genreName)!
+    }
+
+    getTVGenreFromName(genreName: string): Genre {
+        return this.tvGenres().find((genre) => genre.name === genreName)!
     }
 
     getMovieGenreName(genreId: number): string {
@@ -170,6 +195,7 @@ export class MoviesAndShowsService {
 
     convertMovieResultToCombinedResult(movieResult: DiscoverMovieResult): CombinedMediaResult {
         const newCombinedResult: CombinedMediaResult = {
+            adult: movieResult.adult,
             media_type: MediaType.Movie,
             backdrop_path: movieResult.backdrop_path,
             genre_ids: movieResult.genre_ids.map(Number),
@@ -189,6 +215,7 @@ export class MoviesAndShowsService {
 
     convertTVResultToCombinedResult(TVResult: DiscoverTVResult): CombinedMediaResult {
         const newCombinedResult: CombinedMediaResult = {
+            adult: false,
             media_type: MediaType.TV,
             backdrop_path: TVResult.backdrop_path,
             genre_ids: TVResult.genre_ids.map(Number),
@@ -208,6 +235,7 @@ export class MoviesAndShowsService {
 
     convertSearchMultiResultToCombinedResult(searchMultiResult: SearchMultiResult): CombinedMediaResult {
         const newCombinedResult: CombinedMediaResult = {
+            adult: searchMultiResult.adult,
             media_type: this.getMediaTypeEnum(searchMultiResult.media_type),
             backdrop_path: searchMultiResult.backdrop_path,
             genre_ids: searchMultiResult.genre_ids,
@@ -227,6 +255,7 @@ export class MoviesAndShowsService {
 
     convertTrendingMultiResultToCombinedResult(trendingMultiResult: TrendingMultiResult): CombinedMediaResult {
         const newCombinedResult: CombinedMediaResult = {
+            adult: trendingMultiResult.adult,
             media_type: this.getMediaTypeEnum(trendingMultiResult.media_type),
             backdrop_path: trendingMultiResult.backdrop_path,
             genre_ids: trendingMultiResult.genre_ids,
@@ -252,32 +281,26 @@ export class MoviesAndShowsService {
         forkJoin([this.tmdbApiService.getConfiguration(), this.tmdbApiService.getCountries(), this.tmdbApiService.getMovieGenres(), this.tmdbApiService.getTVGenres()]).subscribe({
             next: ([getConfigurationResponse, getCountriesResponse, getMovieGenresResponse, getTVGenresResponse]) => {
                 this.tmdbConfiguration.set(getConfigurationResponse)
-                this.countries.set(getCountriesResponse)
-                this.movieGenres.set(getMovieGenresResponse.genres)
-                this.tvGenres.set(getTVGenresResponse.genres)
+                
+                this.countries.update(() => [...this.countries(), this.customAllCountries])
+                this.countries.update(() => [...this.countries(), ...getCountriesResponse])
+                
+                // reduce list of countries to a few selected countries
+                this.countries.set(this.countries().filter((country) => this.ListOfCountriesIWant_iso_639_1.includes(country.iso_3166_1)))
 
-                // And also set the Discover Origin Country
-                this.discoverMovieModel.set({
-                    page: this.nextMoviePageNumber(),
-                    sort_by: {
-                        field: DiscoverSortField.Popularity,
-                        direction: DiscoverSortDirection.Desc
-                    },
-                    with_genres: [],
-                    with_origin_country: this.getCountry('US'),
-                    without_genres: []
-                })
+                // order list of countries by name
+                this.countries.update((country) => country.sort((a, b) => a.english_name.localeCompare(b.english_name)))
 
-                this.discoverTVModel.set({
-                    page: this.nextTVPageNumber(),
-                    sort_by: {
-                        field: DiscoverSortField.Popularity,
-                        direction: DiscoverSortDirection.Desc
-                    },
-                    with_genres: [],
-                    with_origin_country: this.getCountry('US'),
-                    without_genres: []
-                })
+                this.movieGenres.update(() => [...this.movieGenres(), this.customAllGenres])
+                this.movieGenres.update(() => [...this.movieGenres(), ...getMovieGenresResponse.genres])
+
+                this.tvGenres.update(() => [...this.tvGenres(), this.customAllGenres])
+                this.tvGenres.update(() => [...this.tvGenres(), ...getTVGenresResponse.genres])
+
+
+                // Set default country filter to United States
+                this.discoverMovieModel.update((model) => ({...model, with_origin_country: this.getCountry('US')}))
+                this.discoverTVModel.update((model) => ({...model, with_origin_country: this.getCountry('US')}))
             },
             error: (err) => {
                 console.error(err)
@@ -359,8 +382,8 @@ export class MoviesAndShowsService {
     }
 
     searchMultiFresh() {
-        this.updateQueryMode(QueryMode.Search)
-        this.updateSearchMode(SearchMode.Populated)
+        // this.updateQueryMode(QueryMode.Search)
+        // this.updateSearchMode(SearchMode.Populated)
         this.clearAllLoadedPages()
         this.searchNextMultiPage()
     }
@@ -387,8 +410,6 @@ export class MoviesAndShowsService {
     }
 
     trendingMultiFresh() {
-        this.updateQueryMode(QueryMode.Search)
-        this.updateSearchMode(SearchMode.Unpopulated)
         this.clearAllLoadedPages()
         this.trendingNextMultiPage()
     }
@@ -415,8 +436,6 @@ export class MoviesAndShowsService {
     }
 
     discoverMovieFresh() {
-        this.updateQueryMode(QueryMode.Discover)
-        this.updateDiscoverMode(MediaType.Movie)
         this.clearAllLoadedPages()
         this.discoverNextMoviePage()
     }
@@ -443,67 +462,65 @@ export class MoviesAndShowsService {
     }
 
     discoverTVFresh() {
-        this.updateQueryMode(QueryMode.Discover)
-        this.updateDiscoverMode(MediaType.TV)
         this.clearAllLoadedPages()
         this.discoverNextTVPage()
     }
 
     loadPageFresh() {
-        if(this.queryMode() === QueryMode.Discover) {
-            if (this.discoverMode() === MediaType.Movie) {
+        if(this.queryModeModel().queryMode === QueryMode.Discover) {
+            if (this.queryModeModel().discoverMode === MediaType.Movie) {
                 this.discoverMovieFresh()
             }
-            else if (this.discoverMode() === MediaType.TV) {
+            else if (this.queryModeModel().discoverMode === MediaType.TV) {
                 this.discoverTVFresh()
             }
         }
-        else if (this.queryMode() === QueryMode.Search) {
-            if (this.searchMode() === SearchMode.Populated) {
+        else if (this.queryModeModel().queryMode === QueryMode.Search) {
+            if (this.queryModeModel().searchMode === SearchMode.Populated) {
                 this.searchMultiFresh()
             }
-            else if (this.searchMode() === SearchMode.Unpopulated) {
+            else if (this.queryModeModel().searchMode === SearchMode.Unpopulated) {
                 this.trendingMultiFresh()
             }
         }
     }
 
     loadNextPage() {
-        if(this.queryMode() === QueryMode.Discover) {
-            if (this.discoverMode() === MediaType.Movie) {
+        if(this.queryModeModel().queryMode === QueryMode.Discover) {
+            if (this.queryModeModel().discoverMode === MediaType.Movie) {
                 this.discoverNextMoviePage()
             }
-            else if (this.discoverMode() === MediaType.TV) {
+            else if (this.queryModeModel().discoverMode === MediaType.TV) {
                 this.discoverNextTVPage()
             }
         }
-        else if (this.queryMode() === QueryMode.Search) {
-            if (this.searchMode() === SearchMode.Populated) {
+        else if (this.queryModeModel().queryMode === QueryMode.Search) {
+            if (this.queryModeModel().searchMode === SearchMode.Populated) {
                 this.searchNextMultiPage()
             }
-            else if (this.searchMode() === SearchMode.Unpopulated) {
+            else if (this.queryModeModel().searchMode === SearchMode.Unpopulated) {
                 this.trendingNextMultiPage()
             }
         }
     }
 
     existsMorePages(): boolean {
-        if(this.queryMode() === QueryMode.Discover) {
-            if (this.discoverMode() === MediaType.Movie) {
+        if(this.queryModeModel().queryMode === QueryMode.Discover) {
+            if (this.queryModeModel().discoverMode === MediaType.Movie) {
                 const lastMoviePage: DiscoverMovieResponse | undefined = this.loadedMoviePages().at(-1)
                 return lastMoviePage?.page !== lastMoviePage?.total_pages
             }
-            else if (this.discoverMode() === MediaType.TV) {
+            else if (this.queryModeModel().discoverMode === MediaType.TV) {
                 const lastTVPage: DiscoverTVResponse | undefined = this.loadedTVPages().at(-1)
                 return lastTVPage?.page !== lastTVPage?.total_pages
             }
         }
-        else if (this.queryMode() === QueryMode.Search) {
-            if (this.searchMode() === SearchMode.Populated) {
+        else if (this.queryModeModel().queryMode === QueryMode.Search) {
+            if (this.queryModeModel().searchMode === SearchMode.Populated) {
                 const lastMultiPage: SearchMultiResponse | undefined = this.loadedSearchMultiPages().at(-1)
                 return lastMultiPage?.page !== lastMultiPage?.total_pages
             }
-            else if (this.searchMode() === SearchMode.Unpopulated) {
+            else if (this.queryModeModel().searchMode === SearchMode.Unpopulated) {
                 const lastMultiPage: TrendingMultiResponse | undefined = this.loadedTrendingMultiPages().at(-1)
                 return lastMultiPage?.page !== lastMultiPage?.total_pages
             }

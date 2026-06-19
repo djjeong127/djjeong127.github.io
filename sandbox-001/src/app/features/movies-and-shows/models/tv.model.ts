@@ -32,7 +32,6 @@ export interface DiscoverTVSortBy {
 export interface DiscoverTVParams {
     page: number;
     sort_by: DiscoverTVSortBy;
-    with_genres: Genre[];
+    with_genre: Genre;
     with_origin_country: Country;
-    without_genres: Genre[];
 }

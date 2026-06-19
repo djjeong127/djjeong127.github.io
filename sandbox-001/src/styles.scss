@@ -29,6 +29,12 @@ html {
     elevated-container-color: var(--mat-sys-secondary-container),
   ));
 
+  @include mat.button-toggle-overrides((
+    selected-state-background-color: var(--mat-sys-primary),
+    selected-state-text-color: var(--mat-sys-on-primary),
+    shape: var(--mat-sys-corner-small),
+  ));
+
 }
 
 // Compile and apply the mountain Stylesheet via a class modifier

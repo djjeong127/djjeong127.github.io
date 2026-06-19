@@ -52,6 +52,7 @@ export enum MediaType {
 }
 
 export interface CombinedMediaResult {
+    adult: boolean;
     media_type: MediaType
     backdrop_path: string;
     genre_ids: number[];
@@ -80,4 +81,10 @@ export enum QueryMode {
 export enum SearchMode {
     'Populated' = 'populated',
     'Unpopulated' = 'unpopulated'
+}
+
+export interface QueryModeModel {
+    queryMode: QueryMode;
+    searchMode: SearchMode;
+    discoverMode: MediaType;
 }

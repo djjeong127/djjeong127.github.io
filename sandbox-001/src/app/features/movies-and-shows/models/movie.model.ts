@@ -84,7 +84,6 @@ export interface DiscoverMovieSortBy {
 export interface DiscoverMovieParams {
     page: number;
     sort_by: DiscoverMovieSortBy;
-    with_genres: Genre[];
+    with_genre: Genre;
     with_origin_country: Country;
-    without_genres: Genre[];
 }
