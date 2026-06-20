@@ -20,9 +20,9 @@
 
 
                         <mat-button-toggle-group (change)="onSearchSubmit()" [formField]="moviesAndShowsService.searchForm.multiFilter" hideSingleSelectionIndicator="true">
-                            <mat-button-toggle [value]="multiFilterMovie">Movie</mat-button-toggle>
-                            <mat-button-toggle [value]="multiFilterMovieAndTV">Movie & TV</mat-button-toggle>
-                            <mat-button-toggle [value]="multiFilterTV">TV</mat-button-toggle>
+                            <mat-button-toggle [value]="multiFilter.Movie">Movie</mat-button-toggle>
+                            <mat-button-toggle [value]="multiFilter.MovieAndTV">Movie & TV</mat-button-toggle>
+                            <mat-button-toggle [value]="multiFilter.TV">TV</mat-button-toggle>
                         </mat-button-toggle-group>
                     </form>
                 }
@@ -89,7 +89,7 @@
     <div class="media-cards">
         @for (result of moviesAndShowsService.combinedLoadedMediaResults(); track (result.media_type + '_' + result.id)) {
             <div class="media-card" matRipple>
-                <mat-card [routerLink]="['/movies-and-shows', result.media_type, result.id]" [matTooltip]="result.title_name" matTooltipTouchGestures="off">
+                <mat-card [routerLink]="['/movies-and-shows', result.media_type, result.id]" [queryParams]="setQueryParams(result)" [matTooltip]="result.title_name" matTooltipTouchGestures="off">
                     <img class="recipe-image" matCardImage [src]="result.poster_path">
                     <mat-card-content>
                         <h3>{{ result.title_name ? result.title_name : result.original_title_name }}</h3>

@@ -5,8 +5,7 @@ import { TmdbApiService } from './services/tmdb-api-service';
 import { FormField } from '@angular/forms/signals';
 import { MatAnchor } from "@angular/material/button";
 import { ANGULAR_MATERIAL_MODULES } from '../../shared/modules/angular-material.module';
-import { Genre, MediaType, QueryMode, SearchMode } from './models/movie-tv.model';
-import { MultiFilter } from './models/multi.model';
+import { CombinedMediaResult, Genre, MediaType, MultiFilterEnum, QueryMode, SearchMode } from './models/movie-tv.model';
 import { DatePipe, UpperCasePipe, ViewportScroller } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
@@ -88,25 +87,15 @@ export class MoviesAndShows {
   // Enums
   queryMode = QueryMode;
   searchMode = SearchMode;
+  multiFilter = MultiFilterEnum;
   mediaType = MediaType;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   intersectionInterval: any = null;
 
-  multiFilterMovie: MultiFilter = {
-    movie: MediaType.Movie
-  }
-  multiFilterTV: MultiFilter = {
-    tv: MediaType.TV
-  }
-  multiFilterMovieAndTV: MultiFilter = {
-    movie: MediaType.Movie,
-    tv: MediaType.TV
-  }
 
 
   ngOnInit() {
-    this.multiFilterMovieAndTV = this.moviesAndShowsService.searchModel().multiFilter;
     this.moviesAndShowsService.loadPageFresh()
 
     // Update header size for header buffer
@@ -229,5 +218,13 @@ export class MoviesAndShows {
     this.scroller.scrollToPosition([0, 0]); // Coordinates: [X, Y]
   }
   
+  setQueryParams(media: CombinedMediaResult) {
+    if (media.media_type == MediaType.TV) {
+      return {season: 1, episode: 1}
+    }
+    else {
+      return null;
+    }
+  }
 }
 

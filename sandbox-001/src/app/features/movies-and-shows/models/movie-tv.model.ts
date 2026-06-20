@@ -1,5 +1,3 @@
-import { MultiFilter } from "./multi.model";
-
 export interface TmdbConfiguration {
     images: TmdbImage;
     change_keys: string[]
@@ -20,6 +18,19 @@ export interface Country {
     english_name: string;
     native_name: string;
 }
+
+export interface ProductionCompany {
+    id: number;
+    logo_path: string;
+    name: string;
+    origin_country: string;
+}
+
+export interface ProductionCountry {
+    iso_3166_1: string;
+    name: string;
+}
+
 
 export enum DiscoverSortDirection {
     'Asc' = 'asc',
@@ -70,7 +81,13 @@ export interface CombinedMediaResult {
 
 export interface SearchModel {
   searchMedia: string;
-  multiFilter: MultiFilter;
+  multiFilter: MultiFilterEnum;
+}
+
+export enum MultiFilterEnum {
+    Movie = 'movie',
+    TV = 'tv',
+    MovieAndTV = 'movie-and-tv'
 }
 
 export enum QueryMode {

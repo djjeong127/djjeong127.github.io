@@ -1,2 +1,17 @@
 <div>media type: {{media_type()}}</div>
 <div>id: {{id()}}</div>
+<div>season: {{season()}}</div>
+<div>episode: {{episode()}}</div>
+
+@if(media_type() === mediaTypeEnum.Movie) {
+<img height="200px" object-fit="cover" [src]="moviesAndShowsService.getFullImageUrl(selectedMovie()!.poster_path)">
+
+<img height="200px" object-fit="cover" auto [src]="moviesAndShowsService.getFullImageUrl(selectedMovie()!.backdrop_path)">
+
+}
+@else if (media_type() === mediaTypeEnum.TV) {
+    <img height="200px" object-fit="cover" [src]="moviesAndShowsService.getFullImageUrl(selectedTV()!.poster_path)">
+
+    <img height="200px" object-fit="cover" auto [src]="moviesAndShowsService.getFullImageUrl(selectedTV()!.backdrop_path)">
+
+}

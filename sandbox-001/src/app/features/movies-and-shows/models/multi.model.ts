@@ -28,12 +28,6 @@ export interface SearchMultiResult {
     vote_count: number;
 }
 
-export interface MultiFilter {
-    movie?: MediaType.Movie;
-    tv?: MediaType.TV;
-    person?: MediaType.Person;
-}
-
 export interface TrendingMultiResponse {
     page: number;
     results: TrendingMultiResult[];

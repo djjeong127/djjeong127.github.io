@@ -1,4 +1,4 @@
-import { Country, DiscoverSortDirection, DiscoverSortField, Genre, SpokenLanguage } from "./movie-tv.model";
+import { Country, DiscoverSortDirection, DiscoverSortField, Genre, ProductionCompany, ProductionCountry, SpokenLanguage } from "./movie-tv.model";
 
 
 
@@ -26,7 +26,7 @@ export interface DiscoverMovieResult {
     vote_count: number;
 }
 
-export interface GetMovieDetailResponse {
+export interface MovieDetailResponse {
     adult: boolean;
     backdrop_path: string;
     belongs_to_collection: Collection[];
@@ -61,19 +61,6 @@ export interface Collection {
     poster_path: string;
     backdrop_path: string;
 }
-
-export interface ProductionCompany {
-    id: number;
-    logo_path: string;
-    name: string;
-    origin_country: string;
-}
-
-export interface ProductionCountry {
-    iso_3166_1: string;
-    name: string;
-}
-
 
 
 export interface DiscoverMovieSortBy {

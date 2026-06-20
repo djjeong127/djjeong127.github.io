@@ -4,7 +4,7 @@ import { DiscoverMovieParams, DiscoverMovieResponse, DiscoverMovieResult } from 
 import { DiscoverTVParams, DiscoverTVResponse, DiscoverTVResult } from '../models/tv.model';
 
 import { form } from '@angular/forms/signals';
-import { Country, Genre, DiscoverSortDirection, DiscoverSortField, CombinedMediaResult, MediaType, TmdbConfiguration, QueryMode, SearchMode, SearchModel, QueryModeModel } from '../models/movie-tv.model';
+import { Country, Genre, DiscoverSortDirection, DiscoverSortField, CombinedMediaResult, MediaType, TmdbConfiguration, QueryMode, SearchMode, SearchModel, QueryModeModel, MultiFilterEnum } from '../models/movie-tv.model';
 import { count, forkJoin } from 'rxjs';
 import { SearchMultiResponse, SearchMultiResult, TimeWindow, TrendingMultiResponse, TrendingMultiResult } from '../models/multi.model';
 
@@ -80,7 +80,7 @@ export class MoviesAndShowsService {
             (page) => page.results.forEach(
                 (result) => {
                     const newCombinedResult = this.convertSearchMultiResultToCombinedResult(result)
-                    if (Object.values(this.searchModel().multiFilter).includes(newCombinedResult.media_type) && !combinedResults.some((result) => (result.media_type === newCombinedResult.media_type && result.id === newCombinedResult.id))) {
+                    if (!combinedResults.some((result) => (result.media_type === newCombinedResult.media_type && result.id === newCombinedResult.id))) {
                         combinedResults.push(newCombinedResult)
                     }
                 }
@@ -91,7 +91,7 @@ export class MoviesAndShowsService {
             (page) => page.results.forEach(
                 (result) => {
                     const newCombinedResult = this.convertTrendingMultiResultToCombinedResult(result)
-                    if (Object.values(this.searchModel().multiFilter).includes(newCombinedResult.media_type) && !combinedResults.some((result) => (result.media_type === newCombinedResult.media_type && result.id === newCombinedResult.id))) {
+                    if (!combinedResults.some((result) => (result.media_type === newCombinedResult.media_type && result.id === newCombinedResult.id))) {
                         combinedResults.push(newCombinedResult)
                     }
                 }
@@ -107,10 +107,7 @@ export class MoviesAndShowsService {
 
     searchModel = signal<SearchModel>({
         searchMedia: '',
-        multiFilter: {
-            movie: MediaType.Movie,
-            tv: MediaType.TV
-        }
+        multiFilter: MultiFilterEnum.MovieAndTV
     })
     searchForm = form(this.searchModel)
 
@@ -150,10 +147,10 @@ export class MoviesAndShowsService {
         this.queryModeModel.update((mode) => ({...mode, searchMode: newSearchMode}))
     }
 
-    getFullPosterUrl(posterPath: string, posterSize: string = this.tmdbConfiguration()?.images.poster_sizes.find((size) => size === 'original')!): string {
-        let fullUrl = this.tmdbConfiguration()?.images.secure_base_url + posterSize + posterPath
+    getFullImageUrl(imagePath: string, imageSize: string = 'original'): string {
+        let fullUrl = this.tmdbConfiguration()?.images.secure_base_url + imageSize + imagePath
 
-        if (posterPath === null || posterPath === undefined) {
+        if (imagePath === null || imagePath === undefined) {
             fullUrl = '/no_image.png'
         }
         
@@ -210,7 +207,7 @@ export class MoviesAndShowsService {
             original_title_name: movieResult.original_title,
             overview: movieResult.overview,
             popularity: movieResult.popularity,
-            poster_path: this.getFullPosterUrl(movieResult.poster_path),
+            poster_path: this.getFullImageUrl(movieResult.poster_path),
             title_name: movieResult.title,
             vote_average: movieResult.vote_average,
             vote_count: movieResult.vote_count
@@ -230,7 +227,7 @@ export class MoviesAndShowsService {
             original_title_name: TVResult.original_name,
             overview: TVResult.overview,
             popularity: TVResult.popularity,
-            poster_path: this.getFullPosterUrl(TVResult.poster_path),
+            poster_path: this.getFullImageUrl(TVResult.poster_path),
             title_name: TVResult.name,
             vote_average: TVResult.vote_average,
             vote_count: TVResult.vote_count
@@ -250,7 +247,7 @@ export class MoviesAndShowsService {
             original_title_name: searchMultiResult.original_title ? searchMultiResult.original_title : searchMultiResult.original_name,
             overview: searchMultiResult.overview,
             popularity: searchMultiResult.popularity,
-            poster_path: this.getFullPosterUrl(searchMultiResult.poster_path),
+            poster_path: this.getFullImageUrl(searchMultiResult.poster_path),
             title_name: searchMultiResult.title ? searchMultiResult.title : searchMultiResult.name,
             vote_average: searchMultiResult.vote_average,
             vote_count: searchMultiResult.vote_count
@@ -270,7 +267,7 @@ export class MoviesAndShowsService {
             original_title_name: trendingMultiResult.original_title ? trendingMultiResult.original_title : trendingMultiResult.original_name,
             overview: trendingMultiResult.overview,
             popularity: trendingMultiResult.popularity,
-            poster_path: this.getFullPosterUrl(trendingMultiResult.poster_path),
+            poster_path: this.getFullImageUrl(trendingMultiResult.poster_path),
             title_name: trendingMultiResult.title ? trendingMultiResult.title : trendingMultiResult.name,
             vote_average: trendingMultiResult.vote_average,
             vote_count: trendingMultiResult.vote_count
