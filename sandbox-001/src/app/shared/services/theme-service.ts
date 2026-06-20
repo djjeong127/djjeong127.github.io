@@ -105,12 +105,10 @@ export class ThemeService {
         // initialize FeatureModes in localstorage
         features.forEach((feature) => {
             if (localStorage.getItem(`${feature}-mode`)) {
-                console.log('exists')
                 const storedFeatureMode = JSON.parse(localStorage.getItem(`${feature}-mode`)!)
                 this.setFeatureMode(storedFeatureMode)
             }
             else {
-                console.log('does not exist')
                 this.setFeatureMode(this.listOfDefaultFeatureModes.find((featureMode) => featureMode.feature === feature)!)
             }
         })
