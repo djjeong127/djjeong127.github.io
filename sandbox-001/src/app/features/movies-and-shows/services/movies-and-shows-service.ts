@@ -80,7 +80,7 @@ export class MoviesAndShowsService {
             (page) => page.results.forEach(
                 (result) => {
                     const newCombinedResult = this.convertSearchMultiResultToCombinedResult(result)
-                    if (!combinedResults.some((result) => (result.media_type === newCombinedResult.media_type && result.id === newCombinedResult.id))) {
+                    if (this.multiFilterMatches(newCombinedResult) && !combinedResults.some((result) => (result.media_type === newCombinedResult.media_type && result.id === newCombinedResult.id))) {
                         combinedResults.push(newCombinedResult)
                     }
                 }
@@ -91,7 +91,7 @@ export class MoviesAndShowsService {
             (page) => page.results.forEach(
                 (result) => {
                     const newCombinedResult = this.convertTrendingMultiResultToCombinedResult(result)
-                    if (!combinedResults.some((result) => (result.media_type === newCombinedResult.media_type && result.id === newCombinedResult.id))) {
+                    if (this.multiFilterMatches(newCombinedResult) && !combinedResults.some((result) => (result.media_type === newCombinedResult.media_type && result.id === newCombinedResult.id))) {
                         combinedResults.push(newCombinedResult)
                     }
                 }
@@ -142,6 +142,19 @@ export class MoviesAndShowsService {
         this.getMetaData()
     }
 
+    
+    multiFilterMatches(combinedMediaResult: CombinedMediaResult): boolean {
+        if (this.searchModel().multiFilter === MultiFilterEnum.Movie && combinedMediaResult.media_type === MediaType.Movie) {
+            return true
+        }
+        else if (this.searchModel().multiFilter === MultiFilterEnum.MovieAndTV) {
+            return true
+        }
+        else if (this.searchModel().multiFilter === MultiFilterEnum.TV && combinedMediaResult.media_type === MediaType.TV) {
+            return true
+        }
+        return false
+    }
 
     updateSearchMode(newSearchMode: SearchMode) {
         this.queryModeModel.update((mode) => ({...mode, searchMode: newSearchMode}))
