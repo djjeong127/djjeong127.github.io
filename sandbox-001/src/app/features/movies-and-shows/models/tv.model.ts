@@ -39,7 +39,7 @@ export interface DiscoverTVParams {
 export interface TVSeriesDetailResponse {
     adult: boolean;
     backdrop_path: string;
-    creaded_by: Creator[];
+    created_by: Creator[];
     episode_run_time: number[];
     first_air_date: string;
     genres: Genre[];
@@ -118,7 +118,7 @@ export interface TVSeasonDetailResponse {
 
 export interface TVEpisodeDetailResponse {
     air_date: string;
-    episode: number;
+    episode_number: number;
     name: string;
     overview: string;
     id: number;

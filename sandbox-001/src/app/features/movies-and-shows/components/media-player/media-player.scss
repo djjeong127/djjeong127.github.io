@@ -1,0 +1,120 @@
+.media-player-feature {
+    display: grid;
+    padding:  0 1em;
+    color: var(--mat-sys-on-secondary-container);
+
+}
+
+.movie {
+    display: grid;
+    gap: 1em;
+    width: 80%;
+    justify-self: center;
+
+    .movie-title {
+        display: inherit;
+        justify-self: center;
+        align-self: center;
+    }
+
+    .movie-details {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: auto;
+        gap: inherit;
+        height: max-content;
+
+        .media-card {
+            max-width: 35vh;
+
+            mat-card {
+                
+
+                img {
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+        }
+
+        .movie-metadata {
+            
+            .overview {
+                padding-bottom: 1em;
+            }
+
+        }
+    }
+
+
+    .no-media-html {
+        position: relative;
+        display: inline-block;
+        justify-self: center;
+        max-height: 100%;
+        max-width: 80%;
+        aspect-ratio: 16/9;
+        border: 10px solid var(--mat-sys-inverse-primary) !important;
+        margin: 5em 0;
+
+
+        .no-video {
+            display: block;
+            justify-self: center;
+            max-height: 100%;
+            max-width: 100%;
+            aspect-ratio: 16/9;
+            // height: 100%;
+            object-fit: cover;
+            // border: 10px solid var(--mat-sys-inverse-primary) !important;
+        }
+        .blackout {
+            opacity: 0;
+        }
+
+        .overlay {
+            position: absolute;
+            display: flex;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            justify-content: center;
+            align-items: center;
+        }
+
+    }
+
+
+    // targets the iframe in the injected HTML
+    ::ng-deep iframe {
+        display: block !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        
+        max-height: 100% !important;
+        max-width: 80% !important;
+        aspect-ratio: 16/9 !important;
+        border: 10px solid var(--mat-sys-inverse-primary) !important;
+
+        margin: 5em 0;
+
+    }
+
+    @media (orientation: portrait) {
+        width: 100%;
+
+        .media-card {
+            display: none;
+        }
+    }
+
+    
+}
+
+// mat-spinner {
+//     justify-self: center;
+//     align-self: center;
+//     margin: 5em 0;
+// }

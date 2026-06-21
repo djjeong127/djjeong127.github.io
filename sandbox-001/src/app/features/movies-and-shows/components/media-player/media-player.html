@@ -1,17 +1,104 @@
-<div>media type: {{media_type()}}</div>
-<div>id: {{id()}}</div>
-<div>season: {{season()}}</div>
-<div>episode: {{episode()}}</div>
+<div class="media-player-feature">
+    <div>
+    @if(media_type() === mediaTypeEnum.Movie && selectedMovie()) {
+        @let movie = selectedMovie()!;
+        <div class="movie">
 
-@if(media_type() === mediaTypeEnum.Movie) {
-<img height="200px" object-fit="cover" [src]="moviesAndShowsService.getFullImageUrl(selectedMovie()!.poster_path)">
+            <div class="movie-title">
+                    <h1>{{ movie.title ? movie.title : movie.original_title }}</h1>
+            </div>
 
-<img height="200px" object-fit="cover" auto [src]="moviesAndShowsService.getFullImageUrl(selectedMovie()!.backdrop_path)">
+            <div class="movie-details">
 
-}
-@else if (media_type() === mediaTypeEnum.TV) {
-    <img height="200px" object-fit="cover" [src]="moviesAndShowsService.getFullImageUrl(selectedTV()!.poster_path)">
+                <div class="media-card">
+                    <mat-card matTooltipTouchGestures="off">
+                        <img matCardImage [src]="moviesAndShowsService.getFullImageUrl(movie.poster_path)">
+                    </mat-card>
+                </div>
 
-    <img height="200px" object-fit="cover" auto [src]="moviesAndShowsService.getFullImageUrl(selectedTV()!.backdrop_path)">
+                <div class="movie-metadata">
+                    <div class="overview">
+                        <div>{{movie.overview}}</div>
+                    </div>
+                    <div><b>Released:</b> {{movie.release_date | date}}</div>
+                    <div><b>Genres:</b> {{moviesAndShowsService.movieGenreNamesStringFromGenreList(movie.genres)}}</div>
+                    <div><b>Runtime:</b> {{minutesToHoursAndMinutes(movie.runtime)}}</div>
+                </div>
+            </div>
 
-}
+            
+
+            
+            @if (hasAttemptedGettingVidsrcMedia()) {
+                @if(hasGottenVidsrcMedia()) {
+                    <div class="media-html" [innerHTML]="cleanHtml()"></div>
+                }
+                @else {
+                    <div class="no-media-html">
+                        <img class="no-video" src="/no_video.png">
+                    </div>
+                }
+            }
+            @else {
+                <div class="no-media-html">
+                    <img class="no-video blackout" src="/no_video.png">
+                    <div class="overlay">
+                        <mat-spinner ></mat-spinner>
+                    </div>
+                </div>
+            }
+            
+            <!-- <iframe class="media-html" [srcdoc]="cleanHtml()"></iframe> -->
+        </div>
+
+    }
+    @else if (media_type() === mediaTypeEnum.TV && selectedTV() && selectedSeason() && selectedEpisode()) {
+        @let tv = selectedTV()!;
+        @let season = selectedSeason()!;
+        @let episode = selectedEpisode()!;
+
+        <div>{{tv.name}}</div>
+        <div>{{tv.overview}}</div>
+        <div>Status: {{tv.status}}</div>
+        <div>Released: {{tv.first_air_date | date}}</div>
+        <div>{{moviesAndShowsService.TVGenreNamesStringFromGenreList(tv.genres)}}</div>
+        @for (s of tv.seasons; track s.id) {
+            <div>{{s.name}} | season number: {{s.season_number}} |episodes: {{s.episode_count}}</div>
+
+        }
+
+        <br>
+
+
+        <div>{{season.name}} | season number: {{season.season_number}}</div>
+        <div>Air Date: {{season.air_date | date}}</div>
+        <div>{{season.overview}}</div>
+        @for (e of season.episodes; track e.id) {
+            <div>{{e.name}} | episode number: {{e.episode_number}}</div>
+        }
+
+        <br>
+
+        <div>{{episode.name}} | episode number: {{episode.episode_number}}</div>
+        <div>Air Date: {{episode.air_date}}</div>
+        <div>{{episode.overview}}</div>
+        <div>Runtime: {{minutesToHoursAndMinutes(episode.runtime)}}</div>
+
+        <div class="player-container">
+            <div class="media-html" [innerHTML]="cleanHtml()"></div>
+        </div>
+
+    }
+    @else {
+        @if (hasAttemptedGettingVidsrcMedia()) {
+            <div>Could not find media!</div>
+            <img src="/no_video.png">
+        }
+
+    }
+    </div>
+    <div>
+
+    </div>
+
+</div>

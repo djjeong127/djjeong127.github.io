@@ -90,7 +90,7 @@
         @for (result of moviesAndShowsService.combinedLoadedMediaResults(); track (result.media_type + '_' + result.id)) {
             <div class="media-card" matRipple>
                 <mat-card [routerLink]="['/movies-and-shows', result.media_type, result.id]" [queryParams]="setQueryParams(result)" [matTooltip]="result.title_name" matTooltipTouchGestures="off">
-                    <img class="recipe-image" matCardImage [src]="result.poster_path">
+                    <img matCardImage [src]="result.poster_path">
                     <mat-card-content>
                         <h3>{{ result.title_name ? result.title_name : result.original_title_name }}</h3>
                         <p>

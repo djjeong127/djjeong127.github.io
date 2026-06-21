@@ -208,6 +208,22 @@ export class MoviesAndShowsService {
         return tvGenreNames
     }
 
+    movieGenreNamesStringFromGenreList(genreList: Genre[]): string {
+        const orderedGenreList = genreList.sort((a, b) => a.name.localeCompare(b.name))
+        let movieGenreNames = ''
+        orderedGenreList.forEach((genre) => movieGenreNames += genre.name + ', ')
+        movieGenreNames = movieGenreNames.slice(0, -2)
+        return movieGenreNames
+    }
+
+    TVGenreNamesStringFromGenreList(genreList: Genre[]): string {
+        const orderedGenreList = genreList.sort((a, b) => a.name.localeCompare(b.name))
+        let tvGenreNames = ''
+        orderedGenreList.forEach((genre) => tvGenreNames += genre.name + ', ')
+        tvGenreNames = tvGenreNames.slice(0, -2)
+        return tvGenreNames
+    }
+
     convertMovieResultToCombinedResult(movieResult: DiscoverMovieResult): CombinedMediaResult {
         const newCombinedResult: CombinedMediaResult = {
             adult: movieResult.adult,
