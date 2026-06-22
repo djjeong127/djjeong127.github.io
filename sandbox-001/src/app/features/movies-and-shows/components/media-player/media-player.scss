@@ -1,6 +1,6 @@
 .media-player-feature {
     display: grid;
-    // padding:  0 1em;
+    padding: 1em 0 5em 0;
     color: var(--mat-sys-on-secondary-container);
     justify-content: center;
     justify-self: center;
@@ -16,7 +16,6 @@
     display: grid;
     gap: 1em;
     justify-self: center;
-    margin: 2em 0;
 
     .media-title {
         display: inherit;
@@ -56,14 +55,20 @@
     
 }
 
-.sub-media-title {
-        display: grid;
-        justify-self: center;
 
-        h2 {
-            margin: 0.25em;
-        }
+.tv-filters {
+    display: grid;
+    grid-auto-flow: column;
+    justify-self: center;
+    // justify-content: center;
+    justify-items: center;
+    width: min(100vh, 100%);
+
+    mat-form-field {
+        width: 99%;
     }
+
+}
 
 .media-container {
         justify-self: center;
@@ -71,7 +76,7 @@
         max-width: 100vh;
         aspect-ratio: 16/9;
         border: 10px solid var(--mat-sys-inverse-primary);
-        margin: 0 0 3em 0;
+
 
 
         .no-video {

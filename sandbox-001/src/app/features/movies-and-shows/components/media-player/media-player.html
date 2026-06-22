@@ -27,8 +27,10 @@
         </div>
 
     }
-    @else if (media_type() === mediaTypeEnum.TV && selectedTV() && selectedSeason() && selectedEpisode()) {
-        @let tv = selectedTV()!;
+    @else if (media_type() === mediaTypeEnum.TV && selectedTVDetail() && selectedSeasonDetail() && selectedEpisodeDetail()) {
+        @let tv = selectedTVDetail()!;
+        @let season = selectedSeasonDetail()!;
+        @let episode = selectedEpisodeDetail()!;
 
         <div class="media">
 
@@ -53,7 +55,7 @@
                     <div><b>Seasons: </b>{{tv.number_of_seasons}}</div>
                 </div>
             </div>
-    
+
         </div>
         
     }
@@ -62,19 +64,19 @@
 
     }
 
-    @if (media_type() === mediaTypeEnum.TV && selectedTV() && selectedSeason() && selectedEpisode()) {
-        @let season = selectedSeason()!;
-        @let episode = selectedEpisode()!;
+    @if (media_type() === mediaTypeEnum.TV && selectedTVDetail() && selectedSeasonDetail() && selectedEpisodeDetail()) {
+        @let season = selectedSeasonDetail()!;
+        @let episode = selectedEpisodeDetail()!;
 
-
-        <div class="sub-media-title">
-            <h2>Season # {{episode.season_number}}: {{season.name}}</h2>
-            <h2>Episode # {{episode.episode_number}}: {{episode.name}}</h2>
+        <div class="media">
+            <div class="media-title">
+                <h2>{{season.name}}: {{episode.name}}</h2>
+            </div>
         </div>
     }
 
     <!-- if we got metadata from tmdb -->
-    @if ((media_type() === mediaTypeEnum.Movie && selectedMovie()) || (media_type() === mediaTypeEnum.TV && selectedTV() && selectedSeason() && selectedEpisode())) {
+    @if ((media_type() === mediaTypeEnum.Movie && selectedMovie()) || (media_type() === mediaTypeEnum.TV && selectedTVDetail() && selectedSeasonDetail() && selectedEpisodeDetail())) {
         @if (isLoading() || safeVidsrcUrl() === undefined) {
             <div class="media-container">
                 <img class="no-video blackout" src="/no_video.png">
@@ -90,15 +92,41 @@
                 </div>
             }
             @else {
-                <iframe class="media-container" [src]="safeVidsrcUrl()" frameborder="0" scrolling="no" allowfullscreen="yes"></iframe>
+
+                @if (media_type() === mediaTypeEnum.Movie) {
+                    <iframe class="media-container" [style.margin]="'2em 0 0 0'" [src]="safeVidsrcUrl()" frameborder="0" scrolling="no" allowfullscreen="yes"></iframe>
+                }
+                @else {
+                    <iframe class="media-container" [src]="safeVidsrcUrl()" frameborder="0" scrolling="no" allowfullscreen="yes"></iframe>
+                }
             }
         }
     }
 
     
-    @if (media_type() === mediaTypeEnum.TV && selectedTV() && selectedSeason() && selectedEpisode()) {
-        @let season = selectedSeason()!;
-        @let episode = selectedEpisode()!;
+    @if (media_type() === mediaTypeEnum.TV && selectedTVDetail() && selectedSeasonDetail() && selectedEpisodeDetail()) {
+        @let season = selectedSeasonDetail()!;
+        @let episode = selectedEpisodeDetail()!;
+
+        <div class="tv-filters">
+            <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Seasons</mat-label>
+                <mat-select (selectionChange)="triggerSearchTVSeason($event)" [compareWith]="compareObjects" [formField]="searchTVForm.season">
+                    @for (season of (seasonsList()); track season.id) {
+                        <mat-option [value]="season"># {{season.season_number}}: {{season.name}}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Episodes</mat-label>
+                <mat-select (selectionChange)="triggerSearchTVEpisode($event)" [formField]="searchTVForm.episode">
+                    @for (episode of (episodesList()); track episode.id) {
+                        <mat-option [value]="episode"># {{episode.episode_number}}: {{episode.name}}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
 
         <div>{{episode.overview}}</div>
         <div><b>Runtime: </b>{{minutesToHoursAndMinutes(episode.runtime)}}</div>
@@ -107,23 +135,25 @@
         <br>
         <br>
 
-        <h2>More Details: </h2>
+        <div class="media">
+            <div class="media-title">
+                <h2>More Details</h2>
+            </div>
 
-        <div><b>Season #: </b>{{season.season_number}}</div>
-        <div><b>Season Name: </b>{{season.name}}</div>
-        <div><b>Season Air Date: </b>{{season.air_date | date}}</div>
-        <div><b>Season Overview: </b>{{season.overview}}</div>
-        <div><b>Episodes: </b>{{season.episodes.length}}</div>
+            <div><b>Season # </b>{{season.season_number}}</div>
+            <div><b>Season Name: </b>{{season.name}}</div>
+            <div><b>Season Air Date: </b>{{season.air_date | date}}</div>
+            <div><b>Season Overview: </b>{{season.overview}}</div>
+            <div><b>Episodes: </b>{{season.episodes.length}}</div>
 
-        <br>
+            <br>
 
-        <div><b>Episode #: </b>{{episode.episode_number}}</div>
-        <div><b>Episode Name: </b>{{episode.name}}</div>
-        <div><b>Episode Air Date: </b>{{episode.air_date | date}}</div>
-        <div><b>Episode Overview: </b>{{episode.overview}}</div>
-        <div><b>Episode Runtime: </b>{{minutesToHoursAndMinutes(episode.runtime)}}</div>
-        
-
+            <div><b>Episode # </b>{{episode.episode_number}}</div>
+            <div><b>Episode Name: </b>{{episode.name}}</div>
+            <div><b>Episode Air Date: </b>{{episode.air_date | date}}</div>
+            <div><b>Episode Overview: </b>{{episode.overview}}</div>
+            <div><b>Episode Runtime: </b>{{minutesToHoursAndMinutes(episode.runtime)}}</div>
+        </div>
     }
 
     
