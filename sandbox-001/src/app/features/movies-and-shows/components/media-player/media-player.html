@@ -96,8 +96,9 @@
         @let season = selectedSeason()!;
         @let episode = selectedEpisode()!;
 
-        <div><b>Episode Overview: </b>{{episode.overview}}</div>
-        <div><b>Episode Runtime: </b>{{minutesToHoursAndMinutes(episode.runtime)}}</div>
+        <div>{{episode.overview}}</div>
+        <br>
+        <div><b>Runtime: </b>{{minutesToHoursAndMinutes(episode.runtime)}}</div>
         
         <br>
         <br>
