@@ -19,7 +19,7 @@
                     <div class="overview">
                         <div>{{movie.overview}}</div>
                     </div>
-                    <div><b>Release: </b>{{movie.release_date | date}}</div>
+                    <div><b>Release Date: </b>{{movie.release_date | date}}</div>
                     <div><b>Genres: </b>{{moviesAndShowsService.movieGenreNamesStringFromGenreList(movie.genres)}}</div>
                     <div><b>Runtime: </b>{{minutesToHoursAndMinutes(movie.runtime)}}</div>
                 </div>
@@ -119,7 +119,7 @@
 
         <div><b>Episode #: </b>{{episode.episode_number}}</div>
         <div><b>Episode Name: </b>{{episode.name}}</div>
-        <div><b>Episode Air Date: </b>{{episode.air_date}}</div>
+        <div><b>Episode Air Date: </b>{{episode.air_date | date}}</div>
         <div><b>Episode Overview: </b>{{episode.overview}}</div>
         <div><b>Episode Runtime: </b>{{minutesToHoursAndMinutes(episode.runtime)}}</div>
         
