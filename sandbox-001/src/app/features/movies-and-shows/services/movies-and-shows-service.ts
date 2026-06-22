@@ -194,20 +194,6 @@ export class MoviesAndShowsService {
         return this.tvGenres().find((genre) => genre.id === genreId)!.name
     }
 
-    movieGenreNamesStringFromIdList(genreIdList: number[]): string {
-        let movieGenreNames = ''
-        genreIdList.forEach((id) => movieGenreNames += this.getMovieGenreName(id) + ', ')
-        movieGenreNames = movieGenreNames.slice(0, -2)
-        return movieGenreNames
-    }
-
-    TVGenreNamesStringFromIdList(genreIdList: number[]): string {
-        let tvGenreNames = ''
-        genreIdList.forEach((id) => tvGenreNames += this.getTVGenreName(id) + ', ')
-        tvGenreNames = tvGenreNames.slice(0, -2)
-        return tvGenreNames
-    }
-
     movieGenreNamesStringFromGenreList(genreList: Genre[]): string {
         const orderedGenreList = genreList.sort((a, b) => a.name.localeCompare(b.name))
         let movieGenreNames = ''
@@ -216,7 +202,7 @@ export class MoviesAndShowsService {
         return movieGenreNames
     }
 
-    TVGenreNamesStringFromGenreList(genreList: Genre[]): string {
+    tvGenreNamesStringFromGenreList(genreList: Genre[]): string {
         const orderedGenreList = genreList.sort((a, b) => a.name.localeCompare(b.name))
         let tvGenreNames = ''
         orderedGenreList.forEach((genre) => tvGenreNames += genre.name + ', ')

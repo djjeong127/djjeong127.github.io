@@ -11,18 +11,19 @@
     }
 }
 
-.movie {
+.media {
     display: grid;
     gap: 1em;
     justify-self: center;
 
-    .movie-title {
+    .media-title {
         display: inherit;
         justify-self: center;
         align-self: center;
+        text-align: center;
     }
 
-    .movie-details {
+    .media-details {
         display: grid;
         grid-auto-flow: column;
         grid-auto-columns: auto;
@@ -41,7 +42,7 @@
             }
         }
 
-        .movie-metadata {
+        .media-metadata {
             
             .overview {
                 padding-bottom: 1em;
@@ -50,10 +51,10 @@
         }
     }
 
-
-    
-
-    
+    .sub-media-title {
+        display: grid;
+        justify-self: center;
+    }
 }
 
 .media-container {
@@ -62,7 +63,7 @@
         max-width: 100vh;
         aspect-ratio: 16/9;
         border: 10px solid var(--mat-sys-inverse-primary);
-        margin: 5em 0;
+        margin: 1em 0;
 
 
         .no-video {
