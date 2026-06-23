@@ -56,19 +56,6 @@
 }
 
 
-.tv-filters {
-    display: grid;
-    grid-auto-flow: column;
-    justify-self: center;
-    // justify-content: center;
-    justify-items: center;
-    width: min(100vh, 100%);
-
-    mat-form-field {
-        width: 99%;
-    }
-
-}
 
 .media-container {
         justify-self: center;
@@ -105,3 +92,50 @@
         }
 
     }
+
+
+
+
+    .tv-filters {
+    display: grid;
+    grid-auto-flow: column;
+    justify-self: center;
+    justify-items: center;
+    width: min(100vh, 100%);
+
+    mat-form-field {
+        width: 99%;
+
+        mat-option {
+            padding: 0;
+            border: 2px solid var(--mat-sys-outline-variant);
+            
+            .season-select-option {
+                display: grid;
+                grid-auto-flow: column;
+                grid-template-columns: 30% 1fr;
+                align-items: center;
+                gap: 0.5em;
+
+                .option-image {
+                    width: 100%;
+
+                    object-fit: cover;
+                }
+            }
+
+            .episode-select-option {
+                display: grid;
+                grid-auto-flow: column;
+                grid-template-columns: 40% 1fr;
+                align-items: center;
+                gap: 0.5em;
+
+                .option-image {
+                    width: 100%;
+                    object-fit: cover;
+                }
+            }
+        }
+    }
+}

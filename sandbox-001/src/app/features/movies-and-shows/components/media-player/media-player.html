@@ -112,18 +112,28 @@
             <div class="tv-filters">
                 <mat-form-field subscriptSizing="dynamic">
                     <mat-label>Seasons</mat-label>
-                    <mat-select (selectionChange)="triggerSearchTVSeason($event)" [compareWith]="compareObjects" [formField]="searchTVForm.season">
+                    <mat-select (selectionChange)="triggerSearchTVSeason($event)" [compareWith]="compareObjects" [formField]="searchTVForm.season" hideSingleSelectionIndicator="true">
                         @for (season of (seasonsList()); track season.id) {
-                            <mat-option [value]="season"># {{season.season_number}}: {{season.name}}</mat-option>
+                            <mat-option [value]="season">
+                                <div class="season-select-option">
+                                    <img matCardImage class="option-image" [src]="moviesAndShowsService.getFullImageUrl(season.poster_path)">
+                                    <div>#{{season.season_number}}: {{season.name}}</div>
+                                </div>
+                            </mat-option>
                         }
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field subscriptSizing="dynamic">
                     <mat-label>Episodes</mat-label>
-                    <mat-select (selectionChange)="triggerSearchTVEpisode($event)" [compareWith]="compareObjects" [formField]="searchTVForm.episode">
+                    <mat-select (selectionChange)="triggerSearchTVEpisode($event)" [compareWith]="compareObjects" [formField]="searchTVForm.episode" hideSingleSelectionIndicator="true">
                         @for (episode of (episodesList()); track episode.id) {
-                            <mat-option [value]="episode"># {{episode.episode_number}}: {{episode.name}}</mat-option>
+                            <mat-option [value]="episode">
+                                <div class="episode-select-option">
+                                    <img matCardImage class="option-image" [src]="moviesAndShowsService.getFullImageUrl(episode.still_path)">
+                                    <div>#{{episode.episode_number}}: {{episode.name}}</div>
+                                </div>
+                            </mat-option>
                         }
                     </mat-select>
                 </mat-form-field>
