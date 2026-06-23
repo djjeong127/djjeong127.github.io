@@ -40,6 +40,7 @@ export class MediaPlayer {
   vidsrcApiService = inject(VidsrcApiService)
   sanitizer = inject(DomSanitizer)
   routerService = inject(Router)
+  activatedRouteService = inject(ActivatedRoute)
 
   subscriptions: Subscription[] = [];
 
@@ -189,17 +190,31 @@ export class MediaPlayer {
     return episode
   }
 
-  triggerSearchTVSeason(event: MatSelectChange) {
+  async triggerSearchTVSeason(event: MatSelectChange) {
     const newSeason: Season = event.value
-    this.routerService.navigate(['/movies-and-shows', this.media_type(), this.id()], { queryParams: this.setQueryParams(newSeason.season_number, 1) })
+    const successfulRouting = await this.routerService.navigate(['/movies-and-shows', this.media_type(), this.id()], {
+      queryParams: this.setQueryParams(newSeason.season_number, 1),
+      // onSameUrlNavigation: 'reload',
+      replaceUrl: true
+    })
 
+    if (successfulRouting) {
+      this.getTmdbAndVidsrcInfo()
+    }
 
   }
 
-  triggerSearchTVEpisode(event: MatSelectChange) {
+  async triggerSearchTVEpisode(event: MatSelectChange) {
     const newEpisode: Episode = event.value
-    // this.router.navigate(['/movies-and-shows', this.media_type(), this.id()], {queryParams: this.setQueryParams(seasonNumber, episodeNumber)})
+    const successfulRouting = await this.routerService.navigate(['/movies-and-shows', this.media_type(), this.id()], {
+      queryParams: this.setQueryParams(this.searchTVModel().season.season_number, newEpisode.episode_number),
+      // onSameUrlNavigation: 'reload',
+      replaceUrl: true
+    })
 
+    if (successfulRouting) {
+      this.getTmdbAndVidsrcInfo()
+    }
   }
 
   setQueryParams(seasonNumber: number, episodeNumber: number) {
