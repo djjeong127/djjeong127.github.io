@@ -1,19 +1,16 @@
-import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { MediaType } from '../../models/movie-tv.model';
 import { TmdbApiService } from '../../services/tmdb-api-service';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MovieDetailResponse } from '../../models/movie.model';
 import { Episode, Season, TVEpisodeDetailResponse, TVSeasonDetailResponse, TVSeriesDetailResponse } from '../../models/tv.model';
-import { MoviesAndShows } from '../../movies-and-shows';
 import { MoviesAndShowsService } from '../../services/movies-and-shows-service';
 import { DatePipe } from '@angular/common';
 import { VidsrcApiService } from '../../services/vidsrc-api-service';
-import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ANGULAR_MATERIAL_MODULES } from '../../../../shared/modules/angular-material.module';
 import { form, FormField } from '@angular/forms/signals';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MatSelectChange } from '@angular/material/select';
-import { filter, Subject, Subscription, takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
 
 export interface SearchTVModel {
   season: Season;
@@ -40,9 +37,7 @@ export class MediaPlayer {
   vidsrcApiService = inject(VidsrcApiService)
   sanitizer = inject(DomSanitizer)
   routerService = inject(Router)
-  activatedRouteService = inject(ActivatedRoute)
 
-  subscriptions: Subscription[] = [];
 
   mediaTypeEnum = MediaType
 
