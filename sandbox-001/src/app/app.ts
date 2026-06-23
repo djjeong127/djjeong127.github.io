@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DOCUMENT, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { Header } from "./shared/components/header/header";
 import { filter } from 'rxjs';
@@ -15,6 +15,7 @@ export class App {
 
   router = inject(Router)
   themeService = inject(ThemeService)
+  document = inject(DOCUMENT)
 
   constructor() {
     this.setupFeatureModeRouteListener()
@@ -30,9 +31,11 @@ export class App {
       // switch feature mode
       if (event.urlAfterRedirects.includes('/movies-and-shows')) {
         this.themeService.switchFeature(Feature.MoviesAndShows)
+        this.document.documentElement.style.setProperty('--root-background-color', 'var(--mat-sys-inverse-on-surface)')
       }
       else {
         this.themeService.switchFeature(Feature.DefaultAll)
+        this.document.documentElement.style.setProperty('--root-background-color', 'var(--mat-sys-surface)')
       }
 
     });

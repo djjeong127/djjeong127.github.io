@@ -147,7 +147,7 @@ export class MoviesAndShowsService {
         if (this.searchModel().multiFilter === MultiFilterEnum.Movie && combinedMediaResult.media_type === MediaType.Movie) {
             return true
         }
-        else if (this.searchModel().multiFilter === MultiFilterEnum.MovieAndTV) {
+        else if (this.searchModel().multiFilter === MultiFilterEnum.MovieAndTV && (combinedMediaResult.media_type === MediaType.Movie || combinedMediaResult.media_type === MediaType.TV)) {
             return true
         }
         else if (this.searchModel().multiFilter === MultiFilterEnum.TV && combinedMediaResult.media_type === MediaType.TV) {
