@@ -136,6 +136,19 @@
                     object-fit: cover;
                 }
             }
+
+            @media (orientation: portrait) {
+
+                .episode-select-option {
+                    padding: 0 .5em;
+                    grid-template-columns: none;
+
+                    img {
+                        display: none;
+                    }
+                }
+                
+            }
         }
     }
 }
