@@ -35,7 +35,8 @@ export class App {
       }
       else {
         this.themeService.switchFeature(Feature.DefaultAll)
-        this.document.documentElement.style.setProperty('--root-background-color', 'var(--mat-sys-surface)')
+        // this.document.documentElement.style.setProperty('--root-background-color', 'var(--mat-sys-surface)')
+        this.document.documentElement.style.setProperty('--root-background-color', 'var(--mat-sys-inverse-on-surface)')
       }
 
     });
