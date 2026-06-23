@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { Component, computed, effect, ElementRef, HostListener, inject, input, signal, ViewChild } from '@angular/core';
 import { MediaType } from '../../models/movie-tv.model';
 import { TmdbApiService } from '../../services/tmdb-api-service';
 import { MovieDetailResponse } from '../../models/movie.model';
@@ -24,6 +24,8 @@ export interface SearchTVModel {
   styleUrl: './media-player.scss',
 })
 export class MediaPlayer {
+  @ViewChild('episodeHeader') episodeHeader!: ElementRef<HTMLDivElement>;
+
   media_type = input.required<MediaType>();
   id = input.required<number>();
   season = input<string | undefined>()
@@ -190,9 +192,13 @@ export class MediaPlayer {
 
    triggerSearchTVSeason(event: MatSelectChange) {
     const newSeason: Season = event.value
+    this.searchTVSeason(newSeason.season_number)
+  }
+
+  searchTVSeason(seasonNumber: number) {
     this.routerService.navigate([], {
       relativeTo: this.activatedRouteService,
-      queryParams: this.setQueryParams(newSeason.season_number, 1),
+      queryParams: this.setQueryParams(seasonNumber, 1),
       queryParamsHandling: 'merge',
       // onSameUrlNavigation: 'reload',
       // replaceUrl: true
@@ -201,9 +207,18 @@ export class MediaPlayer {
 
   triggerSearchTVEpisode(event: MatSelectChange) {
     const newEpisode: Episode = event.value
+    this.searchTVEpisode(newEpisode.episode_number)
+  }
+
+  searchAndScrollTVEpisode(episodeNumber: number) {
+    this.searchTVEpisode(episodeNumber)
+    this.scrollToEpisodeHeader()
+  }
+
+  searchTVEpisode(episodeNumber: number) {
     this.routerService.navigate([], {
       relativeTo: this.activatedRouteService,
-      queryParams: this.setQueryParams(this.searchTVModel().season.season_number, newEpisode.episode_number),
+      queryParams: this.setQueryParams(this.searchTVModel().season.season_number, episodeNumber),
       queryParamsHandling: 'merge',
       // onSameUrlNavigation: 'reload',
       // replaceUrl: true
@@ -216,5 +231,18 @@ export class MediaPlayer {
 
   compareObjects(o1: any, o2: any): boolean {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;
+  }
+
+  scrollToEpisodeHeader(): void {
+    const appHeaderHeight = (document.querySelector('.app-header') as HTMLElement).getBoundingClientRect().height
+    const episodeHeaderPosition = this.episodeHeader.nativeElement.getBoundingClientRect().top;
+    const currentScrollPosition = window.scrollY
+
+    const targetPosition = episodeHeaderPosition + currentScrollPosition - appHeaderHeight
+
+    window.scrollTo({
+      top: targetPosition,
+      behavior: 'smooth'
+    });
   }
 }

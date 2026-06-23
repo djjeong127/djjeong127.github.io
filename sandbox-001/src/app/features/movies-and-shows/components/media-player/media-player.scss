@@ -36,7 +36,7 @@ hr {
     .media-details {
         display: grid;
         grid-auto-flow: column;
-        grid-auto-columns: auto;
+        grid-auto-columns: auto 1fr;
         gap: inherit;
         height: max-content;
 
@@ -53,9 +53,9 @@ hr {
         }
 
         .media-metadata {
-            
+
             .overview {
-                padding-bottom: 1em;
+                padding-top: 1em;
             }
 
         }
@@ -82,6 +82,34 @@ hr {
     }
 }
 
+
+.more-info-media {
+    display: grid;
+    gap: 1em;
+
+    padding: 1em;
+
+    .media-card {
+        align-self: center;
+    }
+}
+
+.more-info-media-card {
+    border-radius: var(--mat-sys-corner-medium);
+
+    transform: scale(1);
+    transition: transform 0.5s ease-out;
+
+    
+}
+
+.more-info-media-card:hover {
+    cursor: pointer;
+    opacity: 75%;
+
+    transform: scale(1.03);
+    transition: transform 0.2s ease-out;
+}
 
 
 .media-container {
@@ -123,7 +151,7 @@ hr {
 
 
 
-    .tv-filters {
+.tv-filters {
     display: grid;
     grid-auto-flow: column;
     justify-self: center;
