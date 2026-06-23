@@ -86,38 +86,35 @@
     <div class="movies-and-shows-header-buffer" [class.relative]="relative()" [style.height]="`${moviesAndShowsHeaderElement().getBoundingClientRect().height}px`"></div>
 
 
-    @if (moviesAndShowsService.tmdbConfiguration()) {
-        <div class="media-cards">
-            @for (result of moviesAndShowsService.combinedLoadedMediaResults(); track (result.media_type + '_' + result.id)) {
-                <div class="media-card" matRipple>
-                    <mat-card [routerLink]="['/movies-and-shows', result.media_type, result.id]" [queryParams]="setQueryParams(result)" [matTooltip]="result.title_name" matTooltipTouchGestures="off">
-                        <img matCardImage [src]="result.poster_path">
-                        <mat-card-content>
-                            <h3>{{ result.title_name ? result.title_name : result.original_title_name }}</h3>
-                            <p>
-                                @if (result.media_type === mediaType.Movie) {
-                                    {{ result.media_type.slice(0, 1) | uppercase  }}{{result.media_type.slice(1)}} |
-                                }
-                                @else if (result.media_type === mediaType.TV) {
-                                    {{result.media_type | uppercase}} |
-                                }
+    <div class="media-cards">
+        @for (result of moviesAndShowsService.combinedLoadedMediaResults(); track (result.media_type + '_' + result.id)) {
+            <div class="media-card" matRipple>
+                <mat-card [routerLink]="['/movies-and-shows', result.media_type, result.id]" [queryParams]="setQueryParams(result)" [matTooltip]="result.title_name" matTooltipTouchGestures="off">
+                    <img matCardImage [src]="result.poster_path">
+                    <mat-card-content>
+                        <h3>{{ result.title_name ? result.title_name : result.original_title_name }}</h3>
+                        <p>
+                            @if (result.media_type === mediaType.Movie) {
+                                {{ result.media_type.slice(0, 1) | uppercase  }}{{result.media_type.slice(1)}} |
+                            }
+                            @else if (result.media_type === mediaType.TV) {
+                                {{result.media_type | uppercase}} |
+                            }
 
-                                @if (result.release_date){
-                                    {{result.release_date | date: 'yyyy'}}
-                                }
-                            </p>
+                            @if (result.release_date){
+                                {{result.release_date | date: 'yyyy'}}
+                            }
+                        </p>
 
-                        </mat-card-content>
-                    </mat-card>
-                </div>
-            }
-            <div class="bottom-sentinel" #bottomSentinel>
-                @if(moviesAndShowsService.isLoadingMoviePages() || moviesAndShowsService.isLoadingTVPages() || moviesAndShowsService.isLoadingSearchMultiPages() || moviesAndShowsService.isLoadingTrendingMultiPages()) {
-                    <mat-spinner></mat-spinner>
-                }
+                    </mat-card-content>
+                </mat-card>
             </div>
+        }
+        <div class="bottom-sentinel" #bottomSentinel>
+            @if(moviesAndShowsService.isLoadingMoviePages() || moviesAndShowsService.isLoadingTVPages() || moviesAndShowsService.isLoadingSearchMultiPages() || moviesAndShowsService.isLoadingTrendingMultiPages()) {
+                <mat-spinner></mat-spinner>
+            }
         </div>
-    }
-        
+    </div>
 </div>
 
