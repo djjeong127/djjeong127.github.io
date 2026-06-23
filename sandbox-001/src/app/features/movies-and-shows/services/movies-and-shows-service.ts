@@ -14,7 +14,8 @@ import { SearchMultiResponse, SearchMultiResult, TimeWindow, TrendingMultiRespon
 export class MoviesAndShowsService {
     tmdbApiService = inject(TmdbApiService)
 
-    ListOfCountriesIWant_iso_639_1: string[] = ['00', 'US', 'KR']
+    ListOfCountriesIWant_iso_639_1: string[] = ['US', 'KR']
+    ListOfCountriesIWant= signal<Country[]>([])
 
     customAllCountries: Country = {
         iso_3166_1: '00',
@@ -304,6 +305,9 @@ export class MoviesAndShowsService {
                 
                 // reduce list of countries to a few selected countries
                 // this.countries.set(this.countries().filter((country) => this.ListOfCountriesIWant_iso_639_1.includes(country.iso_3166_1)))
+
+                // initialize the list of countries that I want earlier in the select drop down UI
+                this.ListOfCountriesIWant_iso_639_1.forEach((countryCode) => this.ListOfCountriesIWant.update(() => [...this.ListOfCountriesIWant(), this.getCountry(countryCode)]))
 
                 // order list of countries by name
                 this.countries.update((country) => country.sort((a, b) => a.english_name.localeCompare(b.english_name)))
