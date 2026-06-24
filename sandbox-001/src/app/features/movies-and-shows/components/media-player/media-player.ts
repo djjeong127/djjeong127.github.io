@@ -179,10 +179,10 @@ export class MediaPlayer {
 
   minutesToHoursAndMinutes(minutes: number): string {
     if (minutes < 60) {
-      return `${minutes} minutes`
+      return `${minutes}min`
     }
     else {
-      return `${Math.trunc(minutes / 60)} hour${Math.trunc(minutes / 60) > 1 ? 's' : ''}, ${minutes % 60} minute${minutes % 60 > 1 ? 's' : ''}`
+      return `${Math.trunc(minutes / 60)}h ${minutes % 60}min`
     }
 
   }

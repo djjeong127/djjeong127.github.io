@@ -17,13 +17,14 @@
                     </div>
 
                     <div class="media-metadata">
-                        <div><b>Genres: </b>{{moviesAndShowsService.movieGenreNamesStringFromGenreList(movie.genres)}}</div>
-                        <div><b>Runtime: </b>{{minutesToHoursAndMinutes(movie.runtime)}}</div>
-                        <div><b>Release Date: </b>{{movie.release_date | date}}</div>
-
                         <div class="overview">
                             <div>{{movie.overview}}</div>
                         </div>
+
+                        <div><b>Genres: </b>{{moviesAndShowsService.movieGenreNamesStringFromGenreList(movie.genres)}}</div>
+                        <div><b>Release Date: </b>{{movie.release_date | date}}</div>
+                        <div><b>Runtime: </b>{{minutesToHoursAndMinutes(movie.runtime)}}</div>
+                        
                     </div>
                 </div>
             </div>
@@ -49,13 +50,14 @@
                     </div>
 
                     <div class="media-metadata">
-                        <div><b>Genres: </b>{{moviesAndShowsService.tvGenreNamesStringFromGenreList(tv.genres)}}</div>
-                        <div><b>Seasons: </b>{{tv.number_of_seasons}}</div>
-                        <div><b>First Air Date: </b>{{tv.first_air_date| date}}</div>
-
                         <div class="overview">
                             <div>{{tv.overview}}</div>
                         </div>
+
+                        <div><b>Genres: </b>{{moviesAndShowsService.tvGenreNamesStringFromGenreList(tv.genres)}}</div>
+                        <div><b>First Air Date: </b>{{tv.first_air_date| date}}</div>
+                        <div><b>Seasons: </b>{{tv.number_of_seasons}}</div>
+                        
                     </div>
                 </div>
 
@@ -98,7 +100,8 @@
 
                     <div class="media-title">
                         <h2>{{season.name}}</h2>
-                        <h2>#{{episode.episode_number}}: {{episode.name}}</h2>
+                        <h4>{{episode.name}}</h4>
+                        <div>{{minutesToHoursAndMinutes(episode.runtime)}}</div>
                     </div>
                 </div>
 
@@ -175,7 +178,6 @@
             </div>
 
             <div>{{episode.overview}}</div>
-            <div><b>Runtime: </b>{{minutesToHoursAndMinutes(episode.runtime)}}</div>
             
             <br>
             <hr>
@@ -196,13 +198,15 @@
                     </div>
 
                     <div class="media-metadata">
-                        <div><b>Season # {{season.season_number}}: </b>{{season.name}}</div>
-                        <div><b>Season Air Date: </b>{{season.air_date | date}}</div>
-                        <div><b>Episodes: </b>{{season.episodes.length}}</div>
+                        <h2>Season #{{season.season_number}}</h2>
+                        <h3>{{season.name}}</h3>
 
                         <div class="overview">
-                            <div><b>Season Overview: </b>{{season.overview}}</div>
+                            <div><b></b>{{season.overview}}</div>
                         </div>
+
+                        <div><b>Season Air Date: </b>{{season.air_date | date}}</div>
+                        <div><b>Episodes: </b>{{season.episodes.length}}</div>
 
                     </div>
                 </div>
@@ -223,13 +227,16 @@
                                 </div>
 
                                 <div class="media-metadata">
-                                    <h2><b>Episode # {{episode.episode_number}}: </b>{{episode.name}}</h2>
-                                    <div><b>Episode Air Date: </b>{{episode.air_date | date}}</div>
-                                    <div><b>Episode Runtime: </b>{{minutesToHoursAndMinutes(episode.runtime)}}</div>
-                                    
+                                    <h2>Episode #{{episode.episode_number}}</h2>
+                                    <h3>{{episode.name}}</h3>
+
                                     <div class="overview">
                                         <div>{{episode.overview}}</div>
                                     </div>
+
+                                    <div><b>Air Date: </b>{{episode.air_date | date}}</div>
+                                    <div><b>Runtime: </b>{{minutesToHoursAndMinutes(episode.runtime)}}</div>
+                                    
                                 </div>
                             </div>
                         </mat-card>
