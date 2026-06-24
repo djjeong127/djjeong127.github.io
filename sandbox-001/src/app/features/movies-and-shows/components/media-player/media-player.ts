@@ -377,8 +377,7 @@ export class MediaPlayer {
   triggerSearchTVEpisode(event: MatSelectChange) {
     const newEpisode: Episode = event.value
 
-
-      this.searchAndScrollTVEpisode(newEpisode.episode_number)
+    this.searchAndScrollTVEpisode(newEpisode.episode_number)
     
   }
 
