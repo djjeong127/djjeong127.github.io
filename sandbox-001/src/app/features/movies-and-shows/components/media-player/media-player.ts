@@ -2,7 +2,7 @@ import { Component, computed, effect, ElementRef, HostListener, inject, input, s
 import { MediaType } from '../../models/movie-tv.model';
 import { TmdbApiService } from '../../services/tmdb-api-service';
 import { MovieDetailResponse } from '../../models/movie.model';
-import { Episode, Season, TVEpisodeDetailResponse, TVSeasonDetailResponse, TVSeriesDetailResponse } from '../../models/tv.model';
+import { Episode, EpisodeGroup, EpisodeGroupDetailEpisode, Season, TVEpisodeDetailResponse, TVEpisodeGroupDetailResponse, TVEpisodeGroupsResponse, TVSeasonDetailResponse, TVSeriesDetailResponse } from '../../models/tv.model';
 import { MoviesAndShowsService } from '../../services/movies-and-shows-service';
 import { DatePipe } from '@angular/common';
 import { VidsrcApiService } from '../../services/vidsrc-api-service';
@@ -41,7 +41,6 @@ export class MediaPlayer {
   routerService = inject(Router)
   activatedRouteService = inject(ActivatedRoute)
 
-
   mediaTypeEnum = MediaType
 
   isLoading = signal<boolean>(true)
@@ -53,6 +52,9 @@ export class MediaPlayer {
 
   seasonsList = computed<Season[] | undefined>(() => this.selectedTVDetail()?.seasons)
   episodesList = computed<Episode[] | undefined>(() => this.selectedSeasonDetail()?.episodes)
+
+  episodeGroups = signal<TVEpisodeGroupsResponse | undefined>(undefined)
+  episodeGroupDetail = signal<TVEpisodeGroupDetailResponse | undefined>(undefined)
 
   searchTVModel = signal<SearchTVModel>({
     season: {
@@ -88,6 +90,45 @@ export class MediaPlayer {
   constructor() {
     effect(() => {
       this.safeVidsrcUrl.set(undefined)
+      this.isLoading.set(true)
+
+      this.selectedMovie.set(undefined)
+      this.selectedTVDetail.set(undefined)
+      this.selectedSeasonDetail.set(undefined)
+      this.selectedEpisodeDetail.set(undefined)
+
+      this.episodeGroups.set(undefined)
+      this.episodeGroupDetail.set(undefined)
+
+      // this.tmdbApiService.getTVEpisodeGroups(this.id()).subscribe({
+      //   next: (response) => {
+      //     this.episodeGroups.set(response)
+      //     if (response.results.length !== 0) {
+      //       const absoluteEpisodeGroup: EpisodeGroup = response.results.find((result) => result.type === 2 && result.group_count === 1)!
+      //       this.tmdbApiService.getTVEpisodeGroupDetail(absoluteEpisodeGroup.id).subscribe({
+      //         next: (response) => {
+      //           this.episodeGroupDetail.set(response)
+      //         },
+      //         error: (err) => {
+      //           this.isLoading.set(false)
+      //           console.error(err)
+      //         },
+      //         complete: () => {
+      //           this.isLoading.set(false)
+      //         }
+      //       })
+            
+      //     }
+      //   },
+      //   error: (err) => {
+      //     this.isLoading.set(false)
+      //     console.error(err)
+      //   },
+      //   complete: () => {
+      //     this.isLoading.set(false)
+      //   }
+      // })
+
       this.getTmdbAndVidsrcInfo(this.media_type(), this.id(), this.seasonNumber(), this.episodeNumber())
 
     })
@@ -133,42 +174,158 @@ export class MediaPlayer {
           console.error(err)
         },
         complete: () => {
-          this.tmdbApiService.getTVSeasonDetail(id, seasonNumber).subscribe({
+
+
+
+
+
+          this.tmdbApiService.getTVEpisodeGroups(this.id()).subscribe({
             next: (response) => {
-              this.selectedSeasonDetail.set(response)
-              this.searchTVModel.update((form) => ({...form, episode: this.getEpisode(episodeNumber, response.episodes)}))
-            },
+              this.episodeGroups.set(response)
+              },
             error: (err) => {
               this.isLoading.set(false)
               console.error(err)
             },
             complete: () => {
-              this.tmdbApiService.getTVEpisodeDetail(id, seasonNumber, episodeNumber).subscribe({
-                next: (response) => {
-                  this.selectedEpisodeDetail.set(response)
-                },
-                error: (err) => {
-                  this.isLoading.set(false)
-                  console.error(err)
-                },
-                complete: () => {
-                  this.vidsrcApiService.getVidsrcTV(id, seasonNumber, episodeNumber).subscribe({
-                    next: (response) => {
-                      this.safeVidsrcUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(response))
-                    },
-                    error: (err) => {
-                      this.isLoading.set(false)
-                      this.safeVidsrcUrl.set('')
-                      console.error(err)
-                    },
-                    complete: () => {
-                      this.isLoading.set(false)
+              if (this.episodeGroups() && this.episodeGroups()!.results.length !== 0) {
+                const absoluteEpisodeGroup: EpisodeGroup = this.episodeGroups()!.results.find((result) => result.type === 2 && result.group_count === 1)!
+                this.tmdbApiService.getTVEpisodeGroupDetail(absoluteEpisodeGroup.id).subscribe({
+                  next: (response) => {
+                    this.episodeGroupDetail.set(response)
+                  },
+                  error: (err) => {
+                    this.isLoading.set(false)
+                    console.error(err)
+                  },
+                  complete: () => {
+                    let absoluteEpisodeNumber = episodeNumber
+                    if (seasonNumber > 1) {
+                      absoluteEpisodeNumber = this.getAbsoluteEpisodeNumber(seasonNumber, episodeNumber)
                     }
-                  })
-                }
-              })
+                    this.tmdbApiService.getTVSeasonDetail(id, seasonNumber).subscribe({
+                      next: (response) => {
+                        this.selectedSeasonDetail.set(response)
+                        this.searchTVModel.update((form) => ({...form, episode: this.getEpisode(absoluteEpisodeNumber, response.episodes)}))
+                      },
+                      error: (err) => {
+                        this.isLoading.set(false)
+                        console.error(err)
+                      },
+                      complete: () => {
+                        this.tmdbApiService.getTVEpisodeDetail(id, seasonNumber, absoluteEpisodeNumber).subscribe({
+                          next: (response) => {
+                            this.selectedEpisodeDetail.set(response)
+                          },
+                          error: (err) => {
+                            this.isLoading.set(false)
+                            console.error(err)
+                          },
+                          complete: () => {
+                            this.vidsrcApiService.getVidsrcTV(id, seasonNumber, episodeNumber).subscribe({
+                              next: (response) => {
+                                this.safeVidsrcUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(response))
+                              },
+                              error: (err) => {
+                                this.isLoading.set(false)
+                                this.safeVidsrcUrl.set('')
+                                console.error(err)
+                              },
+                              complete: () => {
+                                this.isLoading.set(false)
+                              }
+                            })
+                          }
+                        })      
+                      }
+                    })
+
+                  }
+                })
+              }
+              else {
+                this.tmdbApiService.getTVSeasonDetail(id, seasonNumber).subscribe({
+                  next: (response) => {
+                    this.selectedSeasonDetail.set(response)
+                    this.searchTVModel.update((form) => ({...form, episode: this.getEpisode(episodeNumber, response.episodes)}))
+                  },
+                  error: (err) => {
+                    this.isLoading.set(false)
+                    console.error(err)
+                  },
+                  complete: () => {
+                    this.tmdbApiService.getTVEpisodeDetail(id, seasonNumber, episodeNumber).subscribe({
+                      next: (response) => {
+                        this.selectedEpisodeDetail.set(response)
+                      },
+                      error: (err) => {
+                        this.isLoading.set(false)
+                        console.error(err)
+                      },
+                      complete: () => {
+                        this.vidsrcApiService.getVidsrcTV(id, seasonNumber, episodeNumber).subscribe({
+                          next: (response) => {
+                            this.safeVidsrcUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(response))
+                          },
+                          error: (err) => {
+                            this.isLoading.set(false)
+                            this.safeVidsrcUrl.set('')
+                            console.error(err)
+                          },
+                          complete: () => {
+                            this.isLoading.set(false)
+                          }
+                        })
+                      }
+                    })      
+                  }
+                })
+              }
             }
           })
+
+
+
+
+
+
+
+          // this.tmdbApiService.getTVSeasonDetail(id, seasonNumber).subscribe({
+          //   next: (response) => {
+          //     this.selectedSeasonDetail.set(response)
+          //     this.searchTVModel.update((form) => ({...form, episode: this.getEpisode(episodeNumber, response.episodes)}))
+          //   },
+          //   error: (err) => {
+          //     this.isLoading.set(false)
+          //     console.error(err)
+          //   },
+          //   complete: () => {
+          //     this.tmdbApiService.getTVEpisodeDetail(id, seasonNumber, episodeNumber).subscribe({
+          //       next: (response) => {
+          //         this.selectedEpisodeDetail.set(response)
+          //       },
+          //       error: (err) => {
+          //         this.isLoading.set(false)
+          //         console.error(err)
+          //       },
+          //       complete: () => {
+          //         this.vidsrcApiService.getVidsrcTV(id, seasonNumber, episodeNumber).subscribe({
+          //           next: (response) => {
+          //             this.safeVidsrcUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(response))
+          //           },
+          //           error: (err) => {
+          //             this.isLoading.set(false)
+          //             this.safeVidsrcUrl.set('')
+          //             console.error(err)
+          //           },
+          //           complete: () => {
+          //             this.isLoading.set(false)
+          //           }
+          //         })
+          //       }
+          //     })      
+          //   }
+          // })
         }
       })
     }
@@ -199,7 +356,12 @@ export class MediaPlayer {
 
    triggerSearchTVSeason(event: MatSelectChange) {
     const newSeason: Season = event.value
-    this.searchTVSeason(newSeason.season_number)
+    this.searchAndScrollTVSeason(newSeason.season_number)
+  }
+
+  searchAndScrollTVSeason(seasonNumber: number) {
+    this.searchTVSeason(seasonNumber)
+    this.scrollToEpisodeHeader()
   }
 
   searchTVSeason(seasonNumber: number) {
@@ -214,7 +376,7 @@ export class MediaPlayer {
 
   triggerSearchTVEpisode(event: MatSelectChange) {
     const newEpisode: Episode = event.value
-    this.searchTVEpisode(newEpisode.episode_number)
+    this.searchAndScrollTVEpisode(newEpisode.episode_number)
   }
 
   searchAndScrollTVEpisode(episodeNumber: number) {
@@ -251,5 +413,11 @@ export class MediaPlayer {
       top: targetPosition,
       behavior: 'smooth'
     });
+  }
+
+  getAbsoluteEpisodeNumber(seasonNumber: number, episodeNumber: number): number {
+    const absoluteSeasonEpisodes: EpisodeGroupDetailEpisode[] = this.episodeGroupDetail()?.groups[0].episodes.filter((absoluteEpisode) => absoluteEpisode.season_number ===  seasonNumber)!
+    const absoluteEpisode: EpisodeGroupDetailEpisode = absoluteSeasonEpisodes[episodeNumber - 1]
+    return absoluteEpisode.episode_number
   }
 }

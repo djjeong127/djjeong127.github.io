@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { config, Observable } from 'rxjs';
 import { DiscoverMovieParams, DiscoverMovieResponse, DiscoverMovieSortBy, MovieDetailResponse } from '../models/movie.model';
-import { DiscoverTVParams, DiscoverTVResponse, DiscoverTVSortBy, TVEpisodeDetailResponse, TVSeasonDetailResponse, TVSeriesDetailResponse } from '../models/tv.model';
+import { DiscoverTVParams, DiscoverTVResponse, DiscoverTVSortBy, TVEpisodeDetailResponse, TVEpisodeGroupDetailResponse, TVEpisodeGroupsResponse, TVSeasonDetailResponse, TVSeriesDetailResponse } from '../models/tv.model';
 import { Country, Genre, GenresResponse, TmdbConfiguration } from '../models/movie-tv.model';
 import { shareReplay } from 'rxjs';
 import { SearchMultiResponse, TimeWindow, TrendingMultiResponse } from '../models/multi.model';
@@ -122,5 +122,15 @@ export class TmdbApiService {
     getTVEpisodeDetail(showId: number, seasonNumber: number, episodeNumber: number): Observable<TVEpisodeDetailResponse> {
         const tvParams = this.params.delete('include_adult')
         return this.http.get<TVEpisodeDetailResponse>(this.getTVDetailUrl + `/${showId}/season/${seasonNumber}/episode/${episodeNumber}`, {headers: this.header, params: tvParams})
+    }
+
+    getTVEpisodeGroups(showId: number): Observable<TVEpisodeGroupsResponse> {
+        const tvParams = this.params.delete('include_adult')
+        return this.http.get<TVEpisodeGroupsResponse>(this.getTVDetailUrl + `/${showId}/episode_groups`, {headers: this.header, params: tvParams})
+    }
+
+    getTVEpisodeGroupDetail(episodeGroupId: string): Observable<TVEpisodeGroupDetailResponse> {
+        const tvParams = this.params.delete('include_adult')
+        return this.http.get<TVEpisodeGroupDetailResponse>(this.getTVDetailUrl + `/episode_group/${episodeGroupId}`, {headers: this.header, params: tvParams})
     }
 }

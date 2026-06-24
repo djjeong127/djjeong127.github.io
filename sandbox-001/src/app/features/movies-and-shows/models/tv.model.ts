@@ -129,3 +129,52 @@ export interface TVEpisodeDetailResponse {
     vote_average: number;
     vote_count: number;
 }
+
+export interface TVEpisodeGroupsResponse {
+    results: EpisodeGroup[];
+    id: number;
+}
+
+export interface EpisodeGroup {
+    description: string;
+    episode_count: number;
+    group_count: number;
+    id: string;
+    name: string;
+    type: number;
+}
+
+export interface TVEpisodeGroupDetailResponse {
+    description: string;
+    episode_count: number;
+    group_count: number;
+    groups: EpisodeGroupDetailGroup[];
+    id: string;
+    name: string;
+    network: ProductionCompany;
+    type: number;
+}
+
+export interface EpisodeGroupDetailGroup {
+    id: string;
+    name: string;
+    order: number;
+    episodes: EpisodeGroupDetailEpisode[];
+    locked: boolean;
+}
+
+export interface EpisodeGroupDetailEpisode {
+    air_date: string;
+    episode_number: number;
+    id: number;
+    name: string;
+    overview: string;
+    production_code: string;
+    runtime: string;
+    season_number: number;
+    show_id: number;
+    still_path: string;
+    vote_average: number;
+    vote_count: number;
+    order: number;
+}
