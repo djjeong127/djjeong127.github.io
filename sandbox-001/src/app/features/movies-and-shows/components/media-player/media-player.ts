@@ -377,16 +377,18 @@ export class MediaPlayer {
   triggerSearchTVEpisode(event: MatSelectChange) {
     const newEpisode: Episode = event.value
 
-    if (this.episodeGroupDetail()) {
-      this.searchAndScrollTVEpisode(this.getNotAbsoluteEpisodeNumber(newEpisode.season_number, newEpisode.episode_number))
-    }
-    else {
+
       this.searchAndScrollTVEpisode(newEpisode.episode_number)
-    }
+    
   }
 
   searchAndScrollTVEpisode(episodeNumber: number) {
-    this.searchTVEpisode(episodeNumber)
+    if (this.episodeGroupDetail()) {
+      this.searchTVEpisode(this.getNotAbsoluteEpisodeNumber(this.seasonNumber(), episodeNumber))
+    }
+    else {
+      this.searchTVEpisode(episodeNumber)
+    }
     this.scrollToEpisodeHeader()
   }
 
