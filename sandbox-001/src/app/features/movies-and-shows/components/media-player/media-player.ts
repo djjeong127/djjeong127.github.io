@@ -30,6 +30,7 @@ export class MediaPlayer {
   id = input.required<number>();
   season = input<string | undefined>()
   episode = input<string | undefined>()
+  scrollToMediaPlayer = input<boolean>(false)
 
   seasonNumber = computed<number>(() => Number(this.season()))
   episodeNumber = computed<number>(() => Number(this.episode()))
@@ -156,6 +157,9 @@ export class MediaPlayer {
             },
             complete: () => {
               this.isLoading.set(false)
+              if (this.scrollToMediaPlayer()) {
+                this.scrollToEpisodeHeader()
+              }
             }
           })
         }
@@ -233,6 +237,9 @@ export class MediaPlayer {
                               },
                               complete: () => {
                                 this.isLoading.set(false)
+                                if (this.scrollToMediaPlayer()) {
+                                  this.scrollToEpisodeHeader()
+                                }
                               }
                             })
                           }
@@ -274,6 +281,9 @@ export class MediaPlayer {
                           },
                           complete: () => {
                             this.isLoading.set(false)
+                            if (this.scrollToMediaPlayer()) {
+                              this.scrollToEpisodeHeader()
+                            }
                           }
                         })
                       }
@@ -361,16 +371,13 @@ export class MediaPlayer {
 
   searchAndScrollTVSeason(seasonNumber: number) {
     this.searchTVSeason(seasonNumber)
-    this.scrollToEpisodeHeader()
   }
 
   searchTVSeason(seasonNumber: number) {
     this.routerService.navigate([], {
       relativeTo: this.activatedRouteService,
-      queryParams: this.setQueryParams(seasonNumber, 1),
+      queryParams: this.setQueryParams(seasonNumber, 1, true),
       queryParamsHandling: 'merge',
-      // onSameUrlNavigation: 'reload',
-      // replaceUrl: true
     })
   }
 
@@ -388,21 +395,18 @@ export class MediaPlayer {
     else {
       this.searchTVEpisode(episodeNumber)
     }
-    this.scrollToEpisodeHeader()
   }
 
   searchTVEpisode(episodeNumber: number) {
     this.routerService.navigate([], {
       relativeTo: this.activatedRouteService,
-      queryParams: this.setQueryParams(this.searchTVModel().season.season_number, episodeNumber),
+      queryParams: this.setQueryParams(this.searchTVModel().season.season_number, episodeNumber, true),
       queryParamsHandling: 'merge',
-      // onSameUrlNavigation: 'reload',
-      // replaceUrl: true
     })
   }
 
-  setQueryParams(seasonNumber: number, episodeNumber: number) {
-      return {season: seasonNumber, episode: episodeNumber}
+  setQueryParams(seasonNumber: number, episodeNumber: number, scrollToMediaPlayer: boolean) {
+      return {season: seasonNumber, episode: episodeNumber, scrollToMediaPlayer: scrollToMediaPlayer}
   }
 
   compareObjects(o1: any, o2: any): boolean {
