@@ -12,6 +12,44 @@
     }
 }
 
+.media-player-feature:has(.page-status) {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    gap: 0;
+
+    line-height: 1.2;
+    justify-items: center;
+    position: relative;
+    overflow: hidden;
+ 
+    .page-status {
+        justify-content: center;
+        justify-items: center;
+        align-content: center;
+        text-align: center;
+    }
+
+    .page-status-text {
+        display: grid;
+        font-size: min(12cqw, 12cqh);
+        font-family: cursive;
+        align-self: end;
+        justify-items: center;
+        user-select: none;
+    }
+
+    img {
+        display: grid;
+
+        max-width: 60vw;
+        max-height: 60vh;
+        user-select: none;
+    }
+}
+
+
 hr {
     width: 100%;
     border: none;

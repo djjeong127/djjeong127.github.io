@@ -64,7 +64,23 @@
             <hr #episodeHeader>
         }
         @else {
-            <div class>Could not find media!</div>
+            <div class="page-status">
+                @if(isLoading()) {
+                    <mat-spinner></mat-spinner>
+                }
+                @else {
+                    @if (media_type() === mediaTypeEnum.Movie) {
+                        <div class="page-status-text">Could not find movie!</div>
+                    }
+                    @else if (media_type() === mediaTypeEnum.TV) {
+                        <div class="page-status-text">Could not find show!</div>
+                    }
+                    @else {
+                        <div class=page-status-text>Could not find media!</div>
+                    }
+                    <img src="/duck_on_bread.png">
+                }
+            </div>
         }
 
 

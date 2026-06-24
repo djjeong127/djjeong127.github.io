@@ -100,6 +100,7 @@ export class MediaPlayer {
           this.selectedMovie.set(response)
         },
         error: (err) => {
+          this.isLoading.set(false)
           console.error(err)
         },
         complete: () => {
@@ -128,6 +129,7 @@ export class MediaPlayer {
           this.searchTVModel.update((form) => ({...form, season: this.getSeason(seasonNumber, response.seasons)}))
         },
         error: (err) => {
+          this.isLoading.set(false)
           console.error(err)
         },
         complete: () => {
@@ -137,6 +139,7 @@ export class MediaPlayer {
               this.searchTVModel.update((form) => ({...form, episode: this.getEpisode(episodeNumber, response.episodes)}))
             },
             error: (err) => {
+              this.isLoading.set(false)
               console.error(err)
             },
             complete: () => {
@@ -145,6 +148,7 @@ export class MediaPlayer {
                   this.selectedEpisodeDetail.set(response)
                 },
                 error: (err) => {
+                  this.isLoading.set(false)
                   console.error(err)
                 },
                 complete: () => {
@@ -167,6 +171,9 @@ export class MediaPlayer {
           })
         }
       })
+    }
+    else {
+      this.isLoading.set(false)
     }
   }
 
