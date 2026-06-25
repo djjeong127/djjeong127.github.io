@@ -38,7 +38,7 @@
                             </div>
 
                             <div><b>Genres: </b>{{moviesAndShowsService.movieGenreNamesStringFromGenreList(movie.genres)}}</div>
-                            <div><b>Release Date: </b>{{movie.release_date | date: 'yyyy'}}</div>
+                            <div><b>Release Date: </b>{{movie.release_date | date}}</div>
                             <div><b>Runtime: </b>{{minutesToHoursAndMinutes(movie.runtime)}}</div>
                             
                         </div>
@@ -71,7 +71,7 @@
                             </div>
 
                             <div><b>Genres: </b>{{moviesAndShowsService.tvGenreNamesStringFromGenreList(tv.genres)}}</div>
-                            <div><b>First Air Date: </b>{{tv.first_air_date| date: 'yyyy'}}</div>
+                            <div><b>First Air Date: </b>{{tv.first_air_date| date}}</div>
                             <div><b>Seasons: </b>{{tv.number_of_seasons}}</div>
                             
                         </div>
