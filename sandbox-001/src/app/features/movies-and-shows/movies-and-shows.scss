@@ -192,3 +192,35 @@ mat-card-content {
     align-self: center;
     justify-self: center;
 }
+
+
+
+.movies-and-shows-feature:has(.page-status) {
+    display: grid;
+    height: 100%;
+    grid-template-rows: auto 1fr;
+
+    .page-status {
+        display: grid;
+        align-content: center;
+        justify-content: center;
+        overflow: hidden;
+
+        .page-status-text {
+            font-size: min(10cqw, 10cqh);
+            line-height: 1.2;
+            text-align: center;
+            user-select: none;
+        }
+
+        img {
+            align-self: center;
+            justify-self: center;
+            max-height: 40cqh;
+            max-width: 40cqw;
+            overflow: hidden;
+        }
+
+        
+    }
+}
