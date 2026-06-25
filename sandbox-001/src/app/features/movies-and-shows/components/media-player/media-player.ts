@@ -213,6 +213,9 @@ export class MediaPlayer {
             error: (err) => {
               this.isLoading.set(false)
               this.safeVidsrcUrl.set('')
+              if (this.scrollToMediaPlayer()) {
+                this.scrollToEpisodeHeader()
+              }
               console.error(err)
             },
             complete: () => {
@@ -293,6 +296,9 @@ export class MediaPlayer {
                               error: (err) => {
                                 this.isLoading.set(false)
                                 this.safeVidsrcUrl.set('')
+                                if (this.scrollToMediaPlayer()) {
+                                  this.scrollToEpisodeHeader()
+                                }
                                 console.error(err)
                               },
                               complete: () => {
@@ -337,6 +343,9 @@ export class MediaPlayer {
                           error: (err) => {
                             this.isLoading.set(false)
                             this.safeVidsrcUrl.set('')
+                            if (this.scrollToMediaPlayer()) {
+                              this.scrollToEpisodeHeader()
+                            }
                             console.error(err)
                           },
                           complete: () => {
