@@ -140,7 +140,6 @@ export class MediaPlayer {
 
 
     }
-    console.log(this.relative())
     this.lastScrollPosition.set(currentScrollPosition)
   }
 

@@ -21,7 +21,7 @@ export class VidsrcApiService {
     private vidsrcBaseUrl = this.VIDSRC_API
     
     private vidsrcMovieUrl = this.vidsrcBaseUrl + '/embed/movie?tmdb='
-    private vidsrcTVURL = this.vidsrcBaseUrl + '/embed/tv?tmdb='
+    private vidsrcTVUrl = this.vidsrcBaseUrl + '/embed/tv?tmdb='
 
     private httpOptions = {
         responseType: 'text',
@@ -45,7 +45,7 @@ export class VidsrcApiService {
     }
 
     getVidsrcTV(tvId: number, season: number, episode: number) {
-        return this.http.get(this.vidsrcTVURL + `${tvId}&season=${season}&episode=${episode}`, this.httpOptions).pipe(
+        return this.http.get(this.vidsrcTVUrl + `${tvId}&season=${season}&episode=${episode}`, this.httpOptions).pipe(
             map((response) => {
                 return this.extractIframeSrc(response)
             })
