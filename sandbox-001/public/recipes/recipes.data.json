@@ -53,7 +53,7 @@
         },
         {
           "step": 4,
-          "text": "Mash the peeled eggs in a bowl with your hands"
+          "text": "Squeeze and mash the peeled eggs in a bowl with your hand (can use a glove for this)"
         },
         {
           "step": 5,
@@ -182,15 +182,19 @@
         },
         {
           "step": 3,
-          "text": "Coat the chicken in olive oil"
+          "text": "Coat the chicken in olive oil (throw on a glove and just massage the oil into the bowl of chicken)"
         },
         {
           "step": 4,
-          "text": "Bake at 425F for ~40 minutes"
+          "text": "Lay the chicken on a rack and bake at 425F for ~40 minutes"
         },
         {
           "step": 5,
           "text": "Chop chicken thighs up into pieces"
+        },
+        {
+          "step": 6,
+          "text": "Make some quesadillas, burritos, tacos, etc."
         }
       ]
     },
@@ -291,22 +295,22 @@
         },
         {
           "step": 6,
-          "text": "Put everything together and knead with hands/gloves (until the meat protein develops a sticky, tacky paste)"
+          "text": "Put everything together and knead with hands/gloves until the meat protein develops a sticky, tacky paste"
         },
         {
           "step": 7,
-          "text": "Wrap dumplings up"
+          "text": "Wrap dumplings up, place neatly on a backing sheet lined with parchment paper"
         },
         {
           "step": 8,
-          "text": "Freeze on a baking sheet before putting them into a bag"
+          "text": "Freeze the baking sheet, then put the frozen dumplings into a freezer bag"
         }
       ]
     },
     {
       "id": 5,
       "name": "짜장면",
-      "description": "Korean black bean noodles. Eat with danmuji/단무지 and lightly salted sunny side up eggs",
+      "description": "Korean black bean noodles. Eat with 단무지 and lightly salted sunny side up eggs",
       "author": "me",
       "image": "/recipes/images/jjajangmyeon.png",
       "ingredients": [
@@ -343,11 +347,11 @@
         },
         {
           "step": 2,
-          "text": "Chop the onions into squares (about the size of your thumb fingernail)"
+          "text": "Chop the onions into squares (about the size of your thumbnail)"
         },
         {
           "step": 3,
-          "text": "Mix the jjajang powder and water to make a sludge/slurry (can be adjusted later depending on how thick you want the sauce)"
+          "text": "Mix the jjajang powder and water to make a sludge/slurry (can add more powder later depending on how thick you want the sauce)"
         },
         {
           "step": 4,
@@ -367,14 +371,14 @@
         },
         {
           "step": 8,
-          "text": "Cook some jjajang noodles and mix with jjajang sauce"
+          "text": "Cook some noodles and enjoy"
         }
       ]
     },
     {
       "id": 6,
       "name": "고추장 돼지불고기",
-      "description": "Spicy pork bulgogi. Wrap it up in lettuce with some rice and ssamjang/쌈장",
+      "description": "Spicy pork bulgogi. Wrap it up in lettuce with some rice and 쌈장",
       "author": "me",
       "image": "/recipes/images/spicy_pork_bulgogi.png",
       "ingredients": [
@@ -443,41 +447,49 @@
           "text": "Get a pot or pan with a lid (needed to braise the pork shoulder a bit to tenderize it further)"
         },
         {
+          "step": 3,
+          "text": "Slice the onions"
+        },
+        {
           "step": 4,
-          "text": "Cook the pork until it's almost done, then add a little water and cover with a lid (braise on low for ~10 min)"
+          "text": "Cook the pork until it's almost done, then add a little water and cover with a lid (braise for ~10 min)"
         },
         {
           "step": 5,
           "text": "Remove the lid, add the sliced onions, and finish cooking"
+        },
+        {
+          "step": 6,
+          "text": "Wrap some rice, pork, and 쌈장 in a lettuce leaf. Eat the whole thing in 1 bite."
         }
       ]
     },
     {
       "id": 7,
       "name": "닭죽",
-      "description": "Chicken Juk. Has nice chunks of geometric protein. Be prepared to eat a lot of this.",
+      "description": "Korean chicken and rice porridge. Has nice chunks of protein. Be prepared to eat a lot of this.",
       "author": "me",
       "image": "/recipes/images/chicken_juk.png",
       "ingredients": [
         {
-          "item": "cooked rice",
-          "amount": 4,
+          "item": "uncooked rice",
+          "amount": 3,
           "unit": "Cups"
         },
         {
-          "item": "chicken breast (cubed roughly 1/2 inch thick)",
+          "item": "cubed chicken breast (cubed roughly 1/2 inch thick)",
           "amount": 4,
           "unit": "Pound"
         },
         {
-          "item": "carrots (cubed roughly 1/2 thick)",
-          "amount": 1,
-          "unit": "Pound"
+          "item": "cubed carrots (cubed roughly 1/2 thick)",
+          "amount": 3,
+          "unit": "handfuls"
         },
         {
           "item": "frozen peas",
-          "amount": 0.5,
-          "unit": "Cup"
+          "amount": 3,
+          "unit": "handfuls"
         },
         {
           "item": "minced ginger",
@@ -493,41 +505,52 @@
           "item": "soy sauce",
           "amount": 0.25,
           "unit": "Cup"
-        },
-        {
-          "item": "salt",
-          "amount": 1,
-          "unit": "Teaspoon"
         }
       ],
       "instructions": [
         {
           "step": 1,
-          "text": "Cube the chicken and marinate with salt and soy sauce (1-2 hours)"
+          "text": "Cook the rice. Cube the chicken and marinate with salt and soy sauce (1-2 hours)"
         },
         {
           "step": 2,
-          "text": "In a large pot (5.5 quarts) bring some water to a boil (just enough to cover the chicken)"
+          "text": "In a large stock pot add the marinated chicken, ginger, garlic."
         },
         {
           "step": 3,
-          "text": "Put the chicken into the boiling pot and immediately turn down the heat. Put a lid on the pot and simmer for 30 minutes."
+          "text": "Add water until it covers the top by 1 inch."
         },
         {
           "step": 4,
-          "text": "Put in the carrots, peas, and cooked rice. Make sure to break up the clumps of rice in the pot."
+          "text": "Just as the water starts boiling, bring it down to a simmer."
         },
         {
           "step": 5,
-          "text": "Add more water, until about an inch covers the top (you can add more water as you keep checking)"
+          "text": "Put a lid on the pot and simmer for 30 minutes."
+        },
+        {
+          "step": 6,
+          "text": "Put the cooked rice into a mixing bowl, add some of the stock from the pot, and break up the clumps of rice. (cooks more evenly)"
         },
         {
           "step": 7,
-          "text": "Put the lid back on and simmer for 1+ hour (stir occasionally)"
+          "text": "Put in the carrots, peas, and cooked rice into the stock pot."
         },
         {
           "step": 8,
-          "text": "Add more salt or soy sauce if needed. Melt some slices of American cheese in a bowl of juk too."
+          "text": "Add water until it covers the top by 1 inch."
+        },
+        {
+          "step": 9,
+          "text": "Bring the water to a boil, and then down to a simmer again."
+        },
+        {
+          "step": 10,
+          "text": "Put the lid back on and simmer for ~1 hour (stir every 10 min to prevent the bottom from burning)"
+        },
+        {
+          "step": 11,
+          "text": "Add more salt or soy sauce if needed. Throw a slice of American cheese in too."
         }
       ]
     }
