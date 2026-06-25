@@ -229,11 +229,9 @@ mat-card-content {
         padding: 2em 0;
         align-content: center;
         justify-content: center;
-        // overflow: hidden;
 
         .no-results {
             display: grid;
-            // align-content: start;
         }
 
         .page-status-text {
@@ -250,7 +248,5 @@ mat-card-content {
             max-width: 40cqw;
             overflow: hidden;
         }
-
-        
     }
 }
