@@ -220,7 +220,7 @@ export class MoviesAndShows {
   
   setQueryParams(media: CombinedMediaResult) {
     if (media.media_type == MediaType.TV) {
-      return {season: 1, episode: 1}
+      return {season: 1, episode: 1, scrollToMediaPlayer: true}
     }
     else {
       return null;
