@@ -156,35 +156,6 @@ export class MediaPlayer {
       this.episodeGroups.set(undefined)
       this.episodeGroupDetail.set(undefined)
 
-      // this.tmdbApiService.getTVEpisodeGroups(this.id()).subscribe({
-      //   next: (response) => {
-      //     this.episodeGroups.set(response)
-      //     if (response.results.length !== 0) {
-      //       const absoluteEpisodeGroup: EpisodeGroup = response.results.find((result) => result.type === 2 && result.group_count === 1)!
-      //       this.tmdbApiService.getTVEpisodeGroupDetail(absoluteEpisodeGroup.id).subscribe({
-      //         next: (response) => {
-      //           this.episodeGroupDetail.set(response)
-      //         },
-      //         error: (err) => {
-      //           this.isLoading.set(false)
-      //           console.error(err)
-      //         },
-      //         complete: () => {
-      //           this.isLoading.set(false)
-      //         }
-      //       })
-            
-      //     }
-      //   },
-      //   error: (err) => {
-      //     this.isLoading.set(false)
-      //     console.error(err)
-      //   },
-      //   complete: () => {
-      //     this.isLoading.set(false)
-      //   }
-      // })
-
       this.getTmdbAndVidsrcInfo(this.media_type(), this.id(), this.seasonNumber(), this.episodeNumber())
 
     })
@@ -202,9 +173,17 @@ export class MediaPlayer {
         },
         error: (err) => {
           this.isLoading.set(false)
+          if (this.scrollToMediaPlayer()) {
+            this.scrollToEpisodeHeader()
+          }
           console.error(err)
         },
         complete: () => {
+
+          if (this.scrollToMediaPlayer()) {
+            this.scrollToEpisodeHeader()
+          }
+
           this.vidsrcApiService.getVidsrcMovie(id).subscribe({
             next: (response) => {
               this.safeVidsrcUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(response))
@@ -212,22 +191,14 @@ export class MediaPlayer {
             error: (err) => {
               this.isLoading.set(false)
               this.safeVidsrcUrl.set('')
-              if (this.scrollToMediaPlayer()) {
-                this.scrollToEpisodeHeader()
-              }
               console.error(err)
             },
             complete: () => {
               this.isLoading.set(false)
-              if (this.scrollToMediaPlayer()) {
-                this.scrollToEpisodeHeader()
-              }
             }
           })
         }
       })
-
-     
     }
     else if (mediaType === MediaType.TV) {
       this.tmdbApiService.getTVSeriesDetail(id).subscribe({
@@ -240,11 +211,6 @@ export class MediaPlayer {
           console.error(err)
         },
         complete: () => {
-
-
-
-
-
           this.tmdbApiService.getTVEpisodeGroups(this.id()).subscribe({
             next: (response) => {
               this.episodeGroups.set(response)
@@ -285,9 +251,17 @@ export class MediaPlayer {
                           },
                           error: (err) => {
                             this.isLoading.set(false)
+                            if (this.scrollToMediaPlayer()) {
+                              this.scrollToEpisodeHeader()
+                            }
                             console.error(err)
                           },
                           complete: () => {
+
+                            if (this.scrollToMediaPlayer()) {
+                              this.scrollToEpisodeHeader()
+                            }
+
                             this.vidsrcApiService.getVidsrcTV(id, seasonNumber, episodeNumber).subscribe({
                               next: (response) => {
                                 this.safeVidsrcUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(response))
@@ -295,16 +269,10 @@ export class MediaPlayer {
                               error: (err) => {
                                 this.isLoading.set(false)
                                 this.safeVidsrcUrl.set('')
-                                if (this.scrollToMediaPlayer()) {
-                                  this.scrollToEpisodeHeader()
-                                }
                                 console.error(err)
                               },
                               complete: () => {
                                 this.isLoading.set(false)
-                                if (this.scrollToMediaPlayer()) {
-                                  this.scrollToEpisodeHeader()
-                                }
                               }
                             })
                           }
@@ -332,9 +300,17 @@ export class MediaPlayer {
                       },
                       error: (err) => {
                         this.isLoading.set(false)
+                        if (this.scrollToMediaPlayer()) {
+                          this.scrollToEpisodeHeader()
+                        }
                         console.error(err)
                       },
                       complete: () => {
+
+                        if (this.scrollToMediaPlayer()) {
+                          this.scrollToEpisodeHeader()
+                        }
+
                         this.vidsrcApiService.getVidsrcTV(id, seasonNumber, episodeNumber).subscribe({
                           next: (response) => {
                             this.safeVidsrcUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(response))
@@ -342,16 +318,10 @@ export class MediaPlayer {
                           error: (err) => {
                             this.isLoading.set(false)
                             this.safeVidsrcUrl.set('')
-                            if (this.scrollToMediaPlayer()) {
-                              this.scrollToEpisodeHeader()
-                            }
                             console.error(err)
                           },
                           complete: () => {
                             this.isLoading.set(false)
-                            if (this.scrollToMediaPlayer()) {
-                              this.scrollToEpisodeHeader()
-                            }
                           }
                         })
                       }
@@ -361,49 +331,6 @@ export class MediaPlayer {
               }
             }
           })
-
-
-
-
-
-
-
-          // this.tmdbApiService.getTVSeasonDetail(id, seasonNumber).subscribe({
-          //   next: (response) => {
-          //     this.selectedSeasonDetail.set(response)
-          //     this.searchTVModel.update((form) => ({...form, episode: this.getEpisode(episodeNumber, response.episodes)}))
-          //   },
-          //   error: (err) => {
-          //     this.isLoading.set(false)
-          //     console.error(err)
-          //   },
-          //   complete: () => {
-          //     this.tmdbApiService.getTVEpisodeDetail(id, seasonNumber, episodeNumber).subscribe({
-          //       next: (response) => {
-          //         this.selectedEpisodeDetail.set(response)
-          //       },
-          //       error: (err) => {
-          //         this.isLoading.set(false)
-          //         console.error(err)
-          //       },
-          //       complete: () => {
-          //         this.vidsrcApiService.getVidsrcTV(id, seasonNumber, episodeNumber).subscribe({
-          //           next: (response) => {
-          //             this.safeVidsrcUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(response))
-          //           },
-          //           error: (err) => {
-          //             this.isLoading.set(false)
-          //             this.safeVidsrcUrl.set('')
-          //             console.error(err)
-          //           },
-          //           complete: () => {
-          //             this.isLoading.set(false)
-          //           }
-          //         })
-          //       }
-          //     })      
-          //   }
-          // })
         }
       })
     }
