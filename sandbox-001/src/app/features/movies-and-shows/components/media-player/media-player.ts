@@ -254,7 +254,7 @@ export class MediaPlayer {
               console.error(err)
             },
             complete: () => {
-              if (this.episodeGroups() && this.episodeGroups()!.results.length !== 0) {
+              if (this.episodeGroups() && this.episodeGroups()!.results.length !== 0 && this.episodeGroups()!.results.find((result) => result.type === 2 && result.group_count === 1)!) {
                 const absoluteEpisodeGroup: EpisodeGroup = this.episodeGroups()!.results.find((result) => result.type === 2 && result.group_count === 1)!
                 this.tmdbApiService.getTVEpisodeGroupDetail(absoluteEpisodeGroup.id).subscribe({
                   next: (response) => {
