@@ -553,6 +553,150 @@
           "text": "Add more salt or soy sauce if needed. Throw a slice of American cheese in too."
         }
       ]
+    },
+    {
+      "id": 8,
+      "name": "가른 불고기",
+      "description": "Ground beef bulgogi, eat over rice or as a side dish. Easy for meal prep.",
+      "author": "me",
+      "image": "/recipes/images/ground_beef_bulgogi.png",
+      "ingredients": [
+        {
+          "item": "ground beef",
+          "amount": 4,
+          "unit": "Pounds"
+        },
+        {
+          "item": "soy sauce",
+          "amount": 1.5,
+          "unit": "Cups"
+        },
+        {
+          "item": "brown sugar",
+          "amount": 0.25,
+          "unit": "Cups"
+        },
+        {
+          "item": "onions",
+          "amount": 4,
+          "unit": ""
+        },
+        {
+          "item": "carrot (optional",
+          "amount": 1,
+          "unit": ""
+        },
+        {
+          "item": "green onion",
+          "amount": 1,
+          "unit": ""
+        },
+        {
+          "item": "minced garlic",
+          "amount": 3,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "sesame oil",
+          "amount": 2,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "black pepper",
+          "amount": 1,
+          "unit": "pinch"
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Mix everything together (except the onions) and marinate overnight."
+        },
+        {
+          "step": 2,
+          "text": "Slice the onions (and carrots) thinly right before cooking."
+        },
+        {
+          "step": 3,
+          "text": "Cook the marinated ground beef."
+        },
+        {
+          "step": 4,
+          "text": "When its almost done cooking, thow in the onions (and carrots) and finish cooking."
+        },
+        {
+          "step": 5,
+          "text": "Garnish with thinly sliced green onions and some sesame seeds."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Beef and Broccoli",
+      "description": "Beef and Broccoli.",
+      "author": "me",
+      "image": "/recipes/images/beef_and_broccoli.png",
+      "ingredients": [
+        {
+          "item": "beef chuck (sliced thinkly)",
+          "amount": 1,
+          "unit": "Pound"
+        },
+        {
+          "item": "broccoli",
+          "amount": 1,
+          "unit": "Handful"
+        },
+        {
+          "item": "soy sauce",
+          "amount": 0.25,
+          "unit": "Cups"
+        },
+        {
+          "item": "brown sugar",
+          "amount": 2,
+          "unit": "Tablespoon"
+        },
+        {
+          "item": "minced garlic",
+          "amount": 1,
+          "unit": "Tablespoon"
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Mix everything together (except the broccoli) and marinate overnight."
+        },
+        {
+          "step": 2,
+          "text": "Wash and separate broccoli florets right before cooking. (slice the stem and pull apart)"
+        },
+        {
+          "step": 3,
+          "text": "Blanch the broccoli for 1 min. Rinse and keep in cold water."
+        },
+        {
+          "step": 4,
+          "text": "Cook the beef."
+        },
+        {
+          "step": 5,
+          "text": "When it's almost done, put in a little water, cover it with a lid, and braise for 10 min or until it becomes tender."
+        },
+        {
+          "step": 6,
+          "text": "When it's almost done, put in a little water, cover it with a lid, and braise for 10 min or until it becomes tender."
+        },
+        {
+          "step": 7,
+          "text": "Take off the lid and let the liquid reduce a little before adding in the broccoli."
+        },
+        {
+          "step": 8,
+          "text": "Turn up the heat and finish cooking. Sprinkle in some sesame seeds if you want."
+        }
+      ]
     }
   ],
   
