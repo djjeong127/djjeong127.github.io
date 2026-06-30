@@ -697,6 +697,94 @@
           "text": "Turn up the heat and finish cooking. Sprinkle in some sesame seeds if you want."
         }
       ]
+    },
+    {
+      "id": 10,
+      "name": "식혜",
+      "description": "Sikhye, a sweet rice drink.",
+      "author": "me",
+      "image": "/recipes/images/sikhye.png",
+      "ingredients": [
+        {
+          "item": "milled malted barley",
+          "amount": 1,
+          "unit": "Pound"
+        },
+        {
+          "item": "water",
+          "amount": 2,
+          "unit": "Gallons"
+        },
+        {
+          "item": "uncooked rice",
+          "amount": 1.5,
+          "unit": "Cups"
+        },
+        {
+          "item": "sugar",
+          "amount": 2,
+          "unit": "Cups"
+        },
+        {
+          "item": "ginger (optional)",
+          "amount": 10,
+          "unit": "Grams"
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Cook the rice in the rice cooker (use a little less water so the grains dont stick together)."
+        },
+        {
+          "step": 2,
+          "text": "Pour 1 gallon of water into a large bowl."
+        },
+        {
+          "step": 3,
+          "text": "Put the malt into a strainer/cheesecloth bag and knead it around in the bowl of water for a couple min."
+        },
+        {
+          "step": 4,
+          "text": "Leave the bag in the bowl and let the sediment settle."
+        },
+        {
+          "step": 5,
+          "text": "Pour a little bit of the malt water into the rice cooker and break up the rice."
+        },
+        {
+          "step": 6,
+          "text": "Put the bag of malt in the rice cooker, fill with malt water to the top line/max capacity."
+        },
+        {
+          "step": 7,
+          "text": "Close the rice cooker and keep warm for 4 - 6 hours (keeps temp between 122F-150F, the point is to keep temp so the amalyse enzyme in the barley malt breaks down the starches from the rice into natural sugars)."
+        },
+        {
+          "step": 8,
+          "text": "Check to see if > 20 grains of rice are floating on the surface."
+        },
+        {
+          "step": 9,
+          "text": "Put everything into a large stock pot (the bag, the rice, the malt water, the sediment from before, the rest of the ingredients)."
+        },
+        {
+          "step": 10,
+          "text": "Bring to a boil, then reduce the heat and simmer for 10 min."
+        },
+        {
+          "step": 11,
+          "text": "Take out the bag and other ingredients."
+        },
+        {
+          "step": 12,
+          "text": "Let the pot cool down before filtering out the amount of rice/sediment wanted."
+        },
+        {
+          "step": 13,
+          "text": "Store in fridge up to 1 week."
+        }
+      ]
     }
   ],
   
