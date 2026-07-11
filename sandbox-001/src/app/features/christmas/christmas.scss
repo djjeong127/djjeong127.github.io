@@ -1,0 +1,141 @@
+@use 'sass:math';
+
+.christmas-feature {
+    display: grid;
+    height: 100%;
+    font-family: 'Times New Roman', Times,  serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.its-christmas {
+    display: grid;
+    justify-self: center;
+    align-self: center;
+    color: var(--mat-sys-primary-fixed);
+
+    @media (orientation: landscape) {
+        font-size: 6cqi;
+    }
+    @media (orientation: portrait) {
+        font-size: 8cqi;
+    }
+}
+
+.countdown {
+    display: grid;
+    justify-items: center;
+    gap: 1cqi;
+    line-height: 1;
+    margin: 2cqi 0;
+    height: 75%
+}
+
+.countdown-title {
+    display: grid;
+    align-items: center;
+    color: var(--mat-sys-primary-fixed);
+    
+    @media (orientation: landscape) {
+        font-size: 6cqi;
+        margin: 2cqi;
+    }
+    @media (orientation: portrait) {
+        font-size: 8cqi;
+        margin: 2cqi;
+    }
+}
+
+.countdown-timer {
+    display: grid;
+    gap: 1cqi;
+    width: 90%;
+
+    @media (orientation: landscape) {
+        grid-auto-flow: column;
+        grid-template-columns: repeat(4, 1fr);
+    }
+    @media (orientation: portrait) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.countdown-timer-block {
+    display: grid;
+    justify-items: center; 
+
+    background-color: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+    border-radius: 10px;
+    
+    @media (orientation: landscape) {
+        .countdown-timer-block-title {
+            font-size: 4cqi;
+            margin: 2cqi;
+        }
+
+        .countdown-timer-block-value {
+            font-size: 6cqi;
+            margin: 2cqi;
+        }
+    }
+
+    @media (orientation: portrait) {
+        .countdown-timer-block-title {
+            font-size: 8cqi;
+            margin: 2cqi;
+        }
+
+        .countdown-timer-block-value {
+            font-size: 12cqi;
+            margin: 2cqi;
+        }
+    }
+}
+
+
+
+
+
+@function random_range($min, $max) {
+  $rand: math.random();
+  $random_range: $min + math.floor($rand * (($max - $min) + 1));
+  @return $random_range;
+}
+
+.snow {
+  $total: 500;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: white;
+  border-radius: 50%;
+
+  @for $i from 1 through $total {
+    $random-x: math.random(1000000) * 0.0001vw;
+    $random-offset: random_range(-100000, 100000) * 0.0001vw;
+    $random-x-end: $random-x + $random-offset;
+    $random-x-end-yoyo: $random-x + calc($random-offset / 2);
+    $random-yoyo-time: calc(random_range(30000, 80000) / 100000);
+    $random-yoyo-y: $random-yoyo-time * 100vh;
+    $random-scale: math.random(10000) * 0.0001;
+    $fall-duration: random_range(10, 30) * 1s;
+    $fall-delay: math.random(30) * -1s;
+
+    &:nth-child(#{$i}) {
+      opacity: math.random(10000) * 0.0001;
+      transform: translate($random-x, -10px) scale($random-scale);
+      animation: fall-#{$i} $fall-duration $fall-delay linear infinite;
+    }
+
+    @keyframes fall-#{$i} {
+      #{math.percentage($random-yoyo-time)} {
+        transform: translate($random-x-end, $random-yoyo-y) scale($random-scale);
+      }
+
+      to {
+        transform: translate($random-x-end-yoyo, 100vh) scale($random-scale);
+      }
+    }
+  }
+}

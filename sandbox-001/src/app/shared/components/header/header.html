@@ -1,0 +1,71 @@
+
+<mat-toolbar>
+    <div class="left-buttons">
+        <button matIconButton routerLink="/">
+            <mat-icon>home</mat-icon>
+        </button>
+    </div>
+    <div class="middle-buttons">
+        <!-- <button matButton="filled" (click)="themeService.toggleTheme()">
+            @if (themeService.theme() === themesEnum.Mountain) {
+                산
+            }
+            @else if (themeService.theme() === themesEnum.Jeju) {
+                제주
+            }
+            @else {
+                벚꽃
+            }
+        </button> -->
+        <button matIconButton (click)="themeService.toggleTheme()">
+             @if (themeService.theme() === themesEnum.Mountain) {
+                <mat-icon>landscape</mat-icon>
+            }
+            @else if (themeService.theme() === themesEnum.Jeju) {
+                <mat-icon>sailing</mat-icon>
+            }
+            @else {
+                <mat-icon>local_florist</mat-icon>
+            }
+        </button>
+        
+        <button matIconButton (click)="themeService.toggleMode()">
+            @if (themeService.currentFeatureMode().mode === modesEnum.Light) {
+                @if (themeService.currentFeatureMode().feature === featureEnum.MoviesAndShows) {
+                    <mat-icon>flashlight_on</mat-icon>
+                }
+                @else {
+                    <mat-icon>light_mode</mat-icon>
+                }
+            }
+            @else {
+                @if (themeService.currentFeatureMode().feature === featureEnum.MoviesAndShows) {
+                    <mat-icon>flashlight_off</mat-icon>
+                }
+                @else {
+                    <mat-icon>dark_mode</mat-icon>
+                }
+            }
+        </button>
+
+        @if (themeService.showTmdbApiLanguageIcon()) {
+            <button matIconButton (click)="triggerTmdbApiLanguageChange()">
+                @if (themeService.tmdbApiLanguage() === tmbdApiLanguageEnum.English) {
+                    <!-- <mat-icon>abc</mat-icon> -->
+                    <mat-icon svgIcon="language_english"></mat-icon>
+                }
+                @else if (themeService.tmdbApiLanguage() === tmbdApiLanguageEnum.Korean) {
+                    <!-- <mat-icon>language</mat-icon> -->
+                    <mat-icon svgIcon="language_korean"></mat-icon>
+                }
+            </button>
+            
+        }
+        
+    </div>
+    <div class="right-buttons">
+        <a class="image" routerLink="/give-us-this-day-our">
+            <img class="not-found-image" src="/duck_on_bread.png">
+        </a>
+    </div>
+</mat-toolbar>

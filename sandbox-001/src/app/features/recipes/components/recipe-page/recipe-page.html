@@ -1,0 +1,53 @@
+@if (recipe(); as recipe) {
+    <div class="recipe-page-feature">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title-group>
+                    <mat-card-title>{{ recipe.name }}</mat-card-title>
+                    <!-- <mat-card-subtitle>Author: {{ recipe.author }}</mat-card-subtitle> -->
+                </mat-card-title-group>
+            </mat-card-header>
+            <mat-card-content>
+                <p>{{ recipe.description }}</p>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title-group>
+                    <mat-card-title>Ingredients</mat-card-title>
+                </mat-card-title-group>
+            </mat-card-header>
+            <mat-card-content>
+                <ul>
+                    @for (ingredient of recipe.ingredients; track ingredient.item) {
+                        <li>{{ingredient.amount}} {{ingredient.unit}} {{ingredient.item}}</li>
+                    }
+                </ul>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title-group>
+                    <mat-card-title>Instructions</mat-card-title>
+                </mat-card-title-group>
+            </mat-card-header>
+            <mat-card-content>
+                <ol>
+                    @for (instruction of recipe.instructions; track instruction.step) {
+                        <li>{{instruction.text}}</li>
+                    }
+                </ol>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="image-card">
+
+            <mat-card-content>
+                                    <img class="recipe-image" matCardImage [src]="recipe.image">
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+}

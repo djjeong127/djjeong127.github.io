@@ -1,0 +1,36 @@
+.recipe-page-feature {
+    display: grid;
+    gap: 1em;
+    padding: 1em;
+    justify-items: center;
+}
+
+mat-card {
+
+    @media (orientation: landscape) {
+        width: 80%;
+
+    }
+    @media (orientation: portrait) {
+        width: 100%;
+    }
+}
+
+// fits the card to the image
+.image-card {
+    width: inherit;
+}
+
+.recipe-image {
+    display: grid;
+    justify-self: center;
+
+    @media (orientation: landscape) {
+        max-height: 80vh;
+        max-width: 100%;
+
+    }
+    @media (orientation: portrait) {
+        max-width: 100%;
+    }
+}

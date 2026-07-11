@@ -1,0 +1,18 @@
+{
+  "/api-vidsrc-domains": {
+    "target": "https://vidsrc.domains",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api-vidsrc-domains": ""
+    }
+  },
+  "/api-vidsrc-vidsrcme.ru": {
+    "target": "https://vidsrcme.ru",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api-vidsrc-vidsrcme.ru": ""
+    }
+  }
+}

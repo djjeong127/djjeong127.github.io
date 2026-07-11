@@ -1,0 +1,110 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+@use './custom-stylesheets/mountain.scss' as mountain;
+@use './custom-stylesheets/jeju.scss' as jeju;
+@use './custom-stylesheets/seoul-cherry-blossom.scss' as seoul-cherry-blossom;
+
+html {
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+
+  @include mat.toolbar-overrides((
+    container-background-color: var(--mat-sys-primary-container),
+    container-text-color: var(--mat-sys-on-primary-container)
+  ));
+
+  @include mat.card-overrides((
+    elevated-container-color: var(--mat-sys-secondary-container),
+  ));
+
+  @include mat.button-toggle-overrides((
+    selected-state-background-color: var(--mat-sys-primary),
+    selected-state-text-color: var(--mat-sys-on-primary),
+    shape: var(--mat-sys-corner-small),
+  ));
+
+}
+
+// Compile and apply the mountain Stylesheet via a class modifier
+html.mountain {
+  @include mat.theme(
+    (
+      color: (
+        primary: mountain.$primary-palette,
+        tertiary: mountain.$tertiary-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+// Compile and apply the jeju Stylesheet via a class modifier
+html.jeju {
+  @include mat.theme(
+    (
+      color: (
+        primary: jeju.$primary-palette,
+        tertiary: jeju.$tertiary-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+// Compile and apply the seoul-cherry-blossom Stylesheet via a class modifier
+html.seoul-cherry-blossom {
+  @include mat.theme(
+    (
+      color: (
+        primary: seoul-cherry-blossom.$primary-palette,
+        tertiary: seoul-cherry-blossom.$tertiary-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+
+
+
+:root {
+  --color-scheme: light;
+  --root-background-color: var(--mat-sys-surface)
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: var(--color-scheme);
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  
+  // background-color: var(--mat-sys-surface);
+  background-color: var(--root-background-color);
+
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-large);
+
+  // Reset the user agent margin.
+  margin: 0;
+  height: 100%;
+}
+/* You can add global styles to this file, and also import other style files */

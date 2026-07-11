@@ -1,0 +1,252 @@
+.movies-and-shows-feature {
+    display: grid;
+    color: var(--mat-sys-on-secondary-container);
+
+}
+
+.movies-and-shows-header {
+    display: grid;
+    justify-content: center;
+    gap: 1em;
+    padding: 0.5em 0;
+    background-color: var(--mat-sys-inverse-on-surface);
+
+    position: fixed;
+    width: 100%;
+    z-index: 999;
+
+    transition: translate 0.3s ease-in-out;
+    translate: 0 0;
+}
+
+.movies-and-shows-header.scroll-down {
+    translate: 0 -100%;
+}
+
+.movies-and-shows-header.relative {
+    position: relative;
+}
+
+.movies-and-shows-header-buffer {
+    position: relative;
+    
+    // z-index: 1000;
+    // background-color: red;
+    // opacity: 80%;
+}
+
+.movies-and-shows-header-buffer.relative {
+    position: absolute;
+}
+
+
+
+
+.mode {
+    display: grid;
+    gap: 1em;
+    width: 90vw;
+}
+
+
+.query-mode {
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+    justify-self: center;
+    width: inherit;
+
+    mat-button-toggle-group {
+        width: inherit;
+
+        mat-button-toggle {
+            width: 50%;
+        }
+    }
+}
+
+.search-discover-mode {
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+    justify-self: center;
+    width: inherit;
+
+    .search-mode {
+        display: grid;
+        width: inherit;
+        gap: 1em;
+
+        mat-form-field {
+            width: 100%;
+        }
+
+        mat-button-toggle-group {
+            width: inherit;
+
+            mat-button-toggle {
+                width: 100%;
+                overflow: hidden;
+            }
+        }
+    }
+    .discover-mode {
+        display: grid;
+        width: inherit;
+        gap: 1em;
+
+        .discover-media-type {
+
+            mat-button-toggle {
+                width: 50%;
+            }
+        }
+
+        .discover-filters {
+            display: grid;
+            grid-auto-flow: column;
+            justify-items: center;
+            width: inherit;
+
+            mat-form-field {
+                width: 99%;
+            }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .mode {
+        width: 60vw;
+    }
+}
+
+@media (min-width: 1400px) {
+    .mode {
+        width: 35vw;
+    }
+}
+
+
+
+
+.media-cards {
+    display: grid;
+    gap: 0.5em;
+    padding: 0.5em;
+
+    @media (orientation: landscape) {
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+        
+    }
+    @media (orientation: portrait) {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+
+
+.media-card {
+    border-radius: var(--mat-sys-corner-medium);
+
+    transform: scale(1);
+    transition: transform 0.5s ease-out;
+
+    
+}
+
+.media-card:hover {
+    cursor: pointer;
+    opacity: 75%;
+
+    transform: scale(1.03);
+    transition: transform 0.2s ease-out;
+}
+
+mat-card {
+    height: 100%;
+
+    img {
+        height: inherit;
+        object-fit: cover;
+    }
+}
+
+mat-card-content {
+    padding: 0.5em;
+    p, h3 {
+        margin: 0.5em;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
+        overflow: hidden;
+    }
+}
+
+.bottom-sentinel {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    align-content: center;
+    justify-content: center;
+    align-self: center;
+    justify-self: center;
+}
+
+
+
+.movies-and-shows-feature:has(.page-status) {
+    display: grid;
+    height: 100%;
+    grid-template-rows: auto 1fr;
+
+    .movies-and-shows-header {
+        position: relative;
+    }
+
+    .movies-and-shows-header.relative {
+        position: relative;
+    }
+
+    .movies-and-shows-header.scroll-down {
+        translate: 0 0;
+    }
+
+    .movies-and-shows-header-buffer {
+        display: none;
+    }
+
+    .movies-and-shows-header-buffer.relative {
+        display: none;
+    }
+
+    .media-cards {
+        display: none;
+    }
+
+    .page-status {
+        display: grid;
+        padding: 2em 0;
+        align-content: center;
+        justify-content: center;
+
+        .no-results {
+            display: grid;
+        }
+
+        .page-status-text {
+            font-size: min(10cqw, 10cqh);
+            line-height: 1.2;
+            text-align: center;
+            user-select: none;
+        }
+
+        img {
+            align-self: center;
+            justify-self: center;
+            max-height: 40cqh;
+            max-width: 40cqw;
+            overflow: hidden;
+        }
+    }
+}

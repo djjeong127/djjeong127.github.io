@@ -1,0 +1,37 @@
+<!-- <div class="christmas-feature" [style.background]="christmasService.isChristmas() ? 'linear-gradient(to bottom, #051026, #0f2b46, #1c3c63)' : null"> -->
+<div class="christmas-feature" [style.background]="'linear-gradient(to bottom, #051026, #0f2b46, #1c3c63)'">
+
+    @if (christmasService.isChristmas()) {
+        <div class="its-christmas">MERRY CHRISTMAS!</div>
+        <!-- @for (snowflake of christmasService.snowflakeArray(); track snowflake) {
+            <div class="snow"></div>
+        } -->
+    }
+    @else {
+        <div class="countdown">
+            <div class="countdown-title">Christmas Countdown</div>
+            <div class="countdown-timer">
+                <div class="countdown-timer-block">
+                    <div class="countdown-timer-block-title">Days</div>
+                    <div class="countdown-timer-block-value">{{ christmasService.timeUntilChristmas().days }}</div>
+                </div>
+                <div class="countdown-timer-block">
+                    <div class="countdown-timer-block-title">Hours</div>
+                    <div class="countdown-timer-block-value">{{ christmasService.timeUntilChristmas().hours }}</div>
+                </div>
+                <div class="countdown-timer-block">
+                    <div class="countdown-timer-block-title">Minutes</div>
+                    <div class="countdown-timer-block-value">{{ christmasService.timeUntilChristmas().minutes }}</div>
+                </div>
+                <div class="countdown-timer-block">
+                    <div class="countdown-timer-block-title">Seconds</div>
+                    <div class="countdown-timer-block-value">{{ christmasService.timeUntilChristmas().seconds }}</div>
+                </div>
+            </div>
+        </div>
+    }
+    @for (snowflake of christmasService.snowflakeArray(); track snowflake) {
+            <div class="snow"></div>
+        }
+</div>
+

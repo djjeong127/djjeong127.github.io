@@ -1,0 +1,85 @@
+.not-found-feature {
+    display: grid;
+    line-height: 1.2;
+    height: 100%;
+    justify-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.not-found-text {
+    display: grid;
+    font-size: min(12cqw, 12cqh);
+    font-family: cursive;
+    align-self: end;
+    justify-items: center;
+    user-select: none;
+}
+
+.not-found-image {
+    display: grid;
+    max-width: 60vw;
+    max-height: 60vh;
+    user-select: none;
+}
+
+
+
+
+
+.follower-element {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 3em;
+  height: 3em;
+  border-radius: 50%;
+  
+  /* position of element in regards to the mouse */
+  margin-top: -1.5em;
+  margin-left: -1.5em;
+  
+  pointer-events: none; /* Crucial: stops the follower from hijacking mouseover states */
+  will-change: transform; /* Signals the browser to optimize this layer for motion */
+
+  transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+
+  // hide element if the device is touchscreen
+  @media (pointer: coarse) {
+    pointer-events: none;
+    display: none;
+  }
+}
+
+
+
+.follower-stamp {
+  display: grid;
+  max-width: 20vw;
+  max-height: 20vh;
+  user-select: none;
+
+  position: absolute;
+
+  pointer-events: none; /* Prevents stacked bubbles from intercepting clicks */
+  transform: translate(-50%, -50%); 
+}
+
+.animate-fade {
+  animation: clickDissolveInPlace 1s ease-out forwards;
+}
+
+@keyframes clickDissolveInPlace {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+}
