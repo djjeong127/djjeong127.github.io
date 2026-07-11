@@ -1,0 +1,140 @@
+<div class="movies-and-shows-feature">
+    <div class="movies-and-shows-header" [class.scroll-down]="scrollDown()" [class.relative]="relative()">
+        <div class="mode">
+            <div class="query-mode">
+                <mat-button-toggle-group (change)="onDiscoverSubmit()" [formField]="moviesAndShowsService.queryModeForm.queryMode" hideSingleSelectionIndicator="true">
+                    <mat-button-toggle [value]="queryMode.Search">Search</mat-button-toggle>
+                    <mat-button-toggle [value]="queryMode.Discover">Discover</mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+
+            <div class="search-discover-mode">
+                @if (moviesAndShowsService.queryModeModel().queryMode === queryMode.Search) {
+                    <form class="search-mode" (submit)="onSearchSubmitForm($event)">
+                        <mat-form-field subscriptSizing="dynamic">
+                            <input placeholder="Search" matInput [formField]="moviesAndShowsService.searchForm.searchMedia">
+                            <button matSuffix matIconButton type="submit">
+                                <mat-icon>search</mat-icon>
+                            </button>
+                        </mat-form-field>
+
+
+                        <mat-button-toggle-group (change)="onSearchSubmit()" [formField]="moviesAndShowsService.searchForm.multiFilter" hideSingleSelectionIndicator="true">
+                            <mat-button-toggle [value]="multiFilter.Movie">Movie</mat-button-toggle>
+                            <mat-button-toggle [value]="multiFilter.MovieAndTV">Movie & TV</mat-button-toggle>
+                            <mat-button-toggle [value]="multiFilter.TV">TV</mat-button-toggle>
+                        </mat-button-toggle-group>
+                    </form>
+                }
+                @else {
+                    <div class="discover-mode">
+
+                        <mat-button-toggle-group class="discover-media-type" (change)="onDiscoverSubmit()" [formField]="moviesAndShowsService.queryModeForm.discoverMode" hideSingleSelectionIndicator="true">
+                            <mat-button-toggle [value]="mediaType.Movie">Movie</mat-button-toggle>
+                            <mat-button-toggle [value]="mediaType.TV">TV</mat-button-toggle>
+                        </mat-button-toggle-group>
+
+                        <div class="discover-filters">
+                            @if (moviesAndShowsService.queryModeModel().discoverMode === mediaType.Movie) {
+                                
+                                <mat-form-field subscriptSizing="dynamic">
+                                    <mat-label>Genres</mat-label>
+                                    <mat-select placeholder="Genre" (selectionChange)="triggerDiscoverSubmitSyncGenreIfPossible()" [formField]="moviesAndShowsService.discoverMovieForm.with_genre" hideSingleSelectionIndicator="true">
+                                        @for (genre of moviesAndShowsService.movieGenres(); track genre.id) {
+                                            <mat-option [value]="genre">{{genre.name}}</mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field subscriptSizing="dynamic">
+                                    <mat-label>Country of origin</mat-label>
+                                    <mat-select placeholder="All Countries" (selectionChange)="triggerDiscoverSubmitSyncCountries()" [formField]="moviesAndShowsService.discoverMovieForm.with_origin_country" hideSingleSelectionIndicator="true">
+                                        @for (country of moviesAndShowsService.ListOfCountriesIWant(); track country.iso_3166_1) {
+                                            <mat-option [value]="country">- {{country.english_name}}</mat-option>
+                                        }
+                                        @for (country of moviesAndShowsService.countries(); track country.iso_3166_1) {
+                                            <mat-option [value]="country">{{country.english_name}}</mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                                
+                            }
+                            @else if(moviesAndShowsService.queryModeModel().discoverMode === mediaType.TV) {
+                                
+                                <mat-form-field subscriptSizing="dynamic">
+                                    <mat-label>Genres</mat-label>
+                                    <mat-select placeholder="Genre" (selectionChange)="triggerDiscoverSubmitSyncGenreIfPossible()" [formField]="moviesAndShowsService.discoverTVForm.with_genre" hideSingleSelectionIndicator="true">
+                                        @for (genre of moviesAndShowsService.tvGenres(); track genre.id) {
+                                            <mat-option [value]="genre">{{genre.name}}</mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                                
+                                <mat-form-field subscriptSizing="dynamic">
+                                    <mat-label>Country of origin</mat-label>
+                                    <mat-select (selectionChange)="triggerDiscoverSubmitSyncCountries()" [formField]="moviesAndShowsService.discoverTVForm.with_origin_country" hideSingleSelectionIndicator="true">
+                                        @for (country of moviesAndShowsService.ListOfCountriesIWant(); track country.iso_3166_1) {
+                                            <mat-option [value]="country">- {{country.english_name}}</mat-option>
+                                        }
+                                        @for (country of moviesAndShowsService.countries(); track country.iso_3166_1) {
+                                            <mat-option [value]="country">{{country.english_name}}</mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="movies-and-shows-header-buffer" [class.relative]="relative()" [style.height]="`${moviesAndShowsHeaderElement().getBoundingClientRect().height}px`"></div>
+
+
+    <div class="media-cards">
+        @for (result of moviesAndShowsService.combinedLoadedMediaResults(); track (result.media_type + '_' + result.id)) {
+            <div class="media-card" matRipple>
+                <mat-card [routerLink]="['/movies-and-shows', result.media_type, result.id]" [queryParams]="setQueryParams(result)" [matTooltip]="result.title_name" matTooltipTouchGestures="off">
+                    <img matCardImage [src]="result.poster_path">
+                    <mat-card-content>
+                        <h3>{{ result.title_name ? result.title_name : result.original_title_name }}</h3>
+                        <p>
+                            @if (result.media_type === mediaType.Movie) {
+                                {{ result.media_type.slice(0, 1) | uppercase  }}{{result.media_type.slice(1)}} |
+                            }
+                            @else if (result.media_type === mediaType.TV) {
+                                {{result.media_type | uppercase}} |
+                            }
+
+                            @if (result.release_date){
+                                {{result.release_date | date: 'yyyy'}}
+                            }
+                        </p>
+
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        }
+        <div class="bottom-sentinel" #bottomSentinel>
+            @if(moviesAndShowsService.combinedLoadedMediaResults().length > 0 && (moviesAndShowsService.isLoadingMoviePages() || moviesAndShowsService.isLoadingTVPages() || moviesAndShowsService.isLoadingSearchMultiPages() || moviesAndShowsService.isLoadingTrendingMultiPages())) {
+                <mat-spinner></mat-spinner>
+            }
+        </div>
+    </div>
+    @if (moviesAndShowsService.combinedLoadedMediaResults().length === 0) {
+        <div class="page-status">
+            @if(moviesAndShowsService.isLoadingMoviePages() || moviesAndShowsService.isLoadingTVPages() || moviesAndShowsService.isLoadingSearchMultiPages() || moviesAndShowsService.isLoadingTrendingMultiPages()) {
+                <mat-spinner></mat-spinner>
+            }
+            @else {
+                <div class="no-results">
+                    <div class=page-status-text>No Results!</div>
+                    <img src="/duck_on_bread.png">
+                </div>
+            }
+        </div>
+    }
+    
+</div>
+

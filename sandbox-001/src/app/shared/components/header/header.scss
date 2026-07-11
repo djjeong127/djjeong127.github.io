@@ -1,0 +1,27 @@
+
+mat-toolbar {
+    gap: 1em;
+}
+
+.left-buttons {
+    flex: 1;
+}
+
+.middle-buttons {
+    display: grid;
+    grid-auto-flow: column;
+    column-gap: 1em;
+}
+
+.right-buttons {
+    height: 100%;
+}
+
+.image {
+    height: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.not-found-image {
+    height: 100%;
+}

@@ -1,0 +1,23 @@
+.app-feature {
+    display: grid;
+    height: 100vh;
+    grid-template-rows: auto auto 1fr;
+}
+
+app-header {
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+.app-content {
+    /* Angular Material Toolbar height is 64px for Desktop, 56px for Mobile viewports */
+    padding: 64px 0 0 0;
+    height: calc(100vh - 64px);
+
+    @media (max-width: 599px) {
+        padding: 54px 0 0 0;
+        height: calc(100vh - 54px);
+    }
+}
+

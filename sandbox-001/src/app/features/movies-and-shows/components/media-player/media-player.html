@@ -1,0 +1,265 @@
+<div class="media-player-feature">
+    <div class="media-player-header" [class.scroll-down]="scrollDown()" [class.relative]="relative()">
+        <form class="search-bar" (submit)="onSearchSubmitForm($event)">
+            <mat-form-field subscriptSizing="dynamic">
+                <input placeholder="Search" matInput [formField]="moviesAndShowsService.searchForm.searchMedia">
+                <button matSuffix matIconButton type="submit">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </mat-form-field>
+        </form>
+    </div>
+    @if (mediaPlayerHeaderElement()) {
+        <div class="media-player-header-buffer" [class.relative]="relative()" [style.height]="`${mediaPlayerHeaderElement().getBoundingClientRect().height}px`"></div>
+    }
+
+
+    <div class="media-player-body">
+        @if(moviesAndShowsService.tmdbConfiguration()) {
+            @if(media_type() === mediaTypeEnum.Movie && selectedMovie()) {
+                @let movie = selectedMovie()!;
+                <div class="media">
+
+                    <div class="media-title">
+                        <h1>{{ movie.title ? movie.title : movie.original_title }}</h1>
+                    </div>
+
+                    <div class="media-details">
+
+                        <div class="media-card">
+                            <mat-card matTooltipTouchGestures="off">
+                                <img matCardImage [src]="moviesAndShowsService.getFullImageUrl(movie.poster_path)">
+                            </mat-card>
+                        </div>
+
+                        <div class="media-metadata">
+                            <div class="overview">
+                                <div>{{movie.overview}}</div>
+                            </div>
+
+                            <div><b>Genres: </b>{{moviesAndShowsService.movieGenreNamesStringFromGenreList(movie.genres)}}</div>
+                            <div><b>Release Date: </b>{{movie.release_date | date}}</div>
+                            <div><b>Runtime: </b>{{minutesToHoursAndMinutes(movie.runtime)}}</div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <hr #videoHeader>
+
+            }
+            @else if (media_type() === mediaTypeEnum.TV && selectedTVDetail() && selectedSeasonDetail() && selectedEpisodeDetail()) {
+                @let tv = selectedTVDetail()!;
+
+                <div class="media">
+
+                    <div class="media-title">
+                        <h1>{{ tv.name ? tv.name : tv.original_name }}</h1>
+                    </div>
+
+                    <div class="media-details">
+
+                        <div class="media-card">
+                            <mat-card matTooltipTouchGestures="off">
+                                <img matCardImage [src]="moviesAndShowsService.getFullImageUrl(tv.poster_path)">
+                            </mat-card>
+                        </div>
+
+                        <div class="media-metadata">
+                            <div class="overview">
+                                <div>{{tv.overview}}</div>
+                            </div>
+
+                            <div><b>Genres: </b>{{moviesAndShowsService.tvGenreNamesStringFromGenreList(tv.genres)}}</div>
+                            <div><b>First Air Date: </b>{{tv.first_air_date| date}}</div>
+                            <div><b>Seasons: </b>{{tv.number_of_seasons}}</div>
+                            
+                        </div>
+                    </div>
+
+                </div>
+                
+                <hr #videoHeader>
+            }
+            @else {
+                <div class="page-status">
+                    @if(isLoading()) {
+                        <mat-spinner></mat-spinner>
+                    }
+                    @else {
+                        @if (media_type() === mediaTypeEnum.Movie) {
+                            <div class="page-status-text">Could not find movie!</div>
+                        }
+                        @else if (media_type() === mediaTypeEnum.TV) {
+                            <div class="page-status-text">Could not find show!</div>
+                        }
+                        @else {
+                            <div class=page-status-text>Could not find media!</div>
+                        }
+                        <img src="/duck_on_bread.png">
+                    }
+                </div>
+            }
+
+
+            @if (media_type() === mediaTypeEnum.TV && selectedTVDetail() && selectedSeasonDetail() && selectedEpisodeDetail()) {
+                @let season = selectedSeasonDetail()!;
+                @let episode = selectedEpisodeDetail()!;
+
+                <div class="media episode-title-header">
+                    <div class="media-details">
+                        <div class="media-card">
+                            <mat-card matTooltipTouchGestures="off">
+                                <img matCardImage [src]="moviesAndShowsService.getFullImageUrl(episode.still_path)">
+                            </mat-card>
+                        </div>
+
+                        <div class="media-title">
+                            <h2>{{season.name}}</h2>
+                            <h3>{{episode.name}}</h3>
+                            <div>{{minutesToHoursAndMinutes(episode.runtime)}}</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                
+            }
+
+            <!-- if we got metadata from tmdb -->
+            @if ((media_type() === mediaTypeEnum.Movie && selectedMovie()) || (media_type() === mediaTypeEnum.TV && selectedTVDetail() && selectedSeasonDetail() && selectedEpisodeDetail())) {
+
+                @if (isLoading() || safeVidsrcUrl() === undefined) {
+                    <div class="media-container">
+                        <img class="no-video blackout" src="/movies-and-shows-assets/images/no_video.png">
+                        <div class="overlay">
+                            <mat-spinner ></mat-spinner>
+                        </div>
+                    </div>
+                }
+                @else {
+                    @if (safeVidsrcUrl() === '') {
+                        <div class="media-container">
+                            <img class="no-video" src="/movies-and-shows-assets/images/no_video.png">
+                        </div>
+                    }
+                    @else {
+
+                        @if (safeVidsrcUrl()) {
+                            @if (media_type() === mediaTypeEnum.Movie) {
+                                <iframe class="media-container" referrerpolicy="no-referrer" [src]="safeVidsrcUrl()" frameborder="0" scrolling="no" allowfullscreen="yes"></iframe>
+                            }
+                            @else {
+                                <iframe class="media-container" referrerpolicy="no-referrer" [src]="safeVidsrcUrl()" frameborder="0" scrolling="no" allowfullscreen="yes"></iframe>
+                            }
+                        }
+                        
+                    }
+                }
+            }
+
+            
+            @if (media_type() === mediaTypeEnum.TV && selectedTVDetail() && selectedSeasonDetail() && selectedEpisodeDetail()) {
+                @let season = selectedSeasonDetail()!;
+                @let episode = selectedEpisodeDetail()!;
+
+                <div class="tv-filters">
+                    <mat-form-field subscriptSizing="dynamic">
+                        <mat-label>Seasons</mat-label>
+                        <mat-select (selectionChange)="triggerSearchTVSeason($event)" [compareWith]="compareObjects" [formField]="searchTVForm.season" hideSingleSelectionIndicator="true">
+                            @for (season of (seasonsList()); track season.id) {
+                                <mat-option [value]="season">
+                                    <div class="season-select-option">
+                                        <img matCardImage class="option-image" [src]="moviesAndShowsService.getFullImageUrl(season.poster_path)">
+                                        <div>#{{season.season_number}}: {{season.name}}</div>
+                                    </div>
+                                </mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field subscriptSizing="dynamic">
+                        <mat-label>Episodes</mat-label>
+                        <mat-select (selectionChange)="triggerSearchTVEpisode($event)" [compareWith]="compareObjects" [formField]="searchTVForm.episode" hideSingleSelectionIndicator="true">
+                            @for (episode of (episodesList()); track episode.id) {
+                                <mat-option [value]="episode">
+                                    <div class="episode-select-option">
+                                        <img matCardImage class="option-image" [src]="moviesAndShowsService.getFullImageUrl(episode.still_path)">
+                                        <div>#{{episode.episode_number}}: {{episode.name}}</div>
+                                    </div>
+                                </mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div>{{episode.overview}}</div>
+                
+                <br>
+                <hr>
+
+                <div class="media">
+
+                    <div class="media-title">
+                        <h2>More Details</h2>
+                    </div>
+
+
+                    <div class="media-details">
+
+                        <div class="media-card">
+                            <mat-card matTooltipTouchGestures="off">
+                                <img matCardImage [src]="moviesAndShowsService.getFullImageUrl(season.poster_path)">
+                            </mat-card>
+                        </div>
+
+                        <div class="media-metadata">
+                            <h2>Season #{{season.season_number}}</h2>
+                            <h3>{{season.name}}</h3>
+
+                            <div class="overview">
+                                <div><b></b>{{season.overview}}</div>
+                            </div>
+
+                            <div><b>Season Air Date: </b>{{season.air_date | date}}</div>
+                            <div><b>Episodes: </b>{{season.episodes.length}}</div>
+
+                        </div>
+                    </div>
+
+
+                    <br>
+
+
+                    @for (episode of season.episodes; track episode.id) {
+                        <div class="more-info-media-card" matRipple>
+                            <mat-card class="more-info-media" (click)="searchAndScrollTVEpisode(episode.episode_number)" matTooltipTouchGestures="off">
+                                <div class="media-details">
+
+                                    <div class="media-card">
+                                        <mat-card matTooltipTouchGestures="off">
+                                            <img matCardImage [src]="moviesAndShowsService.getFullImageUrl(episode.still_path)">
+                                        </mat-card>
+                                    </div>
+
+                                    <div class="media-metadata">
+                                        <h2>Episode #{{episode.episode_number}}</h2>
+                                        <h3>{{episode.name}}</h3>
+
+                                        <div class="overview">
+                                            <div>{{episode.overview}}</div>
+                                        </div>
+                                        
+                                        <div><b>Air Date: </b>{{episode.air_date | date}}</div>
+                                        <div><b>Runtime: </b>{{minutesToHoursAndMinutes(episode.runtime)}}</div>
+                                        
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+</div>
