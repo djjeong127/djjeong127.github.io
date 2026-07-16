@@ -1,4 +1,4 @@
-# 🌐 djjeong127's Github Pages
+# djjeong127's Github Pages
 
 > A site where I extract the maximum value of Github's free hosting service to learn front-end design principles, mess around with cool css animations, and sometimes regret having to figure out my mistakes.
 
