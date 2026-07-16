@@ -9,7 +9,8 @@ export interface Duration {
 }
 
 @Service()
-export class ChristmasService {public now = signal(new Date());
+export class ChristmasService {
+    public now = signal(new Date());
     currentYear = computed(() => this.now().getFullYear());
     nextChristmas = computed(() => {
         var christmas = new Date(this.currentYear(), 11, 25);
@@ -34,12 +35,17 @@ export class ChristmasService {public now = signal(new Date());
             // if it's currently Christmas, do nothing
         }
         else {
-            const msInDay = 1000 * 60 * 60 * 24;
-            const msInHour = 1000 * 60 * 60;
-            const msInMinutes = 1000 * 60;
             const msInSeconds = 1000;
+            const msInMinutes = msInSeconds * 60;
+            const msInHour = msInMinutes * 60;
+            const msInDay = msInHour * 24;
 
-            const differenceInMilliseconds = this.nextChristmas().getTime() - this.now().getTime();
+            // FIX: Extract the UTC timestamps or adjust for the timezone offset difference
+            const offsetNow = this.now().getTimezoneOffset(); // Offset in minutes (e.g., 240)
+            const offsetChristmas = this.nextChristmas().getTimezoneOffset(); // Offset in minutes (e.g., 300)
+            const offsetDifference = (offsetChristmas - offsetNow) * msInMinutes;
+
+            const differenceInMilliseconds = this.nextChristmas().getTime() - this.now().getTime() - offsetDifference;
             const days = Math.floor(differenceInMilliseconds / msInDay);
             const hours = Math.floor((differenceInMilliseconds % msInDay) / msInHour);
             const minutes = Math.floor((differenceInMilliseconds % msInHour) / msInMinutes);

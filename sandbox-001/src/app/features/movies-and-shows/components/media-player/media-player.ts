@@ -24,7 +24,7 @@ export interface SearchTVModel {
   styleUrl: './media-player.scss',
 })
 export class MediaPlayer {
-  @ViewChild('episodeHeader') episodeHeader!: ElementRef<HTMLDivElement>;
+  @ViewChild('videoHeader') videoHeader!: ElementRef<HTMLDivElement>;
 
   media_type = input.required<MediaType>();
   id = input.required<number>();
@@ -38,7 +38,6 @@ export class MediaPlayer {
   tmdbApiService = inject(TmdbApiService)
   moviesAndShowsService = inject(MoviesAndShowsService)
   vidsrcApiService = inject(VidsrcApiService)
-  sanitizer = inject(DomSanitizer)
   routerService = inject(Router)
   activatedRouteService = inject(ActivatedRoute)
 
@@ -207,20 +206,20 @@ export class MediaPlayer {
         complete: () => {
           this.vidsrcApiService.getVidsrcMovie(id).subscribe({
             next: (response) => {
-              this.safeVidsrcUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(response))
+              this.safeVidsrcUrl.set(response)
             },
             error: (err) => {
               this.isLoading.set(false)
               this.safeVidsrcUrl.set('')
               if (this.scrollToMediaPlayer()) {
-                this.scrollToEpisodeHeader()
+                this.scrollToVideoHeader()
               }
               console.error(err)
             },
             complete: () => {
               this.isLoading.set(false)
               if (this.scrollToMediaPlayer()) {
-                this.scrollToEpisodeHeader()
+                this.scrollToVideoHeader()
               }
             }
           })
@@ -290,20 +289,20 @@ export class MediaPlayer {
                           complete: () => {
                             this.vidsrcApiService.getVidsrcTV(id, seasonNumber, episodeNumber).subscribe({
                               next: (response) => {
-                                this.safeVidsrcUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(response))
+                                this.safeVidsrcUrl.set(response)
                               },
                               error: (err) => {
                                 this.isLoading.set(false)
                                 this.safeVidsrcUrl.set('')
                                 if (this.scrollToMediaPlayer()) {
-                                  this.scrollToEpisodeHeader()
+                                  this.scrollToVideoHeader()
                                 }
                                 console.error(err)
                               },
                               complete: () => {
                                 this.isLoading.set(false)
                                 if (this.scrollToMediaPlayer()) {
-                                  this.scrollToEpisodeHeader()
+                                  this.scrollToVideoHeader()
                                 }
                               }
                             })
@@ -337,20 +336,20 @@ export class MediaPlayer {
                       complete: () => {
                         this.vidsrcApiService.getVidsrcTV(id, seasonNumber, episodeNumber).subscribe({
                           next: (response) => {
-                            this.safeVidsrcUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(response))
+                            this.safeVidsrcUrl.set(response)
                           },
                           error: (err) => {
                             this.isLoading.set(false)
                             this.safeVidsrcUrl.set('')
                             if (this.scrollToMediaPlayer()) {
-                              this.scrollToEpisodeHeader()
+                              this.scrollToVideoHeader()
                             }
                             console.error(err)
                           },
                           complete: () => {
                             this.isLoading.set(false)
                             if (this.scrollToMediaPlayer()) {
-                              this.scrollToEpisodeHeader()
+                              this.scrollToVideoHeader()
                             }
                           }
                         })
@@ -484,12 +483,12 @@ export class MediaPlayer {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;
   }
 
-  scrollToEpisodeHeader(): void {
+  scrollToVideoHeader(): void {
     const appHeaderHeight = (document.querySelector('.app-header') as HTMLElement).getBoundingClientRect().height
-    const episodeHeaderPosition = this.episodeHeader.nativeElement.getBoundingClientRect().top;
+    const videoHeaderPosition = this.videoHeader.nativeElement.getBoundingClientRect().top;
     const currentScrollPosition = window.scrollY
 
-    const targetPosition = episodeHeaderPosition + currentScrollPosition - appHeaderHeight
+    const targetPosition = videoHeaderPosition + currentScrollPosition - appHeaderHeight
 
     window.scrollTo({
       top: targetPosition,

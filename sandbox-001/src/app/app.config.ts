@@ -30,5 +30,14 @@ function initializeCustomIcons(): Promise<void> {
     sanitizer.bypassSecurityTrustResourceUrl('movies-and-shows-assets/icons/language_korean.svg') // Path to asset
   );
   
+  iconRegistry.addSvgIcon(
+    'linkedin', // The name you will use in templates
+    sanitizer.bypassSecurityTrustResourceUrl('about-me/icons/linkedin.svg') // Path to asset
+  );
+  iconRegistry.addSvgIcon(
+    'github', // The name you will use in templates
+    sanitizer.bypassSecurityTrustResourceUrl('about-me/icons/github.svg') // Path to asset
+  );
+
   return Promise.resolve();
 }

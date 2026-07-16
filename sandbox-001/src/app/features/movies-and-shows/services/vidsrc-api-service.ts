@@ -1,10 +1,12 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { map } from 'rxjs';
 
 @Service()
 export class VidsrcApiService {
     private http = inject(HttpClient);
+    sanitizer = inject(DomSanitizer)
 
     // The vidsrc player will not run properly locally (test by changing the urls and deploying)
     // Base Url proxys for localhost testing (remember to rebuild and npm start after changing the proxies in proxy.conf.json)
@@ -39,7 +41,10 @@ export class VidsrcApiService {
     getVidsrcMovie(movieId: number) {
         return this.http.get(this.vidsrcMovieUrl + movieId, this.httpOptions).pipe(
             map((response) => {
-                return this.extractIframeSrc(response)
+                // disable correct return for iframe src
+                return ''
+                
+                // return this.sanitizer.bypassSecurityTrustResourceUrl(this.extractIframeSrc(response))
             })
         )
     }
@@ -47,7 +52,10 @@ export class VidsrcApiService {
     getVidsrcTV(tvId: number, season: number, episode: number) {
         return this.http.get(this.vidsrcTVUrl + `${tvId}&season=${season}&episode=${episode}`, this.httpOptions).pipe(
             map((response) => {
-                return this.extractIframeSrc(response)
+                // disable correct return for iframe src
+                return ''
+
+                // return this.sanitizer.bypassSecurityTrustResourceUrl(this.extractIframeSrc(response))
             })
         )
     }

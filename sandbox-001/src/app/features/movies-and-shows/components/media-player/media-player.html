@@ -45,7 +45,7 @@
                     </div>
                 </div>
 
-                <hr>
+                <hr #videoHeader>
 
             }
             @else if (media_type() === mediaTypeEnum.TV && selectedTVDetail() && selectedSeasonDetail() && selectedEpisodeDetail()) {
@@ -79,7 +79,7 @@
 
                 </div>
                 
-                <hr #episodeHeader>
+                <hr #videoHeader>
             }
             @else {
                 <div class="page-status">
@@ -147,10 +147,10 @@
 
                         @if (safeVidsrcUrl()) {
                             @if (media_type() === mediaTypeEnum.Movie) {
-                                <iframe class="media-container" [src]="safeVidsrcUrl()" frameborder="0" scrolling="no" allowfullscreen="yes"></iframe>
+                                <iframe class="media-container" referrerpolicy="no-referrer" [src]="safeVidsrcUrl()" frameborder="0" scrolling="no" allowfullscreen="yes"></iframe>
                             }
                             @else {
-                                <iframe class="media-container" [src]="safeVidsrcUrl()" frameborder="0" scrolling="no" allowfullscreen="yes"></iframe>
+                                <iframe class="media-container" referrerpolicy="no-referrer" [src]="safeVidsrcUrl()" frameborder="0" scrolling="no" allowfullscreen="yes"></iframe>
                             }
                         }
                         
@@ -249,9 +249,9 @@
                                         <div class="overview">
                                             <div>{{episode.overview}}</div>
                                         </div>
-
-                                        <div><b>Runtime: </b>{{minutesToHoursAndMinutes(episode.runtime)}}</div>
+                                        
                                         <div><b>Air Date: </b>{{episode.air_date | date}}</div>
+                                        <div><b>Runtime: </b>{{minutesToHoursAndMinutes(episode.runtime)}}</div>
                                         
                                     </div>
                                 </div>

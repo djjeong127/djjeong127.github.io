@@ -219,7 +219,10 @@ export class MoviesAndShows {
   }
   
   setQueryParams(media: CombinedMediaResult) {
-    if (media.media_type == MediaType.TV) {
+    if (media.media_type === MediaType.Movie) {
+      return {scrollToMediaPlayer: true}
+    }
+    else if (media.media_type === MediaType.TV) {
       return {season: 1, episode: 1, scrollToMediaPlayer: true}
     }
     else {
