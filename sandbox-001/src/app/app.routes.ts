@@ -8,11 +8,16 @@ import { RecipePage } from './features/recipes/components/recipe-page/recipe-pag
 import { MediaPlayer } from './features/movies-and-shows/components/media-player/media-player';
 import { AboutMe } from './features/about-me/about-me';
 import { Resume } from './features/about-me/components/resume/resume';
+import { FinanceCalculators } from './features/finance-calculators/finance-calculators';
 
 export const routes: Routes = [
     {
         path: '',
         component: Homepage
+    },
+    {
+        path: 'finance-calculators',
+        component: FinanceCalculators
     },
     {
         path: 'christmas',

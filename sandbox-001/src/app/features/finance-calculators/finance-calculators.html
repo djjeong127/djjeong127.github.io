@@ -1,0 +1,10 @@
+<p>finance-calculators works!</p>
+<div>{{financeCalculatorsService.investmentCalculationResult().startingBalance}}</div>
+<div>{{financeCalculatorsService.investmentCalculationResult().endBalance}}</div>
+<div>{{financeCalculatorsService.investmentCalculationResult().totalContributions}}</div>
+<div>{{financeCalculatorsService.investmentCalculationResult().totalInterest}}</div>
+
+@for (interval of financeCalculatorsService.investmentCalculationResult().stats; track interval.intervalNumber) {
+    <div>{{interval.intervalNumber}} | {{interval.startingBalance | currency}} | {{interval.contribution | currency}} | {{interval.interestEarned | currency}} | {{interval.endingBalance | currency}}</div>
+}
+
