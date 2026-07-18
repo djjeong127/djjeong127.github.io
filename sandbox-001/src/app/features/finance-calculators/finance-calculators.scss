@@ -1,0 +1,26 @@
+.finance-calculators-feature {
+    display: grid;
+    color: var(--mat-sys-on-secondary-container);
+    padding: 0.5em;
+    gap: 1em;
+}
+
+.calculators {
+    display: grid;
+    h1 {
+        justify-self: center;
+        text-align: center;
+    }
+    mat-button-toggle-group {
+        width: 100%;
+        mat-button-toggle {
+            width: 50%;
+        }
+    }
+}
+
+.investment-calculator-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5em;
+}

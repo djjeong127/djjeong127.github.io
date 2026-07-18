@@ -1,11 +1,12 @@
 import { computed, Service, signal } from '@angular/core';
 import { CalculatorType, InvestmentCalculationResults, InvestmentCalculatorModel, TimeUnit } from '../models/calculator.model';
-import { form, min, required } from '@angular/forms/signals';
+import { form, min, pattern, required } from '@angular/forms/signals';
 
 @Service()
 export class FinanceCalculatorsService {
 
-    calculatorType = signal<CalculatorType>(CalculatorType.Investment)
+    calculatorTypeModel = signal<CalculatorType>(CalculatorType.Investment)
+    calculatorTypeForm = form(this.calculatorTypeModel)
 
     investmentCalculatorModel = signal<InvestmentCalculatorModel>({
         startingAmount: 1000,
