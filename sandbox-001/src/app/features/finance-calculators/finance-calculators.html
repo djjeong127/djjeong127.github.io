@@ -63,41 +63,48 @@
                 </div>
             </div>
 
-            <div class="table-container">
-                <table mat-table [dataSource]="financeCalculatorsService.investmentCalculationResult().stats">
-                    <!-- intervalNumber Column -->
-                    <ng-container [matColumnDef]="financeCalculatorsService.investmentCalculatorModel().contributionFrequency">
-                    <th mat-header-cell *matHeaderCellDef class="interval"> {{financeCalculatorsService.investmentCalculatorModel().contributionFrequency}} </th>
-                    <td mat-cell *matCellDef="let element" class="interval"> {{element.intervalNumber}} </td>
-                    </ng-container>
+            <div>
+                <div class="table-container">
+                    <table mat-table [dataSource]="dataSource()">
+                        <!-- intervalNumber Column -->
+                        <ng-container [matColumnDef]="financeCalculatorsService.investmentCalculatorModel().contributionFrequency">
+                        <th mat-header-cell *matHeaderCellDef class="interval"> {{financeCalculatorsService.investmentCalculatorModel().contributionFrequency}} </th>
+                        <td mat-cell *matCellDef="let element" class="interval"> {{element.intervalNumber}} </td>
+                        </ng-container>
 
-                    <!-- startingBalance Column -->
-                    <ng-container matColumnDef="startingBalance">
-                    <th mat-header-cell *matHeaderCellDef> Starting Balance </th>
-                    <td mat-cell *matCellDef="let element"> {{element.startingBalance | currency}} </td>
-                    </ng-container>
+                        <!-- startingBalance Column -->
+                        <ng-container matColumnDef="startingBalance">
+                        <th mat-header-cell *matHeaderCellDef> Starting Balance </th>
+                        <td mat-cell *matCellDef="let element"> {{element.startingBalance | currency}} </td>
+                        </ng-container>
 
-                    <!-- contribution Column -->
-                    <ng-container matColumnDef="contribution">
-                    <th mat-header-cell *matHeaderCellDef> Contribution </th>
-                    <td mat-cell *matCellDef="let element"> {{element.contribution | currency}} </td>
-                    </ng-container>
+                        <!-- contribution Column -->
+                        <ng-container matColumnDef="contribution">
+                        <th mat-header-cell *matHeaderCellDef> Contribution </th>
+                        <td mat-cell *matCellDef="let element"> {{element.contribution | currency}} </td>
+                        </ng-container>
 
-                    <!-- interestEarned Column -->
-                    <ng-container matColumnDef="interestEarned">
-                    <th mat-header-cell *matHeaderCellDef> Interest Earned </th>
-                    <td mat-cell *matCellDef="let element"> {{element.interestEarned | currency}} </td>
-                    </ng-container>
+                        <!-- interestEarned Column -->
+                        <ng-container matColumnDef="interestEarned">
+                        <th mat-header-cell *matHeaderCellDef> Interest Earned </th>
+                        <td mat-cell *matCellDef="let element"> {{element.interestEarned | currency}} </td>
+                        </ng-container>
 
-                    <!-- endingBalance Column -->
-                    <ng-container matColumnDef="endingBalance">
-                    <th mat-header-cell *matHeaderCellDef> End Balance </th>
-                    <td mat-cell *matCellDef="let element"> {{element.endingBalance | currency}} </td>
-                    </ng-container>
+                        <!-- endingBalance Column -->
+                        <ng-container matColumnDef="endingBalance">
+                        <th mat-header-cell *matHeaderCellDef> End Balance </th>
+                        <td mat-cell *matCellDef="let element"> {{element.endingBalance | currency}} </td>
+                        </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns(); sticky: true"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
-                </table>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns(); sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
+                    </table>
+                </div>
+                <mat-paginator
+                    [pageSize]="10"
+                    [pageSizeOptions]="[5, 10, 25, 100]"
+                    showFirstLastButtons>
+                </mat-paginator>
             </div>
 
         </div>

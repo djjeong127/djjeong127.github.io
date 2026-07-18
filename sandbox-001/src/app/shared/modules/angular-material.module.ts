@@ -13,6 +13,7 @@ import { MatChipsModule } from '@angular/material/chips'
 import { MatAutocompleteModule } from '@angular/material/autocomplete'
 import { MatTableModule } from '@angular/material/table'
 import { MatSortModule } from '@angular/material/sort'
+import { MatPaginatorModule } from '@angular/material/paginator'
 
 export const ANGULAR_MATERIAL_MODULES = [
     MatToolbarModule,
@@ -29,5 +30,6 @@ export const ANGULAR_MATERIAL_MODULES = [
     MatChipsModule,
     MatAutocompleteModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    MatPaginatorModule,
 ]
