@@ -18,7 +18,7 @@ export class FinanceCalculators {
   @ViewChild('investmentChart') investmentChartCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('investmentPaginator') investmentPaginator!: MatPaginator;
 
-  chart!: Chart
+  investmentChart!: Chart
 
   financeCalculatorsService = inject(FinanceCalculatorsService)
 
@@ -51,7 +51,7 @@ export class FinanceCalculators {
     const ctx = this.investmentChartCanvas.nativeElement.getContext('2d');
     if (!ctx) return;
 
-    this.chart = new Chart(ctx, {
+    this.investmentChart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: [], // Populated dynamically
@@ -106,28 +106,27 @@ export class FinanceCalculators {
   }
 
   updateChartWithTableData(data: InvestmentCalculationStats[]): void {
-    if (!this.chart) return;
+    if (!this.investmentChart) return;
 
     const dataRows = data;
 
     // 1. Generate X-axis labels dynamically (e.g., "Year 1", "Year 2")
-    this.chart.data.labels = [`${data[0].interval} 0`, ...dataRows.map(row => `${row.interval} ${row.intervalNumber}`)];
+    this.investmentChart.data.labels = [`${data[0].interval} 0`, ...dataRows.map(row => `${row.interval} ${row.intervalNumber}`)];
 
     // 2. Map structural columns to explicit dataset array tracks
     // this.chart.data.datasets[0].data = dataRows.map(row => row.startingBalance);
-    this.chart.data.datasets[0].data = [data[0].startingBalance, ...dataRows.map(row => row.endingBalance)];
-    this.chart.data.datasets[1].data = [data[0].startingBalance, ...dataRows.map(row => row.contributionBalance)];
+    this.investmentChart.data.datasets[0].data = [data[0].startingBalance, ...dataRows.map(row => row.endingBalance)];
+    this.investmentChart.data.datasets[1].data = [data[0].startingBalance, ...dataRows.map(row => row.contributionBalance)];
 
     // 3. Render update transformations smoothly
-    this.chart.update();
+    this.investmentChart.update();
   }
 
   ngOnDestroy(): void {
-    if (this.chart) {
-      this.chart.destroy();
+    if (this.investmentChart) {
+      this.investmentChart.destroy();
     }
   }
-
 
   autoFillIfBlankInvestment() {
     if (this.financeCalculatorsService.investmentCalculatorModel().startingAmount === null) {

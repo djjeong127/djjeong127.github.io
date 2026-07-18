@@ -3,7 +3,7 @@
         <h1>Finance Calculators</h1>
         <mat-button-toggle-group [formField]="financeCalculatorsService.calculatorTypeForm" hideSingleSelectionIndicator="true">
             <mat-button-toggle [value]="calculatorType.Investment">Investment</mat-button-toggle>
-            <mat-button-toggle [value]="calculatorType.Mortgage">Mortgage</mat-button-toggle>
+            <mat-button-toggle disabled [value]="calculatorType.Mortgage">Mortgage</mat-button-toggle>
         </mat-button-toggle-group>
     </div>
 
@@ -58,10 +58,8 @@
                         <div class="result-numbers top-border">{{financeCalculatorsService.investmentCalculationResult().endBalance | currency}}</div>
                     </div>
                 </div>
-                <div class="chart">
-                    <div class="chart-wrapper">
-                        <canvas #investmentChart></canvas>
-                    </div>
+                <div class="chart-wrapper">
+                    <canvas #investmentChart></canvas>
                 </div>
             </div>
 
