@@ -59,15 +59,15 @@ export class FinanceCalculators {
           {
             label: 'Total Returns',
             data: [],
-            borderColor: '#3b82f6', // Blue line
-            backgroundColor: '#3b82f6',
+            borderColor: '#10b981', // Green line
+            backgroundColor: '#10b981',
             tension: 0.2
           },
           {
             label: 'Contributions',
             data: [],
-            borderColor: '#10b981', // Green line
-            backgroundColor: '#10b981',
+            borderColor: '#3b82f6', // Blue line
+            backgroundColor: '#3b82f6',
             tension: 0.2
           }
         ]
