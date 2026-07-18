@@ -1,7 +1,7 @@
 .finance-calculators-feature {
     display: grid;
     color: var(--mat-sys-on-secondary-container);
-    padding: 0.5em;
+    padding: 0.5em 0.5em 2em 0.5em;
     gap: 1em;
 }
 
@@ -75,6 +75,16 @@
     overflow: auto;
     max-height: 80vh;
     contain: inline-size;
+    justify-self: center;
+    width: 100%;
+
+     @media (min-width: 768px) {
+        width: 95%;
+    }
+
+    @media (min-width: 1400px) {
+        width: 90vw;
+    }
 }
 
 .mat-mdc-header-row {
