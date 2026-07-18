@@ -48,19 +48,22 @@
             <div class="results">
                 <h2>Results</h2>
                 <div class="result-stats">
-                    <div>Start Balance: </div>
+                    <div>Starting Amount: </div>
                     <div class="result-numbers">{{financeCalculatorsService.investmentCalculationResult().startingBalance | currency}}</div>
                     <div>Total Contributions: </div>
                     <div class="result-numbers">{{financeCalculatorsService.investmentCalculationResult().totalContributions | currency}}</div>
                     <div>Total Interest Earned: </div>
                     <div class="result-numbers">{{financeCalculatorsService.investmentCalculationResult().totalInterestEarned | currency}}</div>
-                    <div class="top-border">Total Returns: </div>
-                    <div class="result-numbers top-border">{{financeCalculatorsService.investmentCalculationResult().endBalance | currency}}</div>
+                    <div class="top-border"><strong>Total Returns: </strong></div>
+                    <div class="result-numbers top-border"><strong>{{financeCalculatorsService.investmentCalculationResult().endBalance | currency}}</strong></div>
                 </div>
             </div>
-            <div class="chart-wrapper">
-                <canvas #investmentChart></canvas>
+            <div class="pie-chart-wrapper">
+                <canvas #investmentPieChart></canvas>
             </div>
+        </div>
+        <div class="line-chart-wrapper">
+            <canvas #investmentLineChart></canvas>
         </div>
 
         <div>

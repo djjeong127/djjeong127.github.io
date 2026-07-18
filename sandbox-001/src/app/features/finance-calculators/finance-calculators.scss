@@ -73,16 +73,33 @@
             border-top: 1px solid;
         }
     }
+
+    .pie-chart-wrapper {
+        display: grid;
+        justify-self: center;
+        justify-content: center;
+        width: 50%;
+    }
+
     @media (min-width: 768px) {
         grid-template-columns: repeat(2, 1fr);
 
-        h2, .results {
+        .results {
             width: 80%;
             justify-self: center;
         }
     }
 
 
+}
+
+.line-chart-wrapper {
+    position: relative;
+    display: grid;
+    padding: 1em;
+    justify-self: center;
+    justify-content: center;
+    width: 80%;
 }
 
 

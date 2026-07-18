@@ -3,7 +3,7 @@ import { FinanceCalculatorsService } from './services/finance-calculators-servic
 import { ANGULAR_MATERIAL_MODULES } from '../../shared/modules/angular-material.module';
 import { FormField } from '@angular/forms/signals';
 import { CurrencyPipe } from '@angular/common';
-import { CalculatorType, InvestmentCalculationStats, TimeUnit } from './models/calculator.model';
+import { CalculatorType, InvestmentCalculationResults, InvestmentCalculationStats, TimeUnit } from './models/calculator.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Chart } from 'chart.js/auto'
@@ -15,10 +15,12 @@ import { Chart } from 'chart.js/auto'
   styleUrl: './finance-calculators.scss',
 })
 export class FinanceCalculators {
-  @ViewChild('investmentChart') investmentChartCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('investmentLineChart') investmentLineChartCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('investmentPieChart') investmentPieChartCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('investmentPaginator') investmentPaginator!: MatPaginator;
 
-  investmentChart!: Chart
+  investmentLineChart!: Chart
+  investmentPieChart!: Chart
 
   financeCalculatorsService = inject(FinanceCalculatorsService)
 
@@ -29,7 +31,8 @@ export class FinanceCalculators {
 
   investmentDataSource = computed(() => {
     let newTableData = new MatTableDataSource(this.financeCalculatorsService.investmentCalculationResult().stats)
-    this.updateChartWithTableData(newTableData.data)
+    this.updateInvestmentLineChart(newTableData.data)
+    this.updateInvestmentPieChart(this.financeCalculatorsService.investmentCalculationResult())
     newTableData.paginator = this.investmentPaginator
     return newTableData
   })
@@ -42,16 +45,18 @@ export class FinanceCalculators {
   ])
 
   ngAfterViewInit() {
-    this.initChart();
-    this.updateChartWithTableData(this.investmentDataSource().data);
+    this.initInvestmentLineChart();
+    this.updateInvestmentLineChart(this.investmentDataSource().data);
+    this.initInvestmentPieChart();
+    this.updateInvestmentPieChart(this.financeCalculatorsService.investmentCalculationResult())
     this.investmentDataSource().paginator = this.investmentPaginator
   }
 
-   initChart(): void {
-    const ctx = this.investmentChartCanvas.nativeElement.getContext('2d');
+   initInvestmentLineChart(): void {
+    const ctx = this.investmentLineChartCanvas.nativeElement.getContext('2d');
     if (!ctx) return;
 
-    this.investmentChart = new Chart(ctx, {
+    this.investmentLineChart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: [], // Populated dynamically
@@ -105,26 +110,89 @@ export class FinanceCalculators {
     });
   }
 
-  updateChartWithTableData(data: InvestmentCalculationStats[]): void {
-    if (!this.investmentChart) return;
+  updateInvestmentLineChart(data: InvestmentCalculationStats[]): void {
+    if (!this.investmentLineChart) return;
 
     const dataRows = data;
 
     // 1. Generate X-axis labels dynamically (e.g., "Year 1", "Year 2")
-    this.investmentChart.data.labels = [`${data[0].interval} 0`, ...dataRows.map(row => `${row.interval} ${row.intervalNumber}`)];
+    this.investmentLineChart.data.labels = [`${data[0].interval} 0`, ...dataRows.map(row => `${row.interval} ${row.intervalNumber}`)];
 
     // 2. Map structural columns to explicit dataset array tracks
     // this.chart.data.datasets[0].data = dataRows.map(row => row.startingBalance);
-    this.investmentChart.data.datasets[0].data = [data[0].startingBalance, ...dataRows.map(row => row.endingBalance)];
-    this.investmentChart.data.datasets[1].data = [data[0].startingBalance, ...dataRows.map(row => row.contributionBalance)];
+    this.investmentLineChart.data.datasets[0].data = [data[0].startingBalance, ...dataRows.map(row => row.endingBalance)];
+    this.investmentLineChart.data.datasets[1].data = [data[0].startingBalance, ...dataRows.map(row => row.contributionBalance)];
 
     // 3. Render update transformations smoothly
-    this.investmentChart.update();
+    this.investmentLineChart.update();
+  }
+
+  initInvestmentPieChart(): void {
+    const ctx = this.investmentPieChartCanvas.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    this.investmentPieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Contributions', 'Total Returns', 'Other Metrics'], // Fixed section labels
+        datasets: [{
+          data: [], // Populated dynamically with 3 numbers during update
+          borderColor: [
+            '#f59e0b',
+            '#3b82f6',
+            '#10b981'
+          ],
+          backgroundColor: [
+            '#f59e0b',
+            '#3b82f6',
+            '#10b981'
+          ],
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top'
+          },
+          tooltip: {
+            callbacks: {
+              // Formats tooltips to match financial dollar values on hover
+              label: (context) => {
+                const label = context.label ?? '';
+                const value = context.parsed ?? 0;
+                return ` ${label}: $${value.toLocaleString()}`;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+   updateInvestmentPieChart(data: InvestmentCalculationResults): void {
+    if (!this.investmentPieChart) return;
+
+    const labelList = ['Starting Amount', 'Total Contributions', 'Total Interest Earned']
+    const dataList = [data.startingBalance, data.totalContributions, data.totalInterestEarned];
+
+    // 1. Generate labels dynamically from data rows
+    this.investmentPieChart.data.labels = labelList;
+
+    // 2. Map structural columns to explicit dataset array tracks using index 0
+    this.investmentPieChart.data.datasets[0].data = dataList;
+
+    // 3. Render update transformations smoothly
+    this.investmentPieChart.update();
   }
 
   ngOnDestroy(): void {
-    if (this.investmentChart) {
-      this.investmentChart.destroy();
+    if (this.investmentLineChart) {
+      this.investmentLineChart.destroy();
+    }
+    if (this.investmentPieChart) {
+      this.investmentPieChart.destroy();
     }
   }
 
