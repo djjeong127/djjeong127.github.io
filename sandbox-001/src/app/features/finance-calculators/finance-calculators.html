@@ -3,120 +3,120 @@
         <h1>Finance Calculators</h1>
         <mat-button-toggle-group [formField]="financeCalculatorsService.calculatorTypeForm" hideSingleSelectionIndicator="true">
             <mat-button-toggle [value]="calculatorType.Investment">Investment</mat-button-toggle>
-            <mat-button-toggle disabled [value]="calculatorType.Mortgage">Mortgage</mat-button-toggle>
+            <mat-button-toggle [value]="calculatorType.Mortgage">Mortgage</mat-button-toggle>
         </mat-button-toggle-group>
     </div>
 
-    @if (financeCalculatorsService.calculatorTypeModel() === calculatorType.Investment) {
-        <div class="investment-calculator">
-            <form class="investment-calculator-form">
-                <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Starting Amount</mat-label>
-                    <div matTextPrefix>$</div>
-                    <input type="number" matInput [formField]="financeCalculatorsService.investmentCalculatorForm.startingAmount" (blur)="autoFillIfBlankInvestment()">
-                </mat-form-field>
+    <!-- Use the [hidden]="" attribute instead of @if, in order to keep paginator and chart lifecycle -->
+    <div [hidden]="financeCalculatorsService.calculatorTypeModel() !== calculatorType.Investment" class="investment-calculator">
+        <form class="investment-calculator-form">
+            <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Starting Amount</mat-label>
+                <div matTextPrefix>$</div>
+                <input type="number" matInput [formField]="financeCalculatorsService.investmentCalculatorForm.startingAmount" (blur)="autoFillIfBlankInvestment()">
+            </mat-form-field>
 
-                <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Annual Return Rate</mat-label>
-                    <input type="number" matInput [formField]="financeCalculatorsService.investmentCalculatorForm.yearlyReturnRate" (blur)="autoFillIfBlankInvestment()">
-                    <div matTextSuffix>%</div>
-                </mat-form-field>
+            <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Annual Return Rate</mat-label>
+                <input type="number" matInput [formField]="financeCalculatorsService.investmentCalculatorForm.yearlyReturnRate" (blur)="autoFillIfBlankInvestment()">
+                <div matTextSuffix>%</div>
+            </mat-form-field>
 
-                <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Contribution</mat-label>
-                    <div matTextPrefix>$</div>
-                    <input type="number" matInput [formField]="financeCalculatorsService.investmentCalculatorForm.contribution" (blur)="autoFillIfBlankInvestment()">
-                </mat-form-field>
+            <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Contribution</mat-label>
+                <div matTextPrefix>$</div>
+                <input type="number" matInput [formField]="financeCalculatorsService.investmentCalculatorForm.contribution" (blur)="autoFillIfBlankInvestment()">
+            </mat-form-field>
 
-                <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Contribution Frequency</mat-label>
-                    <mat-select [formField]="financeCalculatorsService.investmentCalculatorForm.contributionFrequency" hideSingleSelectionIndicator="true">
-                        @for (timeUnit of timeUnits; track timeUnit) {
-                            <mat-option [value]="timeUnit">{{timeUnit === this.timeUnit.Year ? 'Annually' : timeUnit + 'ly'}}</mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
+            <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Contribution Frequency</mat-label>
+                <mat-select [formField]="financeCalculatorsService.investmentCalculatorForm.contributionFrequency" hideSingleSelectionIndicator="true">
+                    @for (timeUnit of timeUnits; track timeUnit) {
+                        <mat-option [value]="timeUnit">{{timeUnit === this.timeUnit.Year ? 'Annually' : timeUnit + 'ly'}}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
 
-                <mat-form-field subscriptSizing="dynamic">
-                    <mat-label>Years Invested</mat-label>
-                    <input type="number" matInput [formField]="financeCalculatorsService.investmentCalculatorForm.yearsInvested" (blur)="autoFillIfBlankInvestment()">
-                </mat-form-field>
+            <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Years Invested</mat-label>
+                <input type="number" matInput [formField]="financeCalculatorsService.investmentCalculatorForm.yearsInvested" (blur)="autoFillIfBlankInvestment()">
+            </mat-form-field>
 
-            </form>
+        </form>
 
-            <div class="details">
-                <div class="results">
-                    <h2>Results</h2>
-                    <div class="result-stats">
-                        <div>Start Balance: </div>
-                        <div class="result-numbers">{{financeCalculatorsService.investmentCalculationResult().startingBalance | currency}}</div>
-                        <div>Total Contributions: </div>
-                        <div class="result-numbers">{{financeCalculatorsService.investmentCalculationResult().totalContributions | currency}}</div>
-                        <div>Total Interest Earned: </div>
-                        <div class="result-numbers">{{financeCalculatorsService.investmentCalculationResult().totalInterestEarned | currency}}</div>
-                        <div class="top-border">Total Returns: </div>
-                        <div class="result-numbers top-border">{{financeCalculatorsService.investmentCalculationResult().endBalance | currency}}</div>
-                    </div>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas #investmentChart></canvas>
+        <div class="details">
+            <div class="results">
+                <h2>Results</h2>
+                <div class="result-stats">
+                    <div>Start Balance: </div>
+                    <div class="result-numbers">{{financeCalculatorsService.investmentCalculationResult().startingBalance | currency}}</div>
+                    <div>Total Contributions: </div>
+                    <div class="result-numbers">{{financeCalculatorsService.investmentCalculationResult().totalContributions | currency}}</div>
+                    <div>Total Interest Earned: </div>
+                    <div class="result-numbers">{{financeCalculatorsService.investmentCalculationResult().totalInterestEarned | currency}}</div>
+                    <div class="top-border">Total Returns: </div>
+                    <div class="result-numbers top-border">{{financeCalculatorsService.investmentCalculationResult().endBalance | currency}}</div>
                 </div>
             </div>
-
-            <div>
-                <div class="table-container">
-                    <table mat-table [dataSource]="investmentDataSource()">
-                        <!-- intervalNumber Column -->
-                        <ng-container [matColumnDef]="financeCalculatorsService.investmentCalculatorModel().contributionFrequency">
-                        <th mat-header-cell *matHeaderCellDef class="interval"> {{financeCalculatorsService.investmentCalculatorModel().contributionFrequency}} </th>
-                        <td mat-cell *matCellDef="let element" class="interval"> {{element.intervalNumber}} </td>
-                        </ng-container>
-
-                        <!-- startingBalance Column -->
-                        <ng-container matColumnDef="startingBalance">
-                        <th mat-header-cell *matHeaderCellDef> Starting Balance </th>
-                        <td mat-cell *matCellDef="let element"> {{element.startingBalance | currency}} </td>
-                        </ng-container>
-
-                        <!-- contribution Column -->
-                        <ng-container matColumnDef="contribution">
-                        <th mat-header-cell *matHeaderCellDef> Contribution </th>
-                        <td mat-cell *matCellDef="let element"> {{element.contribution | currency}} </td>
-                        </ng-container>
-
-                        <!-- interestEarned Column -->
-                        <ng-container matColumnDef="interestEarned">
-                        <th mat-header-cell *matHeaderCellDef> Interest Earned </th>
-                        <td mat-cell *matCellDef="let element"> {{element.interestEarned | currency}} </td>
-                        </ng-container>
-
-                        <!-- endingBalance Column -->
-                        <ng-container matColumnDef="endingBalance">
-                        <th mat-header-cell *matHeaderCellDef> End Balance </th>
-                        <td mat-cell *matCellDef="let element"> {{element.endingBalance | currency}} </td>
-                        </ng-container>
-
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns(); sticky: true"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
-                    </table>
-                </div>
-                <mat-paginator
-                    #investmentPaginator
-                    [pageSize]="10"
-                    [pageSizeOptions]="[5, 10, 25, 50, 100]"
-                    showFirstLastButtons>
-                </mat-paginator>
+            <div class="chart-wrapper">
+                <canvas #investmentChart></canvas>
             </div>
+        </div>
 
+        <div>
+            <div class="table-container">
+                <table mat-table [dataSource]="investmentDataSource()">
+                    <!-- intervalNumber Column -->
+                    <ng-container [matColumnDef]="financeCalculatorsService.investmentCalculatorModel().contributionFrequency">
+                    <th mat-header-cell *matHeaderCellDef class="interval"> {{financeCalculatorsService.investmentCalculatorModel().contributionFrequency}} </th>
+                    <td mat-cell *matCellDef="let element" class="interval"> {{element.intervalNumber}} </td>
+                    </ng-container>
+
+                    <!-- startingBalance Column -->
+                    <ng-container matColumnDef="startingBalance">
+                    <th mat-header-cell *matHeaderCellDef> Starting Balance </th>
+                    <td mat-cell *matCellDef="let element"> {{element.startingBalance | currency}} </td>
+                    </ng-container>
+
+                    <!-- contribution Column -->
+                    <ng-container matColumnDef="contribution">
+                    <th mat-header-cell *matHeaderCellDef> Contribution </th>
+                    <td mat-cell *matCellDef="let element"> {{element.contribution | currency}} </td>
+                    </ng-container>
+
+                    <!-- interestEarned Column -->
+                    <ng-container matColumnDef="interestEarned">
+                    <th mat-header-cell *matHeaderCellDef> Interest Earned </th>
+                    <td mat-cell *matCellDef="let element"> {{element.interestEarned | currency}} </td>
+                    </ng-container>
+
+                    <!-- endingBalance Column -->
+                    <ng-container matColumnDef="endingBalance">
+                    <th mat-header-cell *matHeaderCellDef> End Balance </th>
+                    <td mat-cell *matCellDef="let element"> {{element.endingBalance | currency}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns(); sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
+                </table>
+            </div>
+            <mat-paginator
+                #investmentPaginator
+                [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 50, 100]"
+                showFirstLastButtons>
+            </mat-paginator>
         </div>
-    }
-    @else if (financeCalculatorsService.calculatorTypeModel() === calculatorType.Mortgage) {
-        <div class="mortgage-calculator">
-            <mat-icon>construction</mat-icon>
-            <div>This feature is still under construction!</div>
-        </div>
+
+    </div>
+
+
+    <!-- Use the [hidden]="" attribute instead of @if, in order to keep paginator and chart lifecycle -->
+    <div [hidden]="financeCalculatorsService.calculatorTypeModel() !== calculatorType.Mortgage" class="mortgage-calculator">
+        <mat-icon>construction</mat-icon>
+        <div>This feature is still under construction!</div>
+    </div>
         
-    }
     
 
 </div>

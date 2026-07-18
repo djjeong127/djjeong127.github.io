@@ -30,6 +30,10 @@
     }
 }
 
+[hidden] {
+    display: none !important;
+}
+
 .investment-calculator {
     display: grid;
     gap: 2em;
