@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { FinanceCalculatorsService } from './services/finance-calculators-service';
 import { ANGULAR_MATERIAL_MODULES } from '../../shared/modules/angular-material.module';
 import { FormField } from '@angular/forms/signals';
@@ -15,12 +15,16 @@ export class FinanceCalculators {
   financeCalculatorsService = inject(FinanceCalculatorsService)
 
   calculatorType = CalculatorType
-
   timeUnits: TimeUnit[] = Object.values(TimeUnit)
 
-  submit(event: Event) {
 
-  }
+  displayedColumns = computed<string[]>(() => [
+    this.financeCalculatorsService.investmentCalculatorModel().contributionFrequency,
+    'startingBalance',
+    'contribution',
+    'interestEarned',
+    'endingBalance'
+  ])
 
   autoFillIfBlank() {
     if (this.financeCalculatorsService.investmentCalculatorModel().startingAmount === null) {

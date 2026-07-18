@@ -11,6 +11,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle'
 import { MatSelectModule } from '@angular/material/select'
 import { MatChipsModule } from '@angular/material/chips'
 import { MatAutocompleteModule } from '@angular/material/autocomplete'
+import { MatTableModule } from '@angular/material/table'
+import { MatSortModule } from '@angular/material/sort'
 
 export const ANGULAR_MATERIAL_MODULES = [
     MatToolbarModule,
@@ -26,4 +28,6 @@ export const ANGULAR_MATERIAL_MODULES = [
     MatSelectModule,
     MatChipsModule,
     MatAutocompleteModule,
+    MatTableModule,
+    MatSortModule
 ]

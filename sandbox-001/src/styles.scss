@@ -40,7 +40,14 @@ html {
     extended-hover-container-elevation-shadow: var(--mat-sys-level1),
     extended-focus-container-elevation-shadow: var(--mat-sys-level1),
     extended-pressed-container-elevation-shadow: var(--mat-sys-level1)
-  ))
+  ));
+
+  @include mat.table-overrides((
+    background-color: var(--root-background-color),
+    header-headline-color: var(--mat-sys-on-secondary-container),
+    row-item-label-text-color: var(--mat-sys-on-secondary-container),
+    row-item-outline-color: var(--mat-sys-on-secondary-container)
+  ));
 
 }
 

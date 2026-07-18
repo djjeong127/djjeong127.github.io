@@ -24,3 +24,34 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5em;
 }
+
+.table-container {
+    overflow: auto;
+    max-height: 80vh;
+    contain: inline-size;
+}
+
+.mat-mdc-header-row {
+  background-color: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.mat-mdc-row:nth-child(even) {
+  background-color: var(--mat-sys-inverse-primary);
+}
+
+.interval {
+    text-align: center;
+}
+
+.mat-column-startingBalance,
+.mat-column-contribution,
+.mat-column-interestEarned,
+.mat-column-endingBalance {
+    text-align: right;
+}
+
+.mat-mdc-header-cell, 
+.mat-mdc-cell {
+  padding: 0 0.5em;
+}
