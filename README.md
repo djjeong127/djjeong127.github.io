@@ -17,9 +17,10 @@
 
 * **Angular (v22)** - Core framework.
 * **Angular Material** - UI library.
-* **[angular-cli-ghpages](https://github.com/angular-schule/angular-cli-ghpages)** - Open-source npm package that automates compiling your Angular application and publishing the final production build to github pages (I'm so glad I found this).
+* **[angular-cli-ghpages](https://github.com/angular-schule/angular-cli-ghpages)** - Open-source npm package that automates compiling your Angular application and publishing the final production build to github pages.
 * **Google Gemini AI** - Food recipe pics, took a few tries to get good pics.
 * **[TMDB API](https://developer.themoviedb.org/docs/getting-started)** - Movie and Shows source of metadata.
+* **[Chart.js](https://www.chartjs.org/)** - Open source library for charts/graphs.
 
 ## Deployment Note
 
