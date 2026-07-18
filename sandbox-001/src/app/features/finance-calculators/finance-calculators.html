@@ -32,7 +32,7 @@
                     <mat-label>Contribution Frequency</mat-label>
                     <mat-select [formField]="financeCalculatorsService.investmentCalculatorForm.contributionFrequency" hideSingleSelectionIndicator="true">
                         @for (timeUnit of timeUnits; track timeUnit) {
-                            <mat-option [value]="timeUnit">{{timeUnit}}</mat-option>
+                            <mat-option [value]="timeUnit">{{timeUnit === this.timeUnit.Year ? 'Annually' : timeUnit + 'ly'}}</mat-option>
                         }
                     </mat-select>
                 </mat-form-field>

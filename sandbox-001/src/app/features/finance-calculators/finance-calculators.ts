@@ -15,6 +15,7 @@ export class FinanceCalculators {
   financeCalculatorsService = inject(FinanceCalculatorsService)
 
   calculatorType = CalculatorType
+  timeUnit = TimeUnit
   timeUnits: TimeUnit[] = Object.values(TimeUnit)
 
 
