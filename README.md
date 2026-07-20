@@ -8,7 +8,7 @@
 
 ## Features
 
-* **[Investment Calculators]** - Contains a couple calculators for investments - index funds, mortgages. Has nice visuals too.
+* **[Investment Calculators]** - Contains a calculators for investments, mortgages. Has nice visuals too.
 * **[Is it Christmas?]** - Countdown until next Christmas, has a cool snowfall animation.
 * **[Movies & Shows]** - Search page for movies/shows, has great metadata and infinite scrolling.
 * **[My Recipes]** - Stores some of my favorite things to cook, I got tired of flipping through my written notes.
