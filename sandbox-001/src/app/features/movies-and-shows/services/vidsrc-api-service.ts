@@ -42,9 +42,9 @@ export class VidsrcApiService {
         return this.http.get(this.vidsrcMovieUrl + movieId, this.httpOptions).pipe(
             map((response) => {
                 // disable correct return for iframe src
-                // return ''
+                return ''
                 
-                return this.sanitizer.bypassSecurityTrustResourceUrl(this.extractIframeSrc(response))
+                // return this.sanitizer.bypassSecurityTrustResourceUrl(this.extractIframeSrc(response))
             })
         )
     }
@@ -53,9 +53,9 @@ export class VidsrcApiService {
         return this.http.get(this.vidsrcTVUrl + `${tvId}&season=${season}&episode=${episode}`, this.httpOptions).pipe(
             map((response) => {
                 // disable correct return for iframe src
-                // return ''
+                return ''
 
-                return this.sanitizer.bypassSecurityTrustResourceUrl(this.extractIframeSrc(response))
+                // return this.sanitizer.bypassSecurityTrustResourceUrl(this.extractIframeSrc(response))
             })
         )
     }
