@@ -148,6 +148,13 @@
             <div class="results">
                 <h2>Results</h2>
                 <div class="result-stats">
+                    <div><strong>Monthly Payment: </strong></div>
+                    <div class="result-numbers"><strong>{{financeCalculatorsService.mortgageCalculationResult().monthlyPayment | currency}}</strong></div>
+                </div>
+
+                <br>
+
+                <div class="result-stats">
                     <div>Total Principal Paid: </div>
                     <div class="result-numbers">{{financeCalculatorsService.mortgageCalculationResult().totalPrincipalPaid | currency}}</div>
                     <div>Total Interest Paid: </div>

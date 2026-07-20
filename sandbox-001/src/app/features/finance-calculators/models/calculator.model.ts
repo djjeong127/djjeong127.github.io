@@ -43,6 +43,7 @@ export interface MortgageCalculatorModel {
 }
 
 export interface MortgageCalculationResults {
+    monthlyPayment: number;
     totalPayment: number;
     totalInterestPaid: number;
     totalPrincipalPaid: number;

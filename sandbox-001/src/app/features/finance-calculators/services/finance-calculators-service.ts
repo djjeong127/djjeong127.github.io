@@ -142,6 +142,7 @@ export class FinanceCalculatorsService {
     mortgageCalculation(mortgageCalculatorModel: MortgageCalculatorModel): MortgageCalculationResults {
         const mortgageCalculationResults: MortgageCalculationResults[] = [];
         let results: MortgageCalculationResults = {
+            monthlyPayment: 0,
             totalPayment: 0,
             totalInterestPaid: 0,
             totalPrincipalPaid: 0,
@@ -160,6 +161,7 @@ export class FinanceCalculatorsService {
         let balance = mortgageCalculatorModel.mortgageAmount;
         for (let m = 1; m <= totalPayments; m++) {
 
+            results.monthlyPayment = flatPayment
             results.totalPayment += flatPayment
             results.totalInterestPaid += 0
             results.totalPrincipalPaid += flatPayment
@@ -195,7 +197,8 @@ export class FinanceCalculatorsService {
             principalPayment = remainingBalance;
         }
 
-        results.totalPayment += (interestPayment + principalPayment)
+        results.monthlyPayment = interestPayment + principalPayment
+        results.totalPayment += interestPayment + principalPayment
         results.totalInterestPaid += interestPayment
         results.totalPrincipalPaid += principalPayment
 
