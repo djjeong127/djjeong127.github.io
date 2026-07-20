@@ -131,7 +131,7 @@
             <mat-form-field subscriptSizing="dynamic">
                 <mat-label>Interest Rate</mat-label>
                 <div matTextPrefix>&nbsp;&nbsp;</div>
-                <input type="number" matInput [formField]="financeCalculatorsService.mortgageCalculatorForm.interestRate" (blur)="autoFillIfBlankMortgage()">
+                <input type="number" step="0.01" matInput [formField]="financeCalculatorsService.mortgageCalculatorForm.interestRate" (blur)="autoFillIfBlankMortgage()">
                 <div matTextSuffix>%</div>
             </mat-form-field>
 
