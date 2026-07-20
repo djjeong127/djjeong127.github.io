@@ -45,6 +45,15 @@ export class FinanceCalculatorsService {
 
     constructor() {
 
+        // initialize calculatorType in localstorage
+        if (localStorage.getItem('calculator-type')) {
+            const storedCalculatorType = JSON.parse(localStorage.getItem('calculator-type')!)
+            this.calculatorTypeModel.set(storedCalculatorType)
+        }
+        else {
+            this.storeCalculatorType(this.calculatorTypeModel())
+        }
+
         // initialize investmentCalculatorModel in localstorage
         if (localStorage.getItem('investment-calculator-model')) {
             const storedInvestmentCalculatorModel = JSON.parse(localStorage.getItem('investment-calculator-model')!)
@@ -63,6 +72,11 @@ export class FinanceCalculatorsService {
             this.storeMortgageCalculatorModel(this.mortgageCalculatorModel())
         }
 
+    }
+
+    storeCalculatorType(calculatorType: CalculatorType) {
+
+        localStorage.setItem('calculator-type', JSON.stringify(calculatorType));
     }
 
     private storeInvestmentCalculatorModel(investmentCalculatorModel: InvestmentCalculatorModel) {
