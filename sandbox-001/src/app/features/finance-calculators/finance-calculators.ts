@@ -53,7 +53,7 @@ export class FinanceCalculators {
 
   mortgageDataSource = computed(() => {
     let newTableData = new MatTableDataSource(this.financeCalculatorsService.mortgageCalculationResult().stats)
-    // this.updateMortgageBarChart(newTableData.data)
+    this.updateMortgageBarChart(newTableData.data)
     this.updateMortgagePieChart(this.financeCalculatorsService.mortgageCalculationResult())
     newTableData.paginator = this.mortgagePaginator
     return newTableData
@@ -73,8 +73,8 @@ export class FinanceCalculators {
     this.updateInvestmentPieChart(this.financeCalculatorsService.investmentCalculationResult())
     this.investmentDataSource().paginator = this.investmentPaginator
 
-    // this.initMortgageBarChart();
-    // this.updateMortgageBarChart(this.mortgageDataSource().data);
+    this.initMortgageBarChart();
+    this.updateMortgageBarChart(this.mortgageDataSource().data);
     this.initMortgagePieChart();
     this.updateMortgagePieChart(this.financeCalculatorsService.mortgageCalculationResult())
     this.mortgageDataSource().paginator = this.mortgagePaginator
@@ -109,6 +109,10 @@ export class FinanceCalculators {
       options: {
         responsive: true,
         plugins: {
+          // title: {
+          //   display: true,
+          //   text: 'Investments',
+          // },
           legend: { position: 'top' },
           tooltip: {
             callbacks: {
@@ -163,7 +167,7 @@ export class FinanceCalculators {
     this.investmentPieChart = new Chart(ctx, {
       type: 'pie',
       data: {
-        labels: ['Contributions', 'Total Returns', 'Other Metrics'], // Fixed section labels
+        labels: [], // Populated dynamically
         datasets: [{
           data: [], // Populated dynamically with 3 numbers during update
           borderColor: [
@@ -182,6 +186,10 @@ export class FinanceCalculators {
       options: {
         responsive: true,
         plugins: {
+          title: {
+            display: true,
+            text: 'Total Investments',
+          },
           legend: {
             position: 'top'
           },
@@ -203,7 +211,7 @@ export class FinanceCalculators {
    updateInvestmentPieChart(data: InvestmentCalculationResults): void {
     if (!this.investmentPieChart) return;
 
-    const labelList = ['Starting Amount', 'Total Contributions', 'Total Interest Earned']
+    const labelList = ['Starting Amount', 'Contributions', 'Interest Earned']
     const dataList = [data.startingBalance, data.totalContributions, data.totalInterestEarned];
 
     // 1. Generate labels dynamically from data rows
@@ -216,80 +224,83 @@ export class FinanceCalculators {
     this.investmentPieChart.update();
   }
 
-  // initMortgageBarChart(): void {
-  //   const ctx = this.mortgageBarChartCanvas.nativeElement.getContext('2d');
-  //   if (!ctx) return;
+  initMortgageBarChart(): void {
+    const ctx = this.mortgageBarChartCanvas.nativeElement.getContext('2d');
+    if (!ctx) return;
 
-  //   this.mortgageBarChart = new Chart(ctx, {
-  //     type: 'bar',
-  //     data: {
-  //       labels: [], // Populated dynamically
-  //       datasets: [
-  //         {
-  //           label: 'Returns',
-  //           data: [],
-  //           borderColor: '#10b981', // Green line
-  //           backgroundColor: '#10b981',
-  //           borderWidth: 1
-  //         },
-  //         {
-  //           label: 'Contributions',
-  //           data: [],
-  //           borderColor: '#3b82f6', // Blue line
-  //           backgroundColor: '#3b82f6',
-  //           borderWidth: 1
-  //         }
-  //       ]
-  //     },
-  //     options: {
-  //       responsive: true,
-  //       plugins: {
-  //         legend: { position: 'top' },
-  //         tooltip: {
-  //           callbacks: {
-  //             // Formats tooltips to match financial dollar values on hover
-  //             label: (context) => {
-  //               const value = context.parsed.y ?? 0;
-  //               return `${context.dataset.label}: $${value.toLocaleString()}`;
-  //             }
-  //           }
-  //         }
-  //       },
-  //       scales: {
-  //         // x: {
-  //         //   beginAtZero: true,
-  //         //   ticks: {
-  //         //     autoSkip: true,
-  //         //     callback: (value) => `${this.financeCalculatorsService.investmentCalculatorModel().contributionFrequency} ` + value.toLocaleString()
-  //         //   }
-  //         // },
-  //         y: {
-  //           beginAtZero: true,
-  //           ticks: {
-  //             callback: (value) => '$' + value.toLocaleString()
-  //           }
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
+    this.mortgageBarChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: [], // Populated dynamically
+        datasets: [
+          {
+            label: 'Principal',
+            data: [],
+            borderColor: '#10b981', // Green line
+            backgroundColor: '#10b981',
+            borderWidth: 1,
+            stack: 'stack 1'
+          },
+          {
+            label: 'Interest',
+            data: [],
+            borderColor: '#3b82f6', // Blue line
+            backgroundColor: '#3b82f6',
+            borderWidth: 1,
+            stack: 'stack 1'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          // title: {
+          //   display: true,
+          //   text: 'Monthly Payments'
+          // },
+          legend: { position: 'top' },
+          tooltip: {
+            callbacks: {
+              // Formats tooltips to match financial dollar values on hover
+              label: (context) => {
+                const value = context.parsed.y ?? 0;
+                return `${context.dataset.label}: $${value.toLocaleString()}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            stacked: true
+          },
+          y: {
+            stacked: true,
+            ticks: {
+              // Optional: Format Y-axis numbers as currency
+              callback: function(value) { return '$' + value; }
+            }
+          }
+        }
+      }
+    });
+  }
 
-  // updateMortgageBarChart(data: MortgageCalculationStats[]): void {
-  //   if (!this.mortgageBarChart) return;
+  updateMortgageBarChart(data: MortgageCalculationStats[]): void {
+  if (!this.mortgageBarChart) return;
 
-  //   const dataRows = data;
+  // 1. Generate X-axis labels dynamically (e.g., "Month 1", "Month 2")
+  this.mortgageBarChart.data.labels = data.map(row => `Month ${row.month}`);
 
-  //   // 1. Generate X-axis labels dynamically (e.g., "Year 1", "Year 2")
-  //   this.investmentLineChart.data.labels = [`${data[0].month} 0`, ...dataRows.map(row => `${row.interval} ${row.intervalNumber}`)];
+  // 2. Map structural columns to explicit dataset array tracks
+  // Dataset 0: Principal Paid (Bottom section)
+  this.mortgageBarChart.data.datasets[0].data = data.map(row => row.principal);
+  
+  // Dataset 1: Interest Paid (Top section)
+  this.mortgageBarChart.data.datasets[1].data = data.map(row => row.interest);
 
-  //   // 2. Map structural columns to explicit dataset array tracks
-  //   // this.chart.data.datasets[0].data = dataRows.map(row => row.startingBalance);
-  //   this.investmentLineChart.data.datasets[0].data = [data[0]., ...dataRows.map(row => row.endingBalance)];
-  //   this.investmentLineChart.data.datasets[1].data = [data[0].startingBalance, ...dataRows.map(row => row.contributionBalance)];
-
-  //   // 3. Render update transformations smoothly
-  //   this.investmentLineChart.update();
-  // }
+  // 3. Render update transformations smoothly
+  this.mortgageBarChart.update();
+}
 
   initMortgagePieChart(): void {
     const ctx = this.mortgagePieChartCanvas.nativeElement.getContext('2d');
@@ -298,7 +309,7 @@ export class FinanceCalculators {
     this.mortgagePieChart = new Chart(ctx, {
       type: 'pie',
       data: {
-        labels: ['Total Principal', 'Total Interest'], // Fixed section labels
+        labels: [], // Populated dynamically
         datasets: [{
           data: [], // Populated dynamically with 3 numbers during update
           borderColor: [
@@ -315,6 +326,10 @@ export class FinanceCalculators {
       options: {
         responsive: true,
         plugins: {
+          title: {
+            display: true,
+            text: 'Total Payment'
+          },
           legend: {
             position: 'top'
           },
@@ -336,7 +351,7 @@ export class FinanceCalculators {
    updateMortgagePieChart(data: MortgageCalculationResults): void {
     if (!this.mortgagePieChart) return;
 
-    const labelList = ['Total Principal', 'Total Interest']
+    const labelList = ['Principal', 'Interest']
     const dataList = [data.totalPrincipalPaid, data.totalInterestPaid];
 
     // 1. Generate labels dynamically from data rows
