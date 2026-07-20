@@ -1,15 +1,16 @@
 <div class="finance-calculators-feature">
     <div class="calculators">
         <h1>Finance Calculators</h1>
-        <mat-button-toggle-group [formField]="financeCalculatorsService.calculatorTypeForm" hideSingleSelectionIndicator="true">
+        <mat-button-toggle-group [formField]="financeCalculatorsService.calculatorTypeForm" (change)="financeCalculatorsService.storeCalculatorType(financeCalculatorsService.calculatorTypeModel())" hideSingleSelectionIndicator="true">
             <mat-button-toggle [value]="calculatorType.Investment">Investment</mat-button-toggle>
             <mat-button-toggle [value]="calculatorType.Mortgage">Mortgage</mat-button-toggle>
+            <mat-button-toggle [value]="calculatorType.Paycheck">Paycheck</mat-button-toggle>
         </mat-button-toggle-group>
     </div>
 
     <!-- Use the [hidden]="" attribute instead of @if, in order to keep paginator and chart lifecycle -->
     <div [hidden]="financeCalculatorsService.calculatorTypeModel() !== calculatorType.Investment" class="investment-calculator">
-        <form class="investment-calculator-form">
+        <form class="calculator-form">
             <mat-form-field subscriptSizing="dynamic">
                 <mat-label>Starting Amount</mat-label>
                 <div matTextPrefix>$</div>
@@ -18,18 +19,20 @@
 
             <mat-form-field subscriptSizing="dynamic">
                 <mat-label>Annual Return Rate</mat-label>
+                <div matTextPrefix>&nbsp;&nbsp;</div>
                 <input type="number" matInput [formField]="financeCalculatorsService.investmentCalculatorForm.yearlyReturnRate" (blur)="autoFillIfBlankInvestment()">
                 <div matTextSuffix>%</div>
             </mat-form-field>
 
             <mat-form-field subscriptSizing="dynamic">
-                <mat-label>Contribution</mat-label>
+                <mat-label>Contribution Amount</mat-label>
                 <div matTextPrefix>$</div>
                 <input type="number" matInput [formField]="financeCalculatorsService.investmentCalculatorForm.contribution" (blur)="autoFillIfBlankInvestment()">
             </mat-form-field>
 
             <mat-form-field subscriptSizing="dynamic">
                 <mat-label>Contribution Frequency</mat-label>
+                <div matTextPrefix>&nbsp;&nbsp;</div>
                 <mat-select [formField]="financeCalculatorsService.investmentCalculatorForm.contributionFrequency" hideSingleSelectionIndicator="true">
                     @for (timeUnit of timeUnits; track timeUnit) {
                         <mat-option [value]="timeUnit">{{timeUnit === this.timeUnit.Year ? 'Annually' : timeUnit + 'ly'}}</mat-option>
@@ -39,6 +42,7 @@
 
             <mat-form-field subscriptSizing="dynamic">
                 <mat-label>Years Invested</mat-label>
+                <div matTextPrefix>&nbsp;&nbsp;</div>
                 <input type="number" matInput [formField]="financeCalculatorsService.investmentCalculatorForm.yearsInvested" (blur)="autoFillIfBlankInvestment()">
             </mat-form-field>
 
@@ -62,6 +66,7 @@
                 <canvas #investmentPieChart></canvas>
             </div>
         </div>
+
         <div class="line-chart-wrapper">
             <canvas #investmentLineChart></canvas>
         </div>
@@ -99,8 +104,8 @@
                     <td mat-cell *matCellDef="let element"> {{element.endingBalance | currency}} </td>
                     </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns(); sticky: true"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
+                    <tr mat-header-row *matHeaderRowDef="investmentDisplayedColumns(); sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: investmentDisplayedColumns();"></tr>
                 </table>
             </div>
             <mat-paginator
@@ -116,8 +121,102 @@
 
     <!-- Use the [hidden]="" attribute instead of @if, in order to keep paginator and chart lifecycle -->
     <div [hidden]="financeCalculatorsService.calculatorTypeModel() !== calculatorType.Mortgage" class="mortgage-calculator">
-        <mat-icon>construction</mat-icon>
-        <div>This feature is still under construction!</div>
+        
+        <form class="calculator-form">
+            <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Mortgage Amount</mat-label>
+                <div matTextPrefix>$</div>
+                <input type="number" matInput [formField]="financeCalculatorsService.mortgageCalculatorForm.mortgageAmount" (blur)="autoFillIfBlankMortgage()">
+            </mat-form-field>
+            
+            <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Interest Rate</mat-label>
+                <div matTextPrefix>&nbsp;&nbsp;</div>
+                <input type="number" step="0.01" matInput [formField]="financeCalculatorsService.mortgageCalculatorForm.interestRate" (blur)="autoFillIfBlankMortgage()">
+                <div matTextSuffix>%</div>
+            </mat-form-field>
+
+            <mat-form-field subscriptSizing="dynamic">
+                <mat-label>Mortgage Term (Years)</mat-label>
+                <div matTextPrefix>&nbsp;&nbsp;</div>
+                <input type="number" matInput [formField]="financeCalculatorsService.mortgageCalculatorForm.mortgageTermYears" (blur)="autoFillIfBlankMortgage()">
+            </mat-form-field>
+
+        </form>
+
+        <div class="details">
+            <div class="results">
+                <h2>Results</h2>
+                <div class="result-stats">
+                    <div>Total Principal Paid: </div>
+                    <div class="result-numbers">{{financeCalculatorsService.mortgageCalculationResult().totalPrincipalPaid | currency}}</div>
+                    <div>Total Interest Paid: </div>
+                    <div class="result-numbers">{{financeCalculatorsService.mortgageCalculationResult().totalInterestPaid | currency}}</div>
+                    <div class="top-border"><strong>Total Payment: </strong></div>
+                    <div class="result-numbers top-border"><strong>{{financeCalculatorsService.mortgageCalculationResult().totalPayment | currency}}</strong></div>
+                </div>
+            </div>
+            <div class="pie-chart-wrapper">
+                <canvas #mortgagePieChart></canvas>
+            </div>
+        </div>
+
+        <div class="bar-chart-wrapper">
+            <canvas #mortgageBarChart></canvas>
+        </div>
+
+        <div>
+            <div class="table-container">
+                <table mat-table [dataSource]="mortgageDataSource()">
+                    <!-- intervalNumber Column -->
+                    <ng-container matColumnDef="month">
+                    <th mat-header-cell *matHeaderCellDef class="interval"> Month </th>
+                    <td mat-cell *matCellDef="let element" class="interval"> {{element.month}} </td>
+                    </ng-container>
+
+                    <!-- startingBalance Column -->
+                    <ng-container matColumnDef="monthlyPayment">
+                    <th mat-header-cell *matHeaderCellDef> Monthly Payment </th>
+                    <td mat-cell *matCellDef="let element"> {{element.monthlyPayment | currency}} </td>
+                    </ng-container>
+
+                    <!-- contribution Column -->
+                    <ng-container matColumnDef="interest">
+                    <th mat-header-cell *matHeaderCellDef> Interest </th>
+                    <td mat-cell *matCellDef="let element"> {{element.interest | currency}} </td>
+                    </ng-container>
+
+                    <!-- interestEarned Column -->
+                    <ng-container matColumnDef="principal">
+                    <th mat-header-cell *matHeaderCellDef> Principal </th>
+                    <td mat-cell *matCellDef="let element"> {{element.principal | currency}} </td>
+                    </ng-container>
+
+                    <!-- endingBalance Column -->
+                    <ng-container matColumnDef="remainingBalance">
+                    <th mat-header-cell *matHeaderCellDef> Remaining Balance </th>
+                    <td mat-cell *matCellDef="let element"> {{element.remainingBalance | currency}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="mortgageDisplayedColumns(); sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: mortgageDisplayedColumns();"></tr>
+                </table>
+            </div>
+            <mat-paginator
+                #mortgagePaginator
+                [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 50, 100]"
+                showFirstLastButtons>
+            </mat-paginator>
+        </div>
+
+    </div>
+
+    <div [hidden]="financeCalculatorsService.calculatorTypeModel() !== calculatorType.Paycheck" class="investment-calculator">
+        <div class="placeholder">
+            <mat-icon>construction</mat-icon>
+            <div>This feature is still under construction!</div>
+        </div>
     </div>
         
     
