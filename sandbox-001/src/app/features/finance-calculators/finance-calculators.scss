@@ -2,7 +2,6 @@
     display: grid;
     color: var(--mat-sys-on-secondary-container);
     padding: 0.5em 0.5em 2em 0.5em;
-    gap: 1em;
     justify-self: center;
     width: 100%;
     box-sizing: border-box;
@@ -18,6 +17,8 @@
 
 .calculators {
     display: grid;
+    padding-bottom: 1em;
+
     h1 {
         justify-self: center;
         text-align: center;
@@ -31,7 +32,9 @@
 }
 
 [hidden] {
-    display: none !important;
+    visibility: hidden !important;
+    height: 0;
+    overflow: hidden;
 }
 
 .investment-calculator {
@@ -39,7 +42,7 @@
     gap: 2em;
 }
 
-.investment-calculator-form {
+.calculator-form {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5em;
@@ -97,7 +100,7 @@
 
 }
 
-.line-chart-wrapper {
+.line-chart-wrapper, .bar-chart-wrapper {
     position: relative;
     display: grid;
     padding: 1em;
@@ -114,6 +117,18 @@
     contain: inline-size;
     justify-self: center;
     width: 100%;
+
+    .mat-column-startingBalance,
+    .mat-column-contribution,
+    .mat-column-interestEarned,
+    .mat-column-endingBalance {
+        text-align: right;
+    }
+
+    .mat-mdc-header-cell, 
+    .mat-mdc-cell {
+    padding: 0 1em;
+    }
 }
 
 mat-paginator {
@@ -133,21 +148,22 @@ mat-paginator {
     text-align: center;
 }
 
-.mat-column-startingBalance,
-.mat-column-contribution,
-.mat-column-interestEarned,
-.mat-column-endingBalance {
-    text-align: right;
-}
 
-.mat-mdc-header-cell, 
-.mat-mdc-cell {
-  padding: 0 1em;
-}
 
 
 .mortgage-calculator {
     display: grid;
-    align-items: center;
-    justify-items: center;
+    gap: 2em;
+
+    .mat-column-monthlyPayment,
+    .mat-column-interest,
+    .mat-column-principal,
+    .mat-column-remainingBalance {
+        text-align: right;
+    }
+
+    .mat-mdc-header-cell, 
+    .mat-mdc-cell {
+    padding: 0 1em;
+    }
 }

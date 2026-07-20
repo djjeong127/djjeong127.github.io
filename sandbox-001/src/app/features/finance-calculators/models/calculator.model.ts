@@ -35,6 +35,23 @@ export interface InvestmentCalculationStats {
     contributionBalance: number;
 }
 
-export interface MortgageCalculator {
+export interface MortgageCalculatorModel {
+    mortgageAmount: number;
+    mortgageTermYears: number;
+    interestRate: number;
+}
 
+export interface MortgageCalculationResults {
+    totalPayment: number;
+    totalInterestPaid: number;
+    totalPrincipalPaid: number;
+    stats: MortgageCalculationStats[]
+}
+
+export interface MortgageCalculationStats {
+    month: number;
+    monthlyPayment: number;
+    interest: number;
+    principal: number;
+    remainingBalance: number;
 }

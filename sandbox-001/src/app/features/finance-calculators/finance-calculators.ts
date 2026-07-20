@@ -3,7 +3,7 @@ import { FinanceCalculatorsService } from './services/finance-calculators-servic
 import { ANGULAR_MATERIAL_MODULES } from '../../shared/modules/angular-material.module';
 import { FormField } from '@angular/forms/signals';
 import { CurrencyPipe } from '@angular/common';
-import { CalculatorType, InvestmentCalculationResults, InvestmentCalculationStats, TimeUnit } from './models/calculator.model';
+import { CalculatorType, InvestmentCalculationResults, InvestmentCalculationStats, MortgageCalculationResults, MortgageCalculationStats, TimeUnit } from './models/calculator.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Chart } from 'chart.js/auto'
@@ -19,8 +19,15 @@ export class FinanceCalculators {
   @ViewChild('investmentPieChart') investmentPieChartCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('investmentPaginator') investmentPaginator!: MatPaginator;
 
+  @ViewChild('mortgageBarChart') mortgageBarChartCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('mortgagePieChart') mortgagePieChartCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('mortgagePaginator') mortgagePaginator!: MatPaginator;
+
   investmentLineChart!: Chart
   investmentPieChart!: Chart
+
+  mortgageBarChart!: Chart
+  mortgagePieChart!: Chart
 
   financeCalculatorsService = inject(FinanceCalculatorsService)
 
@@ -36,12 +43,27 @@ export class FinanceCalculators {
     newTableData.paginator = this.investmentPaginator
     return newTableData
   })
-  displayedColumns = computed<string[]>(() => [
+  investmentDisplayedColumns = computed<string[]>(() => [
     this.financeCalculatorsService.investmentCalculatorModel().contributionFrequency,
     'startingBalance',
     'contribution',
     'interestEarned',
     'endingBalance'
+  ])
+
+  mortgageDataSource = computed(() => {
+    let newTableData = new MatTableDataSource(this.financeCalculatorsService.mortgageCalculationResult().stats)
+    // this.updateMortgageBarChart(newTableData.data)
+    this.updateMortgagePieChart(this.financeCalculatorsService.mortgageCalculationResult())
+    newTableData.paginator = this.mortgagePaginator
+    return newTableData
+  })
+  mortgageDisplayedColumns = computed<string[]>(() => [
+    'month',
+    'monthlyPayment',
+    'interest',
+    'principal',
+    'remainingBalance'
   ])
 
   ngAfterViewInit() {
@@ -50,6 +72,13 @@ export class FinanceCalculators {
     this.initInvestmentPieChart();
     this.updateInvestmentPieChart(this.financeCalculatorsService.investmentCalculationResult())
     this.investmentDataSource().paginator = this.investmentPaginator
+
+    // this.initMortgageBarChart();
+    // this.updateMortgageBarChart(this.mortgageDataSource().data);
+    this.initMortgagePieChart();
+    this.updateMortgagePieChart(this.financeCalculatorsService.mortgageCalculationResult())
+    this.mortgageDataSource().paginator = this.mortgagePaginator
+
   }
 
    initInvestmentLineChart(): void {
@@ -187,12 +216,152 @@ export class FinanceCalculators {
     this.investmentPieChart.update();
   }
 
+  // initMortgageBarChart(): void {
+  //   const ctx = this.mortgageBarChartCanvas.nativeElement.getContext('2d');
+  //   if (!ctx) return;
+
+  //   this.mortgageBarChart = new Chart(ctx, {
+  //     type: 'bar',
+  //     data: {
+  //       labels: [], // Populated dynamically
+  //       datasets: [
+  //         {
+  //           label: 'Returns',
+  //           data: [],
+  //           borderColor: '#10b981', // Green line
+  //           backgroundColor: '#10b981',
+  //           borderWidth: 1
+  //         },
+  //         {
+  //           label: 'Contributions',
+  //           data: [],
+  //           borderColor: '#3b82f6', // Blue line
+  //           backgroundColor: '#3b82f6',
+  //           borderWidth: 1
+  //         }
+  //       ]
+  //     },
+  //     options: {
+  //       responsive: true,
+  //       plugins: {
+  //         legend: { position: 'top' },
+  //         tooltip: {
+  //           callbacks: {
+  //             // Formats tooltips to match financial dollar values on hover
+  //             label: (context) => {
+  //               const value = context.parsed.y ?? 0;
+  //               return `${context.dataset.label}: $${value.toLocaleString()}`;
+  //             }
+  //           }
+  //         }
+  //       },
+  //       scales: {
+  //         // x: {
+  //         //   beginAtZero: true,
+  //         //   ticks: {
+  //         //     autoSkip: true,
+  //         //     callback: (value) => `${this.financeCalculatorsService.investmentCalculatorModel().contributionFrequency} ` + value.toLocaleString()
+  //         //   }
+  //         // },
+  //         y: {
+  //           beginAtZero: true,
+  //           ticks: {
+  //             callback: (value) => '$' + value.toLocaleString()
+  //           }
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
+
+  // updateMortgageBarChart(data: MortgageCalculationStats[]): void {
+  //   if (!this.mortgageBarChart) return;
+
+  //   const dataRows = data;
+
+  //   // 1. Generate X-axis labels dynamically (e.g., "Year 1", "Year 2")
+  //   this.investmentLineChart.data.labels = [`${data[0].month} 0`, ...dataRows.map(row => `${row.interval} ${row.intervalNumber}`)];
+
+  //   // 2. Map structural columns to explicit dataset array tracks
+  //   // this.chart.data.datasets[0].data = dataRows.map(row => row.startingBalance);
+  //   this.investmentLineChart.data.datasets[0].data = [data[0]., ...dataRows.map(row => row.endingBalance)];
+  //   this.investmentLineChart.data.datasets[1].data = [data[0].startingBalance, ...dataRows.map(row => row.contributionBalance)];
+
+  //   // 3. Render update transformations smoothly
+  //   this.investmentLineChart.update();
+  // }
+
+  initMortgagePieChart(): void {
+    const ctx = this.mortgagePieChartCanvas.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    this.mortgagePieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Total Principal', 'Total Interest'], // Fixed section labels
+        datasets: [{
+          data: [], // Populated dynamically with 3 numbers during update
+          borderColor: [
+            '#3b82f6',
+            '#f59e0b',
+          ],
+          backgroundColor: [
+            '#3b82f6',
+            '#f59e0b',
+          ],
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top'
+          },
+          tooltip: {
+            callbacks: {
+              // Formats tooltips to match financial dollar values on hover
+              label: (context) => {
+                const label = context.label ?? '';
+                const value = context.parsed ?? 0;
+                return ` ${label}: $${value.toLocaleString()}`;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+   updateMortgagePieChart(data: MortgageCalculationResults): void {
+    if (!this.mortgagePieChart) return;
+
+    const labelList = ['Total Principal', 'Total Interest']
+    const dataList = [data.totalPrincipalPaid, data.totalInterestPaid];
+
+    // 1. Generate labels dynamically from data rows
+    this.mortgagePieChart.data.labels = labelList;
+
+    // 2. Map structural columns to explicit dataset array tracks using index 0
+    this.mortgagePieChart.data.datasets[0].data = dataList;
+
+    // 3. Render update transformations smoothly
+    this.mortgagePieChart.update();
+  }
+
   ngOnDestroy(): void {
     if (this.investmentLineChart) {
       this.investmentLineChart.destroy();
     }
     if (this.investmentPieChart) {
       this.investmentPieChart.destroy();
+    }
+
+    if (this.mortgageBarChart) {
+      this.mortgageBarChart.destroy();
+    }
+    if (this.mortgagePieChart) {
+      this.mortgagePieChart.destroy();
     }
   }
 
@@ -208,6 +377,18 @@ export class FinanceCalculators {
     }
     if (this.financeCalculatorsService.investmentCalculatorModel().yearsInvested === null) {
       this.financeCalculatorsService.investmentCalculatorModel.update((model) => ({...model, yearsInvested: 1}))
+    }
+  }
+
+  autoFillIfBlankMortgage() {
+    if (this.financeCalculatorsService.mortgageCalculatorModel().mortgageAmount === null) {
+      this.financeCalculatorsService.mortgageCalculatorModel.update((model) => ({...model, mortgageAmount: 0}))
+    }
+    if (this.financeCalculatorsService.mortgageCalculatorModel().mortgageTermYears === null) {
+      this.financeCalculatorsService.mortgageCalculatorModel.update((model) => ({...model, mortgageTermYears: 1}))
+    }
+    if (this.financeCalculatorsService.mortgageCalculatorModel().interestRate === null) {
+      this.financeCalculatorsService.mortgageCalculatorModel.update((model) => ({...model, interestRate: 0}))
     }
   }
 }
