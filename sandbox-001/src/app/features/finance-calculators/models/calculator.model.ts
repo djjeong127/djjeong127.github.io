@@ -1,6 +1,7 @@
 export enum CalculatorType {
     Investment = 'Investment',
-    Mortgage = 'Mortgage'
+    Mortgage = 'Mortgage',
+    Paycheck = 'Paycheck'
 }
 
 export enum TimeUnit {

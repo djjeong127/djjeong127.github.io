@@ -4,6 +4,7 @@
         <mat-button-toggle-group [formField]="financeCalculatorsService.calculatorTypeForm" (change)="financeCalculatorsService.storeCalculatorType(financeCalculatorsService.calculatorTypeModel())" hideSingleSelectionIndicator="true">
             <mat-button-toggle [value]="calculatorType.Investment">Investment</mat-button-toggle>
             <mat-button-toggle [value]="calculatorType.Mortgage">Mortgage</mat-button-toggle>
+            <mat-button-toggle [value]="calculatorType.Paycheck">Paycheck</mat-button-toggle>
         </mat-button-toggle-group>
     </div>
 
@@ -209,6 +210,13 @@
             </mat-paginator>
         </div>
 
+    </div>
+
+    <div [hidden]="financeCalculatorsService.calculatorTypeModel() !== calculatorType.Paycheck" class="investment-calculator">
+        <div class="placeholder">
+            <mat-icon>construction</mat-icon>
+            <div>This feature is still under construction!</div>
+        </div>
     </div>
         
     
