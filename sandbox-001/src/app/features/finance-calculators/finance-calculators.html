@@ -318,13 +318,13 @@
                         <div class="state-tax"></div>
                         <div class="state-tax"></div>
 
-                        <div >{{taxDataSource().work_state_income_ee.name}} {{taxDataSource().work_state_income_ee.rate_structure === 'flat_percent' ? '(Flat)' : ''}}</div>
+                        <div >{{taxDataSource().work_state_income_ee.name}}</div>
                         <div class="result-numbers">{{taxDataSource().work_state_income_ee.rate | percent : '1.0-4'}}</div>
                         <div class="result-numbers">{{taxDataSource().work_state_income_ee.totalActualTax | currency}}</div>
                         
                         @if (workState !== residenceState) {
 
-                            <div>{{taxDataSource().residence_state_income_ee.name}} {{taxDataSource().residence_state_income_ee.rate_structure === 'flat_percent' ? '(Flat)' : ''}}</div>
+                            <div>{{taxDataSource().residence_state_income_ee.name}}</div>
                             <div class="result-numbers">{{taxDataSource().residence_state_income_ee.rate | percent : '1.0-4'}}</div>
                             <div class="result-numbers">{{taxDataSource().residence_state_income_ee.totalActualTax | currency}}</div>
 
