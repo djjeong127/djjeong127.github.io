@@ -297,7 +297,7 @@ export class FinanceCalculatorsService {
             category: 'income',
             effective_date: '',
             jurisdiction: '',
-            name: `${Object.keys(State).find((state) => State[state as keyof typeof State] === taxTypeCode.slice(0, 2))} Income Tax`,
+            name: `${Object.keys(State).find((state) => State[state as keyof typeof State] === taxTypeCode.slice(0, 2))?.replaceAll('_', ' ')} Income Tax`,
             rate: 0,
             rate_structure: '',
             supplemental_rate: 0,
