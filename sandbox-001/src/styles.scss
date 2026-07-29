@@ -49,6 +49,10 @@ html {
     row-item-outline-color: var(--mat-sys-on-secondary-container)
   ));
 
+  @include mat.paginator-overrides((
+    container-background-color: var(--root-background-color),
+  ));
+
   @include mat.menu-overrides((
     item-hover-state-layer-color: none,
     item-focus-state-layer-color: none,
