@@ -54,6 +54,11 @@ html {
     item-focus-state-layer-color: none,
   ));
 
+  @include mat.expansion-overrides((
+    container-background-color: var(--mat-sys-inverse-primary),
+    header-text-color:  var(--mat-sys-on-secondary-container),
+    container-text-color: var(--mat-sys-on-secondary-container),
+  ));
 }
 
 // Compile and apply the mountain Stylesheet via a class modifier

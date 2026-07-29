@@ -169,7 +169,7 @@ mat-paginator {
     padding: 0.5em;
 }
 
-.mat-mdc-header-row {
+.mat-mdc-header-row, .mat-mdc-footer-row {
   background-color: var(--mat-sys-primary);
   color: var(--mat-sys-on-primary);
 }
@@ -209,4 +209,24 @@ mat-paginator {
     justify-self: center;
     align-items: center;
     justify-items: center;
+}
+
+.tax-table-container {
+    margin: 1em 0 0 0;
+
+    .mat-column-from,
+    .mat-column-to,
+    .mat-column-rate,
+    .mat-column-actualTax {
+        text-align: right;
+    }
+
+    .mat-mdc-header-cell, 
+    .mat-mdc-cell {
+    padding: 0 1em;
+    }
+}
+
+.extra-details {
+    text-align: center;
 }
