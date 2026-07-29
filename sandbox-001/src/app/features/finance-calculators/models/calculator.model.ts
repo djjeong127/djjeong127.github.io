@@ -99,7 +99,8 @@ export interface PayableTax {
     rate_structure: string;
     rate: number;
     totalActualTax: number;
-    brackets: Bracket[]
+    brackets: Bracket[];
+    wage_base: number;
 }
 
 export interface AllPayableTaxes {

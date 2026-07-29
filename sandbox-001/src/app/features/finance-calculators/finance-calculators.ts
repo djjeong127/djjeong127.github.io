@@ -85,7 +85,8 @@ export class FinanceCalculators {
       rate_structure: 'tax_does_not_exist',
       rate: 0,
       totalActualTax: 0,
-      brackets: []
+      brackets: [],
+      wage_base: 0
     }
 
     let allPayableTaxes: AllPayableTaxes = {

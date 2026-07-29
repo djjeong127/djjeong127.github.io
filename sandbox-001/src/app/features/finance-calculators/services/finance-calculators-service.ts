@@ -323,7 +323,8 @@ export class FinanceCalculatorsService {
                 rate_structure: tax.rate_structure,
                 rate: tax.rate,
                 totalActualTax: grossWages * tax.rate,
-                brackets: editedBrackets
+                brackets: [],
+                wage_base: 0
             }
             return payableTax
         }
@@ -333,7 +334,8 @@ export class FinanceCalculatorsService {
                 rate_structure: tax.rate_structure,
                 rate: tax.rate,
                 totalActualTax: grossWages <= tax.wage_base ? grossWages * tax.rate : tax.wage_base * tax.rate,
-                brackets: []
+                brackets: [],
+                wage_base: tax.wage_base
             }
             return payableTax
         }
@@ -374,7 +376,8 @@ export class FinanceCalculatorsService {
                 rate_structure: tax.rate_structure,
                 rate: tax.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate,
                 totalActualTax: totalPayableTax,
-                brackets: editedBrackets
+                brackets: editedBrackets,
+                wage_base: 0
             }
             return payableTax
         }
@@ -385,7 +388,8 @@ export class FinanceCalculatorsService {
                 rate_structure: tax.rate_structure,
                 rate: tax.rate,
                 totalActualTax: 0,
-                brackets: []
+                brackets: [],
+                wage_base: 0
             }
             return payableTax
         }

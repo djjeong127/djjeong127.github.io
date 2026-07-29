@@ -339,32 +339,29 @@
                             <span>{{taxDataSource().fed_income_ee.name}} Brackets</span>
                         </mat-toolbar>
                         <table mat-table [dataSource]="taxDataSource().fed_income_ee.brackets">
-                            <!-- intervalNumber Column -->
+
                             <ng-container matColumnDef="from">
                             <th mat-header-cell *matHeaderCellDef class="interval"> Begin </th>
                             <td mat-cell *matCellDef="let element" class="interval"> {{(element.from === 0 ? 0 : element.from + 1) | currency}} </td>
                             <td mat-footer-cell *matFooterCellDef> Total </td>
                             </ng-container>
 
-                            <!-- startingBalance Column -->
                             <ng-container matColumnDef="to">
                             <th mat-header-cell *matHeaderCellDef> End </th>
                             <td mat-cell *matCellDef="let element"> {{element.to | currency}} </td>
                             <td mat-footer-cell *matFooterCellDef></td>
                             </ng-container>
 
-                            <!-- contribution Column -->
                             <ng-container matColumnDef="rate">
                             <th mat-header-cell *matHeaderCellDef> Rate </th>
                             <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
                             <td mat-footer-cell *matFooterCellDef></td>
                             </ng-container>
 
-                            <!-- interestEarned Column -->
                             <ng-container matColumnDef="actualTax">
                             <th mat-header-cell *matHeaderCellDef> Tax </th>
                             <td mat-cell *matCellDef="let element"> {{element.actualTax | currency}} </td>
-                            <td mat-footer-cell *matFooterCellDef> {{ taxDataSource().fed_income_ee.totalActualTax | currency }}
+                            <td mat-footer-cell *matFooterCellDef> {{ taxDataSource().fed_income_ee.totalActualTax | currency }} </td>
                             </ng-container>
 
                             <tr mat-header-row *matHeaderRowDef="['from', 'to', 'rate', 'actualTax']; sticky: true"></tr>
@@ -373,6 +370,237 @@
                         </table>
                     </div>
 
+                    <div class="table-container">
+                        <mat-toolbar color="primary">
+                            <span>Social Security Tax</span>
+                        </mat-toolbar>
+                        <table mat-table [dataSource]="[{'from': 0, 'to': taxDataSource().fed_fica_ss_ee.wage_base, 'rate': taxDataSource().fed_fica_ss_ee.rate, 'actualTax': taxDataSource().fed_fica_ss_ee.totalActualTax}, ]">
+                            
+                            <ng-container matColumnDef="from">
+                            <th mat-header-cell *matHeaderCellDef class="interval"> Begin </th>
+                            <td mat-cell *matCellDef="let element" class="interval"> {{(element.from === 0 ? 0 : element.from + 1) | currency}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="to">
+                            <th mat-header-cell *matHeaderCellDef> Max Taxable Income </th>
+                            <td mat-cell *matCellDef="let element"> {{element.to | currency}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="rate">
+                            <th mat-header-cell *matHeaderCellDef> Rate </th>
+                            <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="actualTax">
+                            <th mat-header-cell *matHeaderCellDef> Tax </th>
+                            <td mat-cell *matCellDef="let element"> {{element.actualTax | currency}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="['from', 'to', 'rate', 'actualTax']; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: ['from', 'to', 'rate', 'actualTax'];"></tr>
+                            <!-- <tr mat-footer-row *matFooterRowDef="['from', 'to', 'rate', 'actualTax']; sticky: true"></tr> -->
+                        </table>
+                    </div>
+
+                    <div class="table-container">
+                        <mat-toolbar color="primary">
+                            <span>Medicare Tax</span>
+                        </mat-toolbar>
+                        <table mat-table [dataSource]="[{'rate': taxDataSource().fed_fica_ss_ee.rate, 'actualTax': taxDataSource().fed_fica_ss_ee.totalActualTax}, ]">
+
+                            <ng-container matColumnDef="rate">
+                            <th mat-header-cell *matHeaderCellDef> Flat Rate </th>
+                            <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="actualTax">
+                            <th mat-header-cell *matHeaderCellDef> Tax </th>
+                            <td mat-cell *matCellDef="let element"> {{element.actualTax | currency}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="['rate', 'actualTax']; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: ['rate', 'actualTax'];"></tr>
+                            <!-- <tr mat-footer-row *matFooterRowDef="['rate', 'actualTax']; sticky: true"></tr> -->
+                        </table>
+                    </div>
+
+                    @if (taxDataSource().work_state_income_ee.rate_structure === '') {
+                        <div class="table-container">
+                            <mat-toolbar color="primary">
+                                <span>{{taxDataSource().work_state_income_ee.name}}</span>
+                            </mat-toolbar>
+                            <table mat-table [dataSource]="[{'actualTax': taxDataSource().work_state_income_ee.totalActualTax}, ]">
+
+                                <ng-container matColumnDef="actualTax">
+                                <th mat-header-cell *matHeaderCellDef> No State Income Tax </th>
+                                <!-- <td mat-cell *matCellDef="let element"> {{element.actualTax | currency}} </td> -->
+                                <td mat-footer-cell *matFooterCellDef></td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="['actualTax']; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: ['actualTax'];"></tr>
+                                <!-- <tr mat-footer-row *matFooterRowDef="['actualTax']; sticky: true"></tr> -->
+                            </table>
+                        </div>
+                    }
+                    @else {
+                        @if (taxDataSource().work_state_income_ee.rate_structure === 'flat_percent') {
+                            <div class="table-container">
+                                <mat-toolbar color="primary">
+                                    <span>{{taxDataSource().work_state_income_ee.name}}</span>
+                                </mat-toolbar>
+                                <table mat-table [dataSource]="[{'rate': taxDataSource().work_state_income_ee.rate, 'actualTax': taxDataSource().work_state_income_ee.totalActualTax}, ]">
+
+                                    <ng-container matColumnDef="rate">
+                                    <th mat-header-cell *matHeaderCellDef> Flat Rate </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
+                                    <td mat-footer-cell *matFooterCellDef></td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="actualTax">
+                                    <th mat-header-cell *matHeaderCellDef> Tax </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.actualTax | currency}} </td>
+                                    <td mat-footer-cell *matFooterCellDef></td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="['rate', 'actualTax']; sticky: true"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: ['rate', 'actualTax'];"></tr>
+                                    <!-- <tr mat-footer-row *matFooterRowDef="['rate', 'actualTax']; sticky: true"></tr> -->
+                                </table>
+                            </div>
+                        }
+                        @else if (taxDataSource().work_state_income_ee.rate_structure === 'graduated') {
+                            <div class="table-container">
+                                <mat-toolbar color="primary">
+                                    <span>{{taxDataSource().work_state_income_ee.name}} Brackets</span>
+                                </mat-toolbar>
+                                <table mat-table [dataSource]="taxDataSource().work_state_income_ee.brackets">
+
+                                    <ng-container matColumnDef="from">
+                                    <th mat-header-cell *matHeaderCellDef class="interval"> Begin </th>
+                                    <td mat-cell *matCellDef="let element" class="interval"> {{(element.from === 0 ? 0 : element.from + 1) | currency}} </td>
+                                    <td mat-footer-cell *matFooterCellDef> Total </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="to">
+                                    <th mat-header-cell *matHeaderCellDef> End </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.to | currency}} </td>
+                                    <td mat-footer-cell *matFooterCellDef></td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="rate">
+                                    <th mat-header-cell *matHeaderCellDef> Rate </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
+                                    <td mat-footer-cell *matFooterCellDef></td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="actualTax">
+                                    <th mat-header-cell *matHeaderCellDef> Tax </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.actualTax | currency}} </td>
+                                    <td mat-footer-cell *matFooterCellDef> {{ taxDataSource().work_state_income_ee.totalActualTax | currency }} </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="['from', 'to', 'rate', 'actualTax']; sticky: true"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: ['from', 'to', 'rate', 'actualTax'];"></tr>
+                                    <tr mat-footer-row *matFooterRowDef="['from', 'to', 'rate', 'actualTax']; sticky: true"></tr>
+                                </table>
+                            </div>
+                        }
+                        
+                    }
+
+                    @if (workState !== residenceState) {
+                            @if (taxDataSource().residence_state_income_ee.rate_structure === '') {
+                            <div class="table-container">
+                                <mat-toolbar color="primary">
+                                    <span>{{taxDataSource().residence_state_income_ee.name}}</span>
+                                </mat-toolbar>
+                                <table mat-table [dataSource]="[{'actualTax': taxDataSource().residence_state_income_ee.totalActualTax}, ]">
+
+                                    <ng-container matColumnDef="actualTax">
+                                    <th mat-header-cell *matHeaderCellDef> No State Income Tax </th>
+                                    <!-- <td mat-cell *matCellDef="let element"> {{element.actualTax | currency}} </td> -->
+                                    <td mat-footer-cell *matFooterCellDef></td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="['actualTax']; sticky: true"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: ['actualTax'];"></tr>
+                                    <!-- <tr mat-footer-row *matFooterRowDef="['actualTax']; sticky: true"></tr> -->
+                                </table>
+                            </div>
+                        }
+                        @else {
+                            @if (taxDataSource().residence_state_income_ee.rate_structure === 'flat_percent') {
+                                <div class="table-container">
+                                    <mat-toolbar color="primary">
+                                        <span>{{taxDataSource().residence_state_income_ee.name}}</span>
+                                    </mat-toolbar>
+                                    <table mat-table [dataSource]="[{'rate': taxDataSource().residence_state_income_ee.rate, 'actualTax': taxDataSource().residence_state_income_ee.totalActualTax}, ]">
+
+                                        <ng-container matColumnDef="rate">
+                                        <th mat-header-cell *matHeaderCellDef> Flat Rate </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
+                                        <td mat-footer-cell *matFooterCellDef></td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="actualTax">
+                                        <th mat-header-cell *matHeaderCellDef> Tax </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.actualTax | currency}} </td>
+                                        <td mat-footer-cell *matFooterCellDef></td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="['rate', 'actualTax']; sticky: true"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: ['rate', 'actualTax'];"></tr>
+                                        <!-- <tr mat-footer-row *matFooterRowDef="['rate', 'actualTax']; sticky: true"></tr> -->
+                                    </table>
+                                </div>
+                            }
+                            @else if (taxDataSource().residence_state_income_ee.rate_structure === 'graduated') {
+                                <div class="table-container">
+                                    <mat-toolbar color="primary">
+                                        <span>{{taxDataSource().residence_state_income_ee.name}} Brackets</span>
+                                    </mat-toolbar>
+                                    <table mat-table [dataSource]="taxDataSource().residence_state_income_ee.brackets">
+
+                                        <ng-container matColumnDef="from">
+                                        <th mat-header-cell *matHeaderCellDef class="interval"> Begin </th>
+                                        <td mat-cell *matCellDef="let element" class="interval"> {{(element.from === 0 ? 0 : element.from + 1) | currency}} </td>
+                                        <td mat-footer-cell *matFooterCellDef> Total </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="to">
+                                        <th mat-header-cell *matHeaderCellDef> End </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.to | currency}} </td>
+                                        <td mat-footer-cell *matFooterCellDef></td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="rate">
+                                        <th mat-header-cell *matHeaderCellDef> Rate </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
+                                        <td mat-footer-cell *matFooterCellDef></td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="actualTax">
+                                        <th mat-header-cell *matHeaderCellDef> Tax </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.actualTax | currency}} </td>
+                                        <td mat-footer-cell *matFooterCellDef> {{ taxDataSource().residence_state_income_ee.totalActualTax | currency }} </td>
+                                        </ng-container>
+
+                                        <tr mat-header-row *matHeaderRowDef="['from', 'to', 'rate', 'actualTax']; sticky: true"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: ['from', 'to', 'rate', 'actualTax'];"></tr>
+                                        <tr mat-footer-row *matFooterRowDef="['from', 'to', 'rate', 'actualTax']; sticky: true"></tr>
+                                    </table>
+                                </div>
+                            }
+                            
+                        }
+                    }
                     
                 </div>
             </div>
