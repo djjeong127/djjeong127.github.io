@@ -341,7 +341,7 @@
             
             <div>
                 <h1 class="extra-details">Extra Details</h1>
-                <mat-accordion>
+                <mat-accordion multi="true">
                     <mat-expansion-panel>
                         <mat-expansion-panel-header>
                         <mat-panel-title> {{taxDataSource().fed_income_ee.name}} </mat-panel-title>
@@ -468,7 +468,7 @@
                                         <table mat-table [dataSource]="taxDataSource().work_state_income_ee.brackets">
 
                                             <ng-container matColumnDef="from">
-                                            <th mat-header-cell *matHeaderCellDef> Begin </th>
+                                            <th mat-header-cell *matHeaderCellDef> Start </th>
                                             <td mat-cell *matCellDef="let element"> {{(element.from === 0 ? 0 : element.from + 1) | currency}} </td>
                                             <td mat-footer-cell *matFooterCellDef> Total </td>
                                             </ng-container>
