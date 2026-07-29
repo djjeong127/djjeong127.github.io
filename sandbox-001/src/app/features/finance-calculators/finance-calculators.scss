@@ -217,6 +217,11 @@ mat-paginator {
 }
 
 .tax-table-container {
+    overflow: auto;
+    // max-height: 80vh;
+    contain: inline-size;
+    justify-self: center;
+    width: 100%;
     margin: 1em 0 0 0;
 
     .mat-column-from,
@@ -232,6 +237,7 @@ mat-paginator {
     }
 }
 
-.extra-details {
+.table-title {
+    justify-content: center;
     text-align: center;
 }
