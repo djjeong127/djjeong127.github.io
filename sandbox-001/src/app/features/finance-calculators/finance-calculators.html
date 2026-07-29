@@ -308,35 +308,35 @@
                     <br>
                     <div class="result-stats result-stats-tax">
                         <div>{{federalIncomeTax.name}}</div>
-                        <div class="result-numbers">{{federalIncomeTax.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate | percent}}</div>
+                        <div class="result-numbers">{{federalIncomeTax.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate | percent : '1.0-4'}}</div>
                         <div class="result-numbers">{{financeCalculatorsService.getEstimatedTaxes(grossWages, federalIncomeTax).totalActualTax | currency}}</div>
 
 
                         <div>Social Security</div>
-                        <div class="result-numbers">{{socialSecurityTax.rate | percent}}</div>
+                        <div class="result-numbers">{{socialSecurityTax.rate | percent : '1.0-4'}}</div>
                         <div class="result-numbers">{{grossWages * socialSecurityTax.rate | currency}}</div>
 
                         <div>Medicare</div>
-                        <div class="result-numbers">{{medicareTax.rate | percent}}</div>
+                        <div class="result-numbers">{{medicareTax.rate | percent : '1.0-4'}}</div>
                         <div class="result-numbers">{{grossWages * medicareTax.rate | currency}}</div>
 
 
                         <div class="state-tax">{{workStateTax.name}} {{workStateTax.rate_structure === 'flat_percent' ? '(Flat)' : ''}}</div>
                         @if (workStateTax.rate_structure === 'flat_percent') {
-                            <div class="result-numbers state-tax">{{workStateTax.rate | percent}}</div>
+                            <div class="result-numbers state-tax">{{workStateTax.rate | percent : '1.0-4'}}</div>
                         }
                         @else {
-                            <div class="result-numbers state-tax">{{workStateTax.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate | percent}}</div>
+                            <div class="result-numbers state-tax">{{workStateTax.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate | percent : '1.0-4'}}</div>
                         }
                         <div class="result-numbers state-tax">{{financeCalculatorsService.getEstimatedTaxes(grossWages, workStateTax).totalActualTax | currency}}</div>
                         
                         @if (workState !== residenceState) {
                             <div>{{residenceStateTax.name}} {{residenceStateTax.rate_structure === 'flat_percent' ? '(Flat)' : ''}}</div>
                             @if (residenceStateTax.rate_structure === 'flat_percent') {
-                                <div class="result-numbers">{{residenceStateTax.rate | percent}}</div>
+                                <div class="result-numbers">{{residenceStateTax.rate | percent : '1.0-4'}}</div>
                             }
                             @else {
-                                <div class="result-numbers">{{residenceStateTax.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate | percent}}</div>
+                                <div class="result-numbers">{{residenceStateTax.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate | percent : '1.0-4'}}</div>
                             }
                             <div class="result-numbers">{{financeCalculatorsService.getEstimatedTaxes(grossWages, residenceStateTax).totalActualTax | currency}}</div>
 
@@ -355,7 +355,7 @@
                     </div>
                 </div>
                 <div class="pie-chart-wrapper">
-                    <canvas #investmentPieChart></canvas>
+                    <canvas #taxPieChart></canvas>
                 </div>
             </div>
 
