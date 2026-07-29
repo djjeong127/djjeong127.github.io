@@ -95,9 +95,19 @@ export interface Tax {
 }
 
 export interface PayableTax {
+    name: string;
     rate_structure: string;
+    rate: number;
     totalActualTax: number;
     brackets: Bracket[]
+}
+
+export interface AllPayableTaxes {
+    fed_income_ee: PayableTax;
+    fed_fica_ss_ee: PayableTax;
+    fed_fica_med_ee: PayableTax;
+    work_state_income_ee: PayableTax;
+    residence_state_income_ee: PayableTax;
 }
 
 export interface Bracket {

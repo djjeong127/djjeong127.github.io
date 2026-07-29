@@ -319,13 +319,25 @@ export class FinanceCalculatorsService {
 
         if (tax.rate_structure === 'flat_percent') {
             const payableTax: PayableTax = {
+                name: tax.name,
                 rate_structure: tax.rate_structure,
+                rate: tax.rate,
                 totalActualTax: grossWages * tax.rate,
                 brackets: editedBrackets
             }
             return payableTax
         }
-        else {
+        else if (tax.rate_structure === 'wage_base_capped') {
+            const payableTax: PayableTax = {
+                name: tax.name,
+                rate_structure: tax.rate_structure,
+                rate: tax.rate,
+                totalActualTax: grossWages <= tax.wage_base ? grossWages * tax.rate : tax.wage_base * tax.rate,
+                brackets: []
+            }
+            return payableTax
+        }
+        else if (tax.rate_structure === 'graduated') {
             tax.brackets.forEach((bracket) => {
                 if (grossWages > bracket.from) {
                     if (grossWages > bracket.to && bracket.to !== null) {
@@ -358,9 +370,22 @@ export class FinanceCalculatorsService {
             })
 
             const payableTax: PayableTax = {
+                name: tax.name,
                 rate_structure: tax.rate_structure,
+                rate: tax.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate,
                 totalActualTax: totalPayableTax,
                 brackets: editedBrackets
+            }
+            return payableTax
+        }
+        else {
+            console.error(`haven't accounted for ${tax.name} tax structure: ${tax.rate_structure}`)
+            const payableTax: PayableTax = {
+                name: tax.name,
+                rate_structure: tax.rate_structure,
+                rate: tax.rate,
+                totalActualTax: 0,
+                brackets: []
             }
             return payableTax
         }

@@ -279,11 +279,6 @@
 
         @if (financeCalculatorsService.taxRateResult() !== undefined) {
             @let grossWages = financeCalculatorsService.taxRateResult()!.grossWages;
-            @let federalIncomeTax = financeCalculatorsService.taxRateResult()!.taxes.find((tax) => tax.tax_type_code === 'FED_INCOME_EE')!;
-            @let socialSecurityTax = financeCalculatorsService.taxRateResult()!.taxes.find((tax) => tax.tax_type_code === 'FED_FICA_SS_EE')!;
-            @let medicareTax = financeCalculatorsService.taxRateResult()!.taxes.find((tax) => tax.tax_type_code === 'FED_FICA_MED_EE')!;
-            @let workStateTax = financeCalculatorsService.getSpecificStateTax(financeCalculatorsService.taxRateResult()!.work_state + '_INCOME_EE');
-            @let residenceStateTax = financeCalculatorsService.getSpecificStateTax(financeCalculatorsService.taxRateResult()!.residence_state + '_INCOME_EE');
             @let workState = financeCalculatorsService.taxRateResult()!.work_state;
             @let residenceState = financeCalculatorsService.taxRateResult()!.residence_state;
 
@@ -292,13 +287,13 @@
                     <h2>Results</h2>
                     <div class="result-stats result-stats-tax">
                         @if (workState !== residenceState) {
-                            @let totalTax = (financeCalculatorsService.getEstimatedTaxes(grossWages, federalIncomeTax).totalActualTax) + (grossWages * socialSecurityTax.rate) + (grossWages * medicareTax.rate) + (financeCalculatorsService.getEstimatedTaxes(grossWages, workStateTax).totalActualTax) + (financeCalculatorsService.getEstimatedTaxes(grossWages, residenceStateTax).totalActualTax);
+                            @let totalTax = taxDataSource().fed_income_ee.totalActualTax + taxDataSource().fed_fica_ss_ee.totalActualTax + taxDataSource().fed_fica_med_ee.totalActualTax + taxDataSource().work_state_income_ee.totalActualTax + taxDataSource().residence_state_income_ee.totalActualTax;
                             <div><strong>Take Home Pay: </strong></div>
                             <div class="result-numbers"></div>
                             <div class="result-numbers"><strong>{{grossWages - totalTax | currency}}</strong></div>
                         }
                         @else {
-                            @let totalTax = (financeCalculatorsService.getEstimatedTaxes(grossWages, federalIncomeTax).totalActualTax) + (grossWages * socialSecurityTax.rate) + (grossWages * medicareTax.rate) + (financeCalculatorsService.getEstimatedTaxes(grossWages, workStateTax).totalActualTax);
+                            @let totalTax = taxDataSource().fed_income_ee.totalActualTax + taxDataSource().fed_fica_ss_ee.totalActualTax + taxDataSource().fed_fica_med_ee.totalActualTax + taxDataSource().work_state_income_ee.totalActualTax;
                             <div><strong>Take Home Pay: </strong></div>
                             <div class="result-numbers"></div>
                             <div class="result-numbers"><strong>{{grossWages - totalTax | currency}}</strong></div>
@@ -307,50 +302,44 @@
 
                     <br>
                     <div class="result-stats result-stats-tax">
-                        <div>{{federalIncomeTax.name}}</div>
-                        <div class="result-numbers">{{federalIncomeTax.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate | percent : '1.0-4'}}</div>
-                        <div class="result-numbers">{{financeCalculatorsService.getEstimatedTaxes(grossWages, federalIncomeTax).totalActualTax | currency}}</div>
+                        <div>{{taxDataSource().fed_income_ee.name}}</div>
+                        <div class="result-numbers">{{taxDataSource().fed_income_ee.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate | percent : '1.0-4'}}</div>
+                        <div class="result-numbers">{{taxDataSource().fed_income_ee.totalActualTax | currency}}</div>
 
 
                         <div>Social Security</div>
-                        <div class="result-numbers">{{socialSecurityTax.rate | percent : '1.0-4'}}</div>
-                        <div class="result-numbers">{{grossWages * socialSecurityTax.rate | currency}}</div>
+                        <div class="result-numbers">{{taxDataSource().fed_fica_ss_ee.rate | percent : '1.0-4'}}</div>
+                        <div class="result-numbers">{{taxDataSource().fed_fica_ss_ee.totalActualTax| currency}}</div>
 
                         <div>Medicare</div>
-                        <div class="result-numbers">{{medicareTax.rate | percent : '1.0-4'}}</div>
-                        <div class="result-numbers">{{grossWages * medicareTax.rate | currency}}</div>
+                        <div class="result-numbers">{{taxDataSource().fed_fica_med_ee.rate | percent : '1.0-4'}}</div>
+                        <div class="result-numbers">{{taxDataSource().fed_fica_med_ee.totalActualTax | currency}}</div>
 
 
-                        <div class="state-tax">{{workStateTax.name}} {{workStateTax.rate_structure === 'flat_percent' ? '(Flat)' : ''}}</div>
-                        @if (workStateTax.rate_structure === 'flat_percent') {
-                            <div class="result-numbers state-tax">{{workStateTax.rate | percent : '1.0-4'}}</div>
-                        }
-                        @else {
-                            <div class="result-numbers state-tax">{{workStateTax.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate | percent : '1.0-4'}}</div>
-                        }
-                        <div class="result-numbers state-tax">{{financeCalculatorsService.getEstimatedTaxes(grossWages, workStateTax).totalActualTax | currency}}</div>
+                        <div class="state-tax">{{taxDataSource().work_state_income_ee.name}} {{taxDataSource().work_state_income_ee.rate_structure === 'flat_percent' ? '(Flat)' : ''}}</div>
+                        <div class="result-numbers state-tax">{{taxDataSource().work_state_income_ee.rate | percent : '1.0-4'}}</div>
+                        <div class="result-numbers state-tax">{{taxDataSource().work_state_income_ee.totalActualTax | currency}}</div>
                         
                         @if (workState !== residenceState) {
-                            <div>{{residenceStateTax.name}} {{residenceStateTax.rate_structure === 'flat_percent' ? '(Flat)' : ''}}</div>
-                            @if (residenceStateTax.rate_structure === 'flat_percent') {
-                                <div class="result-numbers">{{residenceStateTax.rate | percent : '1.0-4'}}</div>
-                            }
-                            @else {
-                                <div class="result-numbers">{{residenceStateTax.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate | percent : '1.0-4'}}</div>
-                            }
-                            <div class="result-numbers">{{financeCalculatorsService.getEstimatedTaxes(grossWages, residenceStateTax).totalActualTax | currency}}</div>
+                            @let totalTax = taxDataSource().fed_income_ee.totalActualTax + taxDataSource().fed_fica_ss_ee.totalActualTax + taxDataSource().fed_fica_med_ee.totalActualTax + taxDataSource().work_state_income_ee.totalActualTax + taxDataSource().residence_state_income_ee.totalActualTax;
 
-                            @let totalTax = (financeCalculatorsService.getEstimatedTaxes(grossWages, federalIncomeTax).totalActualTax) + (grossWages * socialSecurityTax.rate) + (grossWages * medicareTax.rate) + (financeCalculatorsService.getEstimatedTaxes(grossWages, workStateTax).totalActualTax) + (financeCalculatorsService.getEstimatedTaxes(grossWages, residenceStateTax).totalActualTax);
+                            <div>{{taxDataSource().residence_state_income_ee.name}} {{taxDataSource().residence_state_income_ee.rate_structure === 'flat_percent' ? '(Flat)' : ''}}</div>
+                            <div class="result-numbers">{{taxDataSource().residence_state_income_ee.rate | percent : '1.0-4'}}</div>
+                            <div class="result-numbers">{{taxDataSource().residence_state_income_ee.totalActualTax | currency}}</div>
+
                             <div class="top-border"><strong>Total Tax: </strong></div>
                             <div class="result-numbers top-border"></div>
                             <div class="result-numbers top-border"><strong>{{totalTax | currency}}</strong></div>
                         }
+
                         @else {
-                            @let totalTax = (financeCalculatorsService.getEstimatedTaxes(grossWages, federalIncomeTax).totalActualTax) + (grossWages * socialSecurityTax.rate) + (grossWages * medicareTax.rate) + (financeCalculatorsService.getEstimatedTaxes(grossWages, workStateTax).totalActualTax);
+                            @let totalTax = taxDataSource().fed_income_ee.totalActualTax + taxDataSource().fed_fica_ss_ee.totalActualTax + taxDataSource().fed_fica_med_ee.totalActualTax + taxDataSource().work_state_income_ee.totalActualTax;
+
                             <div class="top-border"><strong>Total Tax: </strong></div>
                             <div class="result-numbers top-border"></div>
                             <div class="result-numbers top-border"><strong>{{totalTax | currency}}</strong></div>
                         }
+                        
 
                     </div>
                 </div>
