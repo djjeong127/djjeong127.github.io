@@ -281,23 +281,15 @@
             @let grossWages = financeCalculatorsService.taxRateResult()!.grossWages;
             @let workState = financeCalculatorsService.taxRateResult()!.work_state;
             @let residenceState = financeCalculatorsService.taxRateResult()!.residence_state;
+            @let totalTax = getTotalTax();
 
             <div class="details">
                 <div class="results">
                     <h2>Results</h2>
                     <div class="result-stats result-stats-tax">
-                        @if (workState !== residenceState) {
-                            @let totalTax = taxDataSource().fed_income_ee.totalActualTax + taxDataSource().fed_fica_ss_ee.totalActualTax + taxDataSource().fed_fica_med_ee.totalActualTax + taxDataSource().work_state_income_ee.totalActualTax + taxDataSource().residence_state_income_ee.totalActualTax;
-                            <div><strong>Take Home Pay: </strong></div>
-                            <div class="result-numbers"></div>
-                            <div class="result-numbers"><strong>{{grossWages - totalTax | currency}}</strong></div>
-                        }
-                        @else {
-                            @let totalTax = taxDataSource().fed_income_ee.totalActualTax + taxDataSource().fed_fica_ss_ee.totalActualTax + taxDataSource().fed_fica_med_ee.totalActualTax + taxDataSource().work_state_income_ee.totalActualTax;
-                            <div><strong>Take Home Pay: </strong></div>
-                            <div class="result-numbers"></div>
-                            <div class="result-numbers"><strong>{{grossWages - totalTax | currency}}</strong></div>
-                        }
+                        <div><strong>Take Home Pay: </strong></div>
+                        <div class="result-numbers"></div>
+                        <div class="result-numbers"><strong>{{grossWages - totalTax | currency}}</strong></div>
                     </div>
 
                     <br>
@@ -321,24 +313,15 @@
                         <div class="result-numbers state-tax">{{taxDataSource().work_state_income_ee.totalActualTax | currency}}</div>
                         
                         @if (workState !== residenceState) {
-                            @let totalTax = taxDataSource().fed_income_ee.totalActualTax + taxDataSource().fed_fica_ss_ee.totalActualTax + taxDataSource().fed_fica_med_ee.totalActualTax + taxDataSource().work_state_income_ee.totalActualTax + taxDataSource().residence_state_income_ee.totalActualTax;
 
                             <div>{{taxDataSource().residence_state_income_ee.name}} {{taxDataSource().residence_state_income_ee.rate_structure === 'flat_percent' ? '(Flat)' : ''}}</div>
                             <div class="result-numbers">{{taxDataSource().residence_state_income_ee.rate | percent : '1.0-4'}}</div>
                             <div class="result-numbers">{{taxDataSource().residence_state_income_ee.totalActualTax | currency}}</div>
 
-                            <div class="top-border"><strong>Total Tax: </strong></div>
-                            <div class="result-numbers top-border"></div>
-                            <div class="result-numbers top-border"><strong>{{totalTax | currency}}</strong></div>
                         }
-
-                        @else {
-                            @let totalTax = taxDataSource().fed_income_ee.totalActualTax + taxDataSource().fed_fica_ss_ee.totalActualTax + taxDataSource().fed_fica_med_ee.totalActualTax + taxDataSource().work_state_income_ee.totalActualTax;
-
-                            <div class="top-border"><strong>Total Tax: </strong></div>
-                            <div class="result-numbers top-border"></div>
-                            <div class="result-numbers top-border"><strong>{{totalTax | currency}}</strong></div>
-                        }
+                        <div class="top-border"><strong>Total Tax: </strong></div>
+                        <div class="result-numbers top-border"></div>
+                        <div class="result-numbers top-border"><strong>{{totalTax | currency}}</strong></div>
                         
 
                     </div>
@@ -347,12 +330,52 @@
                     <canvas #taxPieChart></canvas>
                 </div>
             </div>
+            
+            <div>
+                <h2>Extra Details</h2>
+                <div>
+                    <div class="table-container">
+                        <mat-toolbar color="primary">
+                            <span>{{taxDataSource().fed_income_ee.name}} Brackets</span>
+                        </mat-toolbar>
+                        <table mat-table [dataSource]="taxDataSource().fed_income_ee.brackets">
+                            <!-- intervalNumber Column -->
+                            <ng-container matColumnDef="from">
+                            <th mat-header-cell *matHeaderCellDef class="interval"> Begin </th>
+                            <td mat-cell *matCellDef="let element" class="interval"> {{(element.from === 0 ? 0 : element.from + 1) | currency}} </td>
+                            <td mat-footer-cell *matFooterCellDef> Total </td>
+                            </ng-container>
 
-            <!-- <div>
-                @for (bracket of financeCalculatorsService.getEstimatedTaxes(grossWages, federalIncomeTax).brackets; track bracket.rate) {
-                    <div>from: {{bracket.from}} | to: {{bracket.to}} | rate: {{bracket.rate}} | tax: {{bracket.actualTax}}</div>
-                }
-            </div> -->
+                            <!-- startingBalance Column -->
+                            <ng-container matColumnDef="to">
+                            <th mat-header-cell *matHeaderCellDef> End </th>
+                            <td mat-cell *matCellDef="let element"> {{element.to | currency}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+
+                            <!-- contribution Column -->
+                            <ng-container matColumnDef="rate">
+                            <th mat-header-cell *matHeaderCellDef> Rate </th>
+                            <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
+                            </ng-container>
+
+                            <!-- interestEarned Column -->
+                            <ng-container matColumnDef="actualTax">
+                            <th mat-header-cell *matHeaderCellDef> Tax </th>
+                            <td mat-cell *matCellDef="let element"> {{element.actualTax | currency}} </td>
+                            <td mat-footer-cell *matFooterCellDef> {{ taxDataSource().fed_income_ee.totalActualTax | currency }}
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="['from', 'to', 'rate', 'actualTax']; sticky: true"></tr>
+                            <tr mat-row *matRowDef="let row; columns: ['from', 'to', 'rate', 'actualTax'];"></tr>
+                            <tr mat-footer-row *matFooterRowDef="['from', 'to', 'rate', 'actualTax']; sticky: true"></tr>
+                        </table>
+                    </div>
+
+                    
+                </div>
+            </div>
 
             
         }

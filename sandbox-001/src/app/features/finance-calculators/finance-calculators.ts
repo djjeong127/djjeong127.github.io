@@ -465,6 +465,17 @@ export class FinanceCalculators {
   // this.taxPieChart.update();
   // }
 
+  getTotalTax(): number {
+    let totalTax = 0;
+    if (this.taxDataSource().work_state_income_ee.name !== this.taxDataSource().residence_state_income_ee.name) {
+      totalTax = this.taxDataSource().fed_income_ee.totalActualTax + this.taxDataSource().fed_fica_ss_ee.totalActualTax + this.taxDataSource().fed_fica_med_ee.totalActualTax + this.taxDataSource().work_state_income_ee.totalActualTax + this.taxDataSource().residence_state_income_ee.totalActualTax
+    }
+    else {
+      totalTax = this.taxDataSource().fed_income_ee.totalActualTax + this.taxDataSource().fed_fica_ss_ee.totalActualTax + this.taxDataSource().fed_fica_med_ee.totalActualTax + this.taxDataSource().work_state_income_ee.totalActualTax
+    }
+    return totalTax;
+  }
+
   ngOnDestroy(): void {
     if (this.investmentLineChart) {
       this.investmentLineChart.destroy();
