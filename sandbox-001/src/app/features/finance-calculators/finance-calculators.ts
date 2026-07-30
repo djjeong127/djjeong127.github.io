@@ -23,7 +23,24 @@ export class FinanceCalculators {
   @ViewChild('mortgagePieChart') mortgagePieChartCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('mortgagePaginator') mortgagePaginator!: MatPaginator;
 
-  @ViewChild('taxPieChart') taxPieChartCanvas!: ElementRef<HTMLCanvasElement>;
+@ViewChild('taxPieChart') set taxPieChartCanvas(element: ElementRef<HTMLCanvasElement> | undefined) {
+  if (element) {
+    // Canvas element just appeared in the DOM
+    this._taxPieChartCanvasElement = element;
+    
+    // Safely initialize and populate the chart immediately
+    this.initTaxPieChart();
+    this.updateTaxPieChart(this.taxDataSource());
+  } else {
+    // Canvas element left the DOM, destroy the chart reference to prevent memory leaks
+    if (this.taxPieChart) {
+      this.taxPieChart.destroy();
+    }
+    this._taxPieChartCanvasElement = undefined;
+  }
+}
+
+private _taxPieChartCanvasElement?: ElementRef<HTMLCanvasElement>;
 
 
   investmentLineChart!: Chart
@@ -113,9 +130,6 @@ export class FinanceCalculators {
     this.initMortgagePieChart();
     this.updateMortgagePieChart(this.financeCalculatorsService.mortgageCalculationResult())
     this.mortgageDataSource().paginator = this.mortgagePaginator
-
-    this.initTaxPieChart();
-    this.updateTaxPieChart(this.taxDataSource())
   }
 
    initInvestmentLineChart(): void {
@@ -230,16 +244,6 @@ export class FinanceCalculators {
           legend: {
             position: 'top'
           },
-          tooltip: {
-            callbacks: {
-              // Formats tooltips to match financial dollar values on hover
-              label: (context) => {
-                const label = context.label ?? '';
-                const value = context.parsed ?? 0;
-                return ` ${label}: $${value.toLocaleString()}`;
-              }
-            }
-          }
         }
       }
     });
@@ -369,16 +373,6 @@ export class FinanceCalculators {
           },
           legend: {
             position: 'top'
-          },
-          tooltip: {
-            callbacks: {
-              // Formats tooltips to match financial dollar values on hover
-              label: (context) => {
-                const label = context.label ?? '';
-                const value = context.parsed ?? 0;
-                return ` ${label}: $${value.toLocaleString()}`;
-              }
-            }
           }
         }
       }
@@ -402,44 +396,34 @@ export class FinanceCalculators {
   }
 
   initTaxPieChart(): void {
-    const ctx = this.taxPieChartCanvas.nativeElement.getContext('2d');
-    if (!ctx) return;
+  // Ensure the canvas element exists before trying to read it
+  if (!this._taxPieChartCanvasElement) return;
 
-    this.taxPieChart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: [], // Populated dynamically
-        datasets: [{
-          data: [], // Populated dynamically during update
-          borderColor: [], // Populated dynamically during update
-          backgroundColor: [], // Populated dynamically during update
-          hoverOffset: 4
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            // text: 'Total Pay'
-          },
-          legend: {
-            position: 'top'
-          },
-          tooltip: {
-            callbacks: {
-              // Formats tooltips to match financial dollar values on hover
-              label: (context) => {
-                const label = context.label ?? '';
-                const value = context.parsed ?? 0;
-                return ` ${label}: $${value.toLocaleString()}`;
-              }
-            }
-          }
-        }
-      }
-    });
+  const ctx = this._taxPieChartCanvasElement.nativeElement.getContext('2d');
+  if (!ctx) return;
+
+  // Prevent duplicate chart initialization on the same canvas
+  if (this.taxPieChart) {
+    this.taxPieChart.destroy();
   }
+
+  this.taxPieChart = new Chart(ctx, {
+    type: 'pie', // or 'doughnut'
+    data: {
+      labels: ['Federal Income Tax', 'Social Security', 'Medicare', 'Work State Tax', 'Residence State Tax'],
+      datasets: [{
+        data: [], // Populated dynamically by updateTaxPieChart
+        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top' }
+      }
+    }
+  });
+}
 
   updateTaxPieChart(data: AllPayableTaxes): void {
     if (!this.taxPieChart) return;
