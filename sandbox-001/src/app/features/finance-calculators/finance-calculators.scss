@@ -38,7 +38,7 @@
     overflow: hidden;
 }
 
-.investment-calculator {
+.investment-calculator, .tax-calculator {
     display: grid;
     gap: 2em;
 }
@@ -59,10 +59,36 @@
 
 }
 
+.tax-calculator-form {
+    display: grid;
+    gap: 1em;
+    justify-items: center;
+
+    .tax-button {
+        position: relative;
+        display: inline-block;
+        align-items: center;
+        justify-items: center;
+
+        mat-icon {
+            position: absolute;
+            right: -1.2em;
+            top: 20%;
+        }
+
+    }
+    
+}
+
+
 .details {
     display: grid;
     gap: 2em;
     padding: 1em;
+
+    h4 {
+        margin: 0;
+    }
 
     .result-stats {
         display: grid;
@@ -76,6 +102,13 @@
         .top-border {
             border-top: 1px solid;
         }
+    }
+    .result-stats-tax {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .state-tax {
+        margin: 1em 0 0 0;
     }
 
     .pie-chart-wrapper {
@@ -141,6 +174,11 @@ mat-paginator {
   color: var(--mat-sys-on-primary);
 }
 
+.mat-mdc-footer-row {
+  background-color: var(--mat-sys-secondary);
+  color: var(--mat-sys-on-secondary);
+}
+
 .mat-mdc-row:nth-child(even) {
   background-color: var(--mat-sys-inverse-primary);
 }
@@ -176,4 +214,30 @@ mat-paginator {
     justify-self: center;
     align-items: center;
     justify-items: center;
+}
+
+.tax-table-container {
+    overflow: auto;
+    // max-height: 80vh;
+    contain: inline-size;
+    justify-self: center;
+    width: 100%;
+    margin: 1em 0 0 0;
+
+    .mat-column-from,
+    .mat-column-to,
+    .mat-column-rate,
+    .mat-column-actualTax {
+        text-align: right;
+    }
+
+    .mat-mdc-header-cell, 
+    .mat-mdc-cell {
+    padding: 0 1em;
+    }
+}
+
+.table-title {
+    justify-content: center;
+    text-align: center;
 }

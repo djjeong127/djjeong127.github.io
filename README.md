@@ -21,6 +21,7 @@
 * **Google Gemini AI** - Food recipe pictures.
 * **[TMDB API](https://developer.themoviedb.org/docs/getting-started)** - Movie and Shows source of metadata.
 * **[Chart.js](https://www.chartjs.org/)** - Open source library for charts/graphs.
+* **[PayrollTax API](https://payrolltaxapi.com/docs)** - Tax brackets and metadata for paychecks/wages.
 
 ## Deployment Note
 

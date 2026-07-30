@@ -14,6 +14,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete'
 import { MatTableModule } from '@angular/material/table'
 import { MatSortModule } from '@angular/material/sort'
 import { MatPaginatorModule } from '@angular/material/paginator'
+import { MatMenuModule } from '@angular/material/menu';
+import { MatExpansionModule }  from '@angular/material/expansion'
 
 export const ANGULAR_MATERIAL_MODULES = [
     MatToolbarModule,
@@ -32,4 +34,6 @@ export const ANGULAR_MATERIAL_MODULES = [
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
+    MatMenuModule,
+    MatExpansionModule
 ]

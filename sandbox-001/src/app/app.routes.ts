@@ -48,6 +48,10 @@ export const routes: Routes = [
         component: Resume
     },
     {
+        path: 'give-us-this-day-our',
+        component: GiveUsThisDayOur
+    },
+    {
         path: '**',
         component: GiveUsThisDayOur
     }

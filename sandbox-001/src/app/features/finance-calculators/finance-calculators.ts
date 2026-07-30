@@ -1,16 +1,16 @@
 import { Component, computed, ElementRef, inject, ViewChild } from '@angular/core';
 import { FinanceCalculatorsService } from './services/finance-calculators-service';
 import { ANGULAR_MATERIAL_MODULES } from '../../shared/modules/angular-material.module';
-import { FormField } from '@angular/forms/signals';
-import { CurrencyPipe } from '@angular/common';
-import { CalculatorType, InvestmentCalculationResults, InvestmentCalculationStats, MortgageCalculationResults, MortgageCalculationStats, TimeUnit } from './models/calculator.model';
+import { FormField, FormRoot } from '@angular/forms/signals';
+import { CurrencyPipe, PercentPipe } from '@angular/common';
+import { AllPayableTaxes, CalculatorType, FilingStatus, InvestmentCalculationResults, InvestmentCalculationStats, MortgageCalculationResults, MortgageCalculationStats, PayableTax, PayrollTaxApiResponse, State, TimeUnit } from './models/calculator.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Chart } from 'chart.js/auto'
 
 @Component({
   selector: 'app-finance-calculators',
-  imports: [ANGULAR_MATERIAL_MODULES, FormField, CurrencyPipe],
+  imports: [ANGULAR_MATERIAL_MODULES, FormField, CurrencyPipe, PercentPipe, FormRoot],
   templateUrl: './finance-calculators.html',
   styleUrl: './finance-calculators.scss',
 })
@@ -23,17 +23,24 @@ export class FinanceCalculators {
   @ViewChild('mortgagePieChart') mortgagePieChartCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('mortgagePaginator') mortgagePaginator!: MatPaginator;
 
+  @ViewChild('taxPieChart') taxPieChartCanvas!: ElementRef<HTMLCanvasElement>;
+
+
   investmentLineChart!: Chart
   investmentPieChart!: Chart
 
   mortgageBarChart!: Chart
   mortgagePieChart!: Chart
 
+  taxPieChart!: Chart
+
   financeCalculatorsService = inject(FinanceCalculatorsService)
 
   calculatorType = CalculatorType
   timeUnit = TimeUnit
   timeUnits: TimeUnit[] = Object.values(TimeUnit)
+  filingStatuses: FilingStatus[] = Object.values(FilingStatus)
+  states: State[] = Object.values(State)
 
 
   investmentDataSource = computed(() => {
@@ -66,6 +73,37 @@ export class FinanceCalculators {
     'remainingBalance'
   ])
 
+  taxDataSource = computed(() => {
+    const grossWages = this.financeCalculatorsService.taxRateResult()!.grossWages
+    const fedIncomeTax = this.financeCalculatorsService.taxRateResult()?.taxes.find((tax) => tax.tax_type_code === 'FED_INCOME_EE')
+    const socialSecurityTax = this.financeCalculatorsService.taxRateResult()?.taxes.find((tax) => tax.tax_type_code === 'FED_FICA_SS_EE')
+    const medicareTax = this.financeCalculatorsService.taxRateResult()?.taxes.find((tax) => tax.tax_type_code === 'FED_FICA_MED_EE')
+    const workStateTax = this.financeCalculatorsService.getSpecificStateTax(this.financeCalculatorsService.taxRateResult()?.work_state + '_INCOME_EE')
+    const residenceStateTax = this.financeCalculatorsService.getSpecificStateTax(this.financeCalculatorsService.taxRateResult()?.residence_state + '_INCOME_EE')
+    const blankTax: PayableTax = {
+      name: 'Blank Tax',
+      rate_structure: 'tax_does_not_exist',
+      rate: 0,
+      totalActualTax: 0,
+      brackets: [],
+      wage_base: 0
+    }
+
+    let allPayableTaxes: AllPayableTaxes = {
+      fed_income_ee: fedIncomeTax ? this.financeCalculatorsService.getEstimatedTaxes(grossWages, fedIncomeTax) : blankTax,
+      fed_fica_ss_ee: socialSecurityTax ? this.financeCalculatorsService.getEstimatedTaxes(grossWages, socialSecurityTax) : blankTax,
+      fed_fica_med_ee: medicareTax ? this.financeCalculatorsService.getEstimatedTaxes(grossWages, medicareTax) : blankTax,
+      work_state_income_ee: workStateTax ? this.financeCalculatorsService.getEstimatedTaxes(grossWages, workStateTax) : blankTax,
+      residence_state_income_ee: residenceStateTax ? this.financeCalculatorsService.getEstimatedTaxes(grossWages, residenceStateTax) : blankTax
+    }
+
+    this.updateTaxPieChart(allPayableTaxes)
+    return allPayableTaxes
+  })
+  updateTaxPieChartComputed = computed(() => {
+    return this.updateTaxPieChart(this.taxDataSource())
+  })
+
   ngAfterViewInit() {
     this.initInvestmentLineChart();
     this.updateInvestmentLineChart(this.investmentDataSource().data);
@@ -79,6 +117,8 @@ export class FinanceCalculators {
     this.updateMortgagePieChart(this.financeCalculatorsService.mortgageCalculationResult())
     this.mortgageDataSource().paginator = this.mortgagePaginator
 
+    this.initTaxPieChart();
+    this.updateTaxPieChart(this.taxDataSource())
   }
 
    initInvestmentLineChart(): void {
@@ -188,7 +228,7 @@ export class FinanceCalculators {
         plugins: {
           title: {
             display: true,
-            text: 'Total Investments',
+            // text: 'Total Investments',
           },
           legend: {
             position: 'top'
@@ -236,16 +276,16 @@ export class FinanceCalculators {
           {
             label: 'Principal',
             data: [],
-            borderColor: '#10b981', // Green line
-            backgroundColor: '#10b981',
+            borderColor: '#3b82f6', // Green line
+            backgroundColor: '#3b82f6',
             borderWidth: 1,
             stack: 'stack 1'
           },
           {
             label: 'Interest',
             data: [],
-            borderColor: '#3b82f6', // Blue line
-            backgroundColor: '#3b82f6',
+            borderColor: '#f59e0b', // Blue line
+            backgroundColor: '#f59e0b',
             borderWidth: 1,
             stack: 'stack 1'
           }
@@ -328,7 +368,7 @@ export class FinanceCalculators {
         plugins: {
           title: {
             display: true,
-            text: 'Total Payment'
+            // text: 'Total Payment'
           },
           legend: {
             position: 'top'
@@ -362,6 +402,87 @@ export class FinanceCalculators {
 
     // 3. Render update transformations smoothly
     this.mortgagePieChart.update();
+  }
+
+  initTaxPieChart(): void {
+    const ctx = this.taxPieChartCanvas.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    this.taxPieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: [], // Populated dynamically
+        datasets: [{
+          data: [], // Populated dynamically during update
+          borderColor: [], // Populated dynamically during update
+          backgroundColor: [], // Populated dynamically during update
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            // text: 'Total Pay'
+          },
+          legend: {
+            position: 'top'
+          },
+          tooltip: {
+            callbacks: {
+              // Formats tooltips to match financial dollar values on hover
+              label: (context) => {
+                const label = context.label ?? '';
+                const value = context.parsed ?? 0;
+                return ` ${label}: $${value.toLocaleString()}`;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  updateTaxPieChart(data: AllPayableTaxes): void {
+    if (!this.taxPieChart) return;
+
+    // 1. Define your dynamic labels and data (e.g., now 3 items)
+    const takeHomePay = this.financeCalculatorsService.taxRateResult()!.grossWages - this.getTotalTax(data)
+    let labelList = ['Take Home Pay', data.fed_income_ee.name, 'Social Security Tax', 'Medicare Tax', data.work_state_income_ee.name];
+    let dataList = [takeHomePay, data.fed_income_ee.totalActualTax, data.fed_fica_ss_ee.totalActualTax, data.fed_fica_med_ee.totalActualTax, data.work_state_income_ee.totalActualTax];
+    
+
+    // 2. Define matching colors dynamically for each slice
+    const colorList = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
+
+    if (data.work_state_income_ee.name !== data.residence_state_income_ee.name) {
+      labelList.push(data.residence_state_income_ee.name)
+      dataList.push(data.residence_state_income_ee.totalActualTax)
+      colorList.push('#ec4899')
+    }
+
+    // 3. Assign labels and data to the chart instance
+    this.taxPieChart.data.labels = labelList;
+    this.taxPieChart.data.datasets[0].data = dataList;
+
+    // 4. Update the color arrays dynamically to match the new slice count
+    this.taxPieChart.data.datasets[0].backgroundColor = colorList;
+    this.taxPieChart.data.datasets[0].borderColor = colorList;
+
+    // 5. Render smooth transformations
+    this.taxPieChart.update();
+  }
+
+  getTotalTax(data: AllPayableTaxes): number {
+    let totalTax = 0;
+    if (data.work_state_income_ee.name !== data.residence_state_income_ee.name) {
+      totalTax = data.fed_income_ee.totalActualTax + data.fed_fica_ss_ee.totalActualTax + data.fed_fica_med_ee.totalActualTax + data.work_state_income_ee.totalActualTax + data.residence_state_income_ee.totalActualTax
+    }
+    else {
+      totalTax = data.fed_income_ee.totalActualTax + data.fed_fica_ss_ee.totalActualTax + data.fed_fica_med_ee.totalActualTax + data.work_state_income_ee.totalActualTax
+    }
+    return totalTax;
   }
 
   ngOnDestroy(): void {
@@ -404,6 +525,12 @@ export class FinanceCalculators {
     }
     if (this.financeCalculatorsService.mortgageCalculatorModel().interestRate === null) {
       this.financeCalculatorsService.mortgageCalculatorModel.update((model) => ({...model, interestRate: 0}))
+    }
+  }
+
+  autoFillIfBlankTax() {
+    if (this.financeCalculatorsService.taxCalculatorModel().grossWages === null) {
+      this.financeCalculatorsService.taxCalculatorModel.update((model) => ({...model, grossWages: 1}))
     }
   }
 }

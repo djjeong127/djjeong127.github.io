@@ -1,9 +1,13 @@
-import { computed, Service, signal } from '@angular/core';
-import { CalculatorType, InvestmentCalculationResults, InvestmentCalculatorModel, MortgageCalculationResults, MortgageCalculatorModel, TimeUnit } from '../models/calculator.model';
-import { form, min, pattern, required } from '@angular/forms/signals';
+import { computed, inject, Service, signal } from '@angular/core';
+import { Bracket, CalculatorType, FilingStatus, InvestmentCalculationResults, InvestmentCalculatorModel, MortgageCalculationResults, MortgageCalculatorModel, PayableTax, PayPeriod, PayrollTaxApiRequest, PayrollTaxApiResponse, PayrollTaxLocalStorageObject, State, Tax, TimeUnit } from '../models/calculator.model';
+import { form, MAX_NUMBER, min, pattern, required } from '@angular/forms/signals';
+import { PayrollTaxApiService } from './payroll-tax-api-service';
+import { map } from 'rxjs';
 
 @Service()
 export class FinanceCalculatorsService {
+
+    payrollTaxApiService = inject(PayrollTaxApiService)
 
     calculatorTypeModel = signal<CalculatorType>(CalculatorType.Investment)
     calculatorTypeForm = form(this.calculatorTypeModel)
@@ -43,6 +47,22 @@ export class FinanceCalculatorsService {
         return this.mortgageCalculation(this.mortgageCalculatorModel())
     })
 
+    taxCalculatorModel = signal<PayrollTaxApiRequest>({
+        workState: State.New_York,
+        payDate: new Date().getFullYear().toString(),
+        residenceState: State.New_York,
+        grossWages: 100000,
+        payPeriod: PayPeriod.Annual,
+        filingStatus: FilingStatus.Single,
+        allowances: 0
+    })
+    taxCalculatorForm = form(this.taxCalculatorModel, (schemaPath) => {
+        min(schemaPath.grossWages, 1, {message: 'Starting Amount cannot be negative'})
+    })
+
+    taxRateResult = signal<PayrollTaxApiResponse | undefined>(undefined)
+
+
     constructor() {
 
         // initialize calculatorType in localstorage
@@ -72,6 +92,20 @@ export class FinanceCalculatorsService {
             this.storeMortgageCalculatorModel(this.mortgageCalculatorModel())
         }
 
+        // initialize taxCalculatorModel in localstorage
+        if (localStorage.getItem('tax-calculator-local-storage-object')) {
+            const storedTaxCalculatorLocalStorageObject: PayrollTaxLocalStorageObject = JSON.parse(localStorage.getItem('tax-calculator-local-storage-object')!)
+            this.taxCalculatorModel.set(storedTaxCalculatorLocalStorageObject.request)
+            this.taxRateResult.set(storedTaxCalculatorLocalStorageObject.response)
+        }
+        else {
+            const taxCalculatorLocalStorageObject: PayrollTaxLocalStorageObject = {
+                request: this.taxCalculatorModel(),
+                response: this.taxRateResult()
+            }
+            this.storeTaxCalculatorLocalStorageObject(taxCalculatorLocalStorageObject)
+        }
+
     }
 
     storeCalculatorType(calculatorType: CalculatorType) {
@@ -87,6 +121,10 @@ export class FinanceCalculatorsService {
     private storeMortgageCalculatorModel(mortgageCalculatorModel: MortgageCalculatorModel) {
 
         localStorage.setItem('mortgage-calculator-model', JSON.stringify(mortgageCalculatorModel));
+    }
+
+    private storeTaxCalculatorLocalStorageObject(taxCalculatorLocalStorageObject: PayrollTaxLocalStorageObject) {
+        localStorage.setItem('tax-calculator-local-storage-object', JSON.stringify(taxCalculatorLocalStorageObject));
     }
 
 
@@ -148,10 +186,10 @@ export class FinanceCalculatorsService {
             totalPrincipalPaid: 0,
             stats: []
         }
-        
+
         // Convert annual percentage rate to a monthly decimal rate (r)
         const monthlyRate = (mortgageCalculatorModel.interestRate / 100) / 12;
-        
+
         // Total number of monthly payments (n)
         const totalPayments = mortgageCalculatorModel.mortgageTermYears * 12;
 
@@ -167,7 +205,7 @@ export class FinanceCalculatorsService {
             results.totalPrincipalPaid += flatPayment
 
             balance -= flatPayment;
-            results.stats.push({    
+            results.stats.push({
                 month: m,
                 monthlyPayment: flatPayment,
                 interest: 0,
@@ -179,16 +217,16 @@ export class FinanceCalculatorsService {
         }
 
         // Step 1: Calculate the fixed monthly P&I payment (M)
-        const exactPayment = mortgageCalculatorModel.mortgageAmount * (monthlyRate * Math.pow(1 + monthlyRate, totalPayments)) / 
+        const exactPayment = mortgageCalculatorModel.mortgageAmount * (monthlyRate * Math.pow(1 + monthlyRate, totalPayments)) /
                             (Math.pow(1 + monthlyRate, totalPayments) - 1);
-        
+
         let remainingBalance = mortgageCalculatorModel.mortgageAmount;
 
         // Step 2: Loop through each month to calculate interest and principal components
         for (let month = 1; month <= totalPayments; month++) {
         // Calculate monthly interest based on current remaining balance
         const interestPayment = remainingBalance * monthlyRate;
-        
+
         // Principal part is the total payment minus the interest part
         let principalPayment = exactPayment - interestPayment;
 
@@ -214,5 +252,152 @@ export class FinanceCalculatorsService {
         }
 
         return results;
+    }
+
+    getTaxInfo() {
+
+        this.payrollTaxApiService.getRatesLookup(this.taxCalculatorModel()).pipe(
+            map((response: PayrollTaxApiResponse) => {
+                const editedResponse: PayrollTaxApiResponse = {
+                    grossWages: this.taxCalculatorModel().grossWages,
+                    taxes: response.taxes,
+                    work_state: response.work_state,
+                    residence_state: response.residence_state
+                }
+                return editedResponse
+            })
+        ).subscribe({
+            next: (response) => {
+                this.taxRateResult.set(response)
+                const newTaxCalculatorObject: PayrollTaxLocalStorageObject = {
+                    request: this.taxCalculatorModel(),
+                    response: this.taxRateResult()
+                }
+                this.storeTaxCalculatorLocalStorageObject(newTaxCalculatorObject)
+            },
+            error: (err) => {
+                console.error(err)
+            },
+            complete: () => {
+
+            }
+        })
+    }
+
+    getSpecificStateTax(taxTypeCode: string): Tax {
+        let tax = this.taxRateResult()!.taxes.find((tax: Tax) => tax.tax_type_code === taxTypeCode)
+
+        const emptyStateTax: Tax = {
+            brackets: [{
+                from: 0,
+                rate: 0,
+                to: Number.MAX_VALUE,
+                actualTax: 0
+            }],
+            category: 'income',
+            effective_date: '',
+            jurisdiction: '',
+            name: `${Object.keys(State).find((state) => State[state as keyof typeof State] === taxTypeCode.slice(0, 2))?.replaceAll('_', ' ')} Income Tax`,
+            rate: 0,
+            rate_structure: '',
+            supplemental_rate: 0,
+            tax_type_code: taxTypeCode,
+            taxpayer_side: '',
+            wage_base: 0
+        }
+        if (tax === undefined) {
+            tax = emptyStateTax
+        }
+
+        return tax
+        
+    }
+
+    getEstimatedTaxes(grossWages: number, tax: Tax): PayableTax {
+        let totalPayableTax: number = 0
+        let editedBrackets: Bracket[] = []
+
+        if (tax.rate_structure === 'flat_percent') {
+            const payableTax: PayableTax = {
+                name: tax.name,
+                rate_structure: tax.rate_structure,
+                rate: tax.rate,
+                totalActualTax: grossWages * tax.rate,
+                brackets: [],
+                wage_base: 0
+            }
+            return payableTax
+        }
+        else if (tax.rate_structure === 'wage_base_capped') {
+            const payableTax: PayableTax = {
+                name: tax.name,
+                rate_structure: tax.rate_structure,
+                rate: tax.rate,
+                totalActualTax: grossWages <= tax.wage_base ? grossWages * tax.rate : tax.wage_base * tax.rate,
+                brackets: [],
+                wage_base: tax.wage_base
+            }
+            return payableTax
+        }
+        else if (tax.rate_structure === 'graduated') {
+            tax.brackets.forEach((bracket) => {
+                if (grossWages > bracket.from) {
+                    if (grossWages > bracket.to && bracket.to !== null) {
+                        const bracketTax = (bracket.to - bracket.from) * bracket.rate
+                        const editedBracket: Bracket = {
+                            ...bracket,
+                            actualTax: bracketTax
+                        }
+                        editedBrackets.push(editedBracket)
+                        totalPayableTax += bracketTax
+
+                    }
+                    else {
+                        const bracketTax = (grossWages - bracket.from) * bracket.rate
+                        const editedBracket: Bracket = {
+                            ...bracket,
+                            actualTax: bracketTax
+                        }
+                        editedBrackets.push(editedBracket)
+                        totalPayableTax += bracketTax
+                    }
+                }
+                else {
+                    const editedBracket: Bracket = {
+                        ...bracket,
+                        actualTax: 0
+                    }
+                    editedBrackets.push(editedBracket)
+                }
+            })
+
+            const payableTax: PayableTax = {
+                name: tax.name,
+                rate_structure: tax.rate_structure,
+                rate: tax.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate,
+                totalActualTax: totalPayableTax,
+                brackets: editedBrackets,
+                wage_base: 0
+            }
+            return payableTax
+        }
+        else {
+            // console.error(`haven't accounted for ${tax.name} tax structure: ${tax.rate_structure}`)
+            const payableTax: PayableTax = {
+                name: tax.name,
+                rate_structure: tax.rate_structure,
+                rate: tax.rate,
+                totalActualTax: 0,
+                brackets: [],
+                wage_base: 0
+            }
+            return payableTax
+        }
+        
+        
+    
+
+        
+
     }
 }

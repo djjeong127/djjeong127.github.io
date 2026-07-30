@@ -1,7 +1,7 @@
 export enum CalculatorType {
     Investment = 'Investment',
     Mortgage = 'Mortgage',
-    Paycheck = 'Paycheck'
+    Tax = 'Tax'
 }
 
 export enum TimeUnit {
@@ -58,37 +58,69 @@ export interface MortgageCalculationStats {
     remainingBalance: number;
 }
 
+export interface PayrollTaxLocalStorageObject {
+    request: PayrollTaxApiRequest;
+    response: PayrollTaxApiResponse | undefined;
+}
+
 export interface PayrollTaxApiRequest {
-    workState: State,
-    payDate: Date,
-    residenceState: State,
-    grossWages: number,
-    payPeriod: PayPeriod,
-    filingStatus: FilingStatus,
-    allowances: number
+    workState: State;
+    payDate: string;
+    residenceState: State;
+    grossWages: number;
+    payPeriod: PayPeriod;
+    filingStatus: FilingStatus;
+    allowances: number;
 }
 
 export interface PayrollTaxApiResponse {
-    taxes: Tax[]
+    grossWages: number;
+    taxes: Tax[];
+    work_state: State;
+    residence_state: State;
 }
 
 export interface Tax {
-    category: string
-    effective_date: string,
-    jurisdiction: string,
-    name: string,
-    rate: number
-    rate_structure: string,
-    supplemental_rate: number
-    tax_type_code: string
-    taxpayer_side: string
-    wage_base: number
+    brackets: Bracket[];
+    category: string;
+    effective_date: string;
+    jurisdiction: string;
+    name: string;
+    rate: number;
+    rate_structure: string;
+    supplemental_rate: number;
+    tax_type_code: string;
+    taxpayer_side: string;
+    wage_base: number;
+}
+
+export interface PayableTax {
+    name: string;
+    rate_structure: string;
+    rate: number;
+    totalActualTax: number;
+    brackets: Bracket[];
+    wage_base: number;
+}
+
+export interface AllPayableTaxes {
+    fed_income_ee: PayableTax;
+    fed_fica_ss_ee: PayableTax;
+    fed_fica_med_ee: PayableTax;
+    work_state_income_ee: PayableTax;
+    residence_state_income_ee: PayableTax;
+}
+
+export interface Bracket {
+    from: number;
+    rate: number;
+    to: number;
+    actualTax: number;
 }
 
 export enum FilingStatus {
     Single = 'single',
     Married = 'married',
-    Head_of_household = 'head_of_household'
 }
 
 export enum PayPeriod {
