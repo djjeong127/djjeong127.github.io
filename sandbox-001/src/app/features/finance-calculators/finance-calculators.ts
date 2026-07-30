@@ -97,7 +97,11 @@ export class FinanceCalculators {
       residence_state_income_ee: residenceStateTax ? this.financeCalculatorsService.getEstimatedTaxes(grossWages, residenceStateTax) : blankTax
     }
 
+    this.updateTaxPieChart(allPayableTaxes)
     return allPayableTaxes
+  })
+  updateTaxPieChartComputed = computed(() => {
+    return this.updateTaxPieChart(this.taxDataSource())
   })
 
   ngAfterViewInit() {
@@ -113,6 +117,8 @@ export class FinanceCalculators {
     this.updateMortgagePieChart(this.financeCalculatorsService.mortgageCalculationResult())
     this.mortgageDataSource().paginator = this.mortgagePaginator
 
+    this.initTaxPieChart();
+    this.updateTaxPieChart(this.taxDataSource())
   }
 
    initInvestmentLineChart(): void {
@@ -222,7 +228,7 @@ export class FinanceCalculators {
         plugins: {
           title: {
             display: true,
-            text: 'Total Investments',
+            // text: 'Total Investments',
           },
           legend: {
             position: 'top'
@@ -362,7 +368,7 @@ export class FinanceCalculators {
         plugins: {
           title: {
             display: true,
-            text: 'Total Payment'
+            // text: 'Total Payment'
           },
           legend: {
             position: 'top'
@@ -398,81 +404,83 @@ export class FinanceCalculators {
     this.mortgagePieChart.update();
   }
 
-  // initTaxPieChart(): void {
-  //   const ctx = this.taxPieChartCanvas.nativeElement.getContext('2d');
-  //   if (!ctx) return;
+  initTaxPieChart(): void {
+    const ctx = this.taxPieChartCanvas.nativeElement.getContext('2d');
+    if (!ctx) return;
 
-  //   this.taxPieChart = new Chart(ctx, {
-  //     type: 'pie',
-  //     data: {
-  //       labels: [], // Populated dynamically
-  //       datasets: [{
-  //         data: [], // Populated dynamically with 3 numbers during update
-  //         borderColor: [
-  //           '#3b82f6',
-  //           '#f59e0b',
-  //         ],
-  //         backgroundColor: [
-  //           '#3b82f6',
-  //           '#f59e0b',
-  //         ],
-  //         hoverOffset: 4
-  //       }]
-  //     },
-  //     options: {
-  //       responsive: true,
-  //       plugins: {
-  //         title: {
-  //           display: true,
-  //           text: 'Total Payment'
-  //         },
-  //         legend: {
-  //           position: 'top'
-  //         },
-  //         tooltip: {
-  //           callbacks: {
-  //             // Formats tooltips to match financial dollar values on hover
-  //             label: (context) => {
-  //               const label = context.label ?? '';
-  //               const value = context.parsed ?? 0;
-  //               return ` ${label}: $${value.toLocaleString()}`;
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
+    this.taxPieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: [], // Populated dynamically
+        datasets: [{
+          data: [], // Populated dynamically during update
+          borderColor: [], // Populated dynamically during update
+          backgroundColor: [], // Populated dynamically during update
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            // text: 'Total Pay'
+          },
+          legend: {
+            position: 'top'
+          },
+          tooltip: {
+            callbacks: {
+              // Formats tooltips to match financial dollar values on hover
+              label: (context) => {
+                const label = context.label ?? '';
+                const value = context.parsed ?? 0;
+                return ` ${label}: $${value.toLocaleString()}`;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
 
-  //  updateTaxPieChart(data: PayrollTaxApiResponse): void {
-  //   if (!this.taxPieChart) return;
+  updateTaxPieChart(data: AllPayableTaxes): void {
+    if (!this.taxPieChart) return;
 
-  // // 1. Define your dynamic labels and data (e.g., now 3 items)
-  // const labelList = ['Principal', 'Interest', 'Taxes'];
-  // const dataList = data.taxes;
+    // 1. Define your dynamic labels and data (e.g., now 3 items)
+    const takeHomePay = this.financeCalculatorsService.taxRateResult()!.grossWages - this.getTotalTax(data)
+    let labelList = ['Take Home Pay', data.fed_income_ee.name, 'Social Security Tax', 'Medicare Tax', data.work_state_income_ee.name];
+    let dataList = [takeHomePay, data.fed_income_ee.totalActualTax, data.fed_fica_ss_ee.totalActualTax, data.fed_fica_med_ee.totalActualTax, data.work_state_income_ee.totalActualTax];
+    
 
-  // // 2. Define matching colors dynamically for each slice
-  // const colorList = ['#3b82f6', '#f59e0b', '#10b981'];
+    // 2. Define matching colors dynamically for each slice
+    const colorList = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
 
-  // // 3. Assign labels and data to the chart instance
-  // this.taxPieChart.data.labels = labelList;
-  // this.taxPieChart.data.datasets[0].data = dataList;
+    if (data.work_state_income_ee.name !== data.residence_state_income_ee.name) {
+      labelList.push(data.residence_state_income_ee.name)
+      dataList.push(data.residence_state_income_ee.totalActualTax)
+      colorList.push('#ec4899')
+    }
 
-  // // 4. Update the color arrays dynamically to match the new slice count
-  // this.taxPieChart.data.datasets[0].backgroundColor = colorList;
-  // this.taxPieChart.data.datasets[0].borderColor = colorList;
+    // 3. Assign labels and data to the chart instance
+    this.taxPieChart.data.labels = labelList;
+    this.taxPieChart.data.datasets[0].data = dataList;
 
-  // // 5. Render smooth transformations
-  // this.taxPieChart.update();
-  // }
+    // 4. Update the color arrays dynamically to match the new slice count
+    this.taxPieChart.data.datasets[0].backgroundColor = colorList;
+    this.taxPieChart.data.datasets[0].borderColor = colorList;
 
-  getTotalTax(): number {
+    // 5. Render smooth transformations
+    this.taxPieChart.update();
+  }
+
+  getTotalTax(data: AllPayableTaxes): number {
     let totalTax = 0;
-    if (this.taxDataSource().work_state_income_ee.name !== this.taxDataSource().residence_state_income_ee.name) {
-      totalTax = this.taxDataSource().fed_income_ee.totalActualTax + this.taxDataSource().fed_fica_ss_ee.totalActualTax + this.taxDataSource().fed_fica_med_ee.totalActualTax + this.taxDataSource().work_state_income_ee.totalActualTax + this.taxDataSource().residence_state_income_ee.totalActualTax
+    if (data.work_state_income_ee.name !== data.residence_state_income_ee.name) {
+      totalTax = data.fed_income_ee.totalActualTax + data.fed_fica_ss_ee.totalActualTax + data.fed_fica_med_ee.totalActualTax + data.work_state_income_ee.totalActualTax + data.residence_state_income_ee.totalActualTax
     }
     else {
-      totalTax = this.taxDataSource().fed_income_ee.totalActualTax + this.taxDataSource().fed_fica_ss_ee.totalActualTax + this.taxDataSource().fed_fica_med_ee.totalActualTax + this.taxDataSource().work_state_income_ee.totalActualTax
+      totalTax = data.fed_income_ee.totalActualTax + data.fed_fica_ss_ee.totalActualTax + data.fed_fica_med_ee.totalActualTax + data.work_state_income_ee.totalActualTax
     }
     return totalTax;
   }

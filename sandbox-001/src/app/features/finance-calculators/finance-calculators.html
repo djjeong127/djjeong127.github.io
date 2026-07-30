@@ -283,7 +283,7 @@
             @let grossWages = financeCalculatorsService.taxRateResult()!.grossWages;
             @let workState = financeCalculatorsService.taxRateResult()!.work_state;
             @let residenceState = financeCalculatorsService.taxRateResult()!.residence_state;
-            @let totalTax = getTotalTax();
+            @let totalTax = getTotalTax(this.taxDataSource());
 
             <div class="details">
                 <div class="results">
@@ -305,11 +305,11 @@
                         <div class="result-numbers">{{taxDataSource().fed_income_ee.totalActualTax | currency}}</div>
 
 
-                        <div>Social Security</div>
+                        <div>Social Security Tax</div>
                         <div class="result-numbers">{{taxDataSource().fed_fica_ss_ee.rate | percent : '1.2-2'}}</div>
                         <div class="result-numbers">{{taxDataSource().fed_fica_ss_ee.totalActualTax| currency}}</div>
 
-                        <div>Medicare</div>
+                        <div>Medicare Tax</div>
                         <div class="result-numbers">{{taxDataSource().fed_fica_med_ee.rate | percent : '1.2-2'}}</div>
                         <div class="result-numbers">{{taxDataSource().fed_fica_med_ee.totalActualTax | currency}}</div>
 
