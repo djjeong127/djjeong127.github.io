@@ -301,16 +301,16 @@
                         <div class="state-tax"></div>
 
                         <div>{{taxDataSource().fed_income_ee.name}}</div>
-                        <div class="result-numbers">{{taxDataSource().fed_income_ee.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate | percent : '1.0-4'}}</div>
+                        <div class="result-numbers">{{taxDataSource().fed_income_ee.brackets.find((bracket) => bracket.from < grossWages && (grossWages <= bracket.to || bracket.to === null))!.rate | percent : '1.2-2'}}</div>
                         <div class="result-numbers">{{taxDataSource().fed_income_ee.totalActualTax | currency}}</div>
 
 
                         <div>Social Security</div>
-                        <div class="result-numbers">{{taxDataSource().fed_fica_ss_ee.rate | percent : '1.0-4'}}</div>
+                        <div class="result-numbers">{{taxDataSource().fed_fica_ss_ee.rate | percent : '1.2-2'}}</div>
                         <div class="result-numbers">{{taxDataSource().fed_fica_ss_ee.totalActualTax| currency}}</div>
 
                         <div>Medicare</div>
-                        <div class="result-numbers">{{taxDataSource().fed_fica_med_ee.rate | percent : '1.0-4'}}</div>
+                        <div class="result-numbers">{{taxDataSource().fed_fica_med_ee.rate | percent : '1.2-2'}}</div>
                         <div class="result-numbers">{{taxDataSource().fed_fica_med_ee.totalActualTax | currency}}</div>
 
 
@@ -319,13 +319,13 @@
                         <div class="state-tax"></div>
 
                         <div >{{taxDataSource().work_state_income_ee.name}}</div>
-                        <div class="result-numbers">{{taxDataSource().work_state_income_ee.rate | percent : '1.0-4'}}</div>
+                        <div class="result-numbers">{{taxDataSource().work_state_income_ee.rate | percent : '1.2-2'}}</div>
                         <div class="result-numbers">{{taxDataSource().work_state_income_ee.totalActualTax | currency}}</div>
                         
                         @if (workState !== residenceState) {
 
                             <div>{{taxDataSource().residence_state_income_ee.name}}</div>
-                            <div class="result-numbers">{{taxDataSource().residence_state_income_ee.rate | percent : '1.0-4'}}</div>
+                            <div class="result-numbers">{{taxDataSource().residence_state_income_ee.rate | percent : '1.2-2'}}</div>
                             <div class="result-numbers">{{taxDataSource().residence_state_income_ee.totalActualTax | currency}}</div>
 
                         }
@@ -366,7 +366,7 @@
 
                                 <ng-container matColumnDef="rate">
                                 <th mat-header-cell *matHeaderCellDef> Rate </th>
-                                <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
+                                <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.2-2'}} </td>
                                 <td mat-footer-cell *matFooterCellDef></td>
                                 </ng-container>
 
@@ -398,7 +398,7 @@
 
                                 <ng-container matColumnDef="rate">
                                 <th mat-header-cell *matHeaderCellDef> Flat Rate </th>
-                                <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
+                                <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.2-2'}} </td>
                                 </ng-container>
 
                                 <ng-container matColumnDef="actualTax">
@@ -422,7 +422,7 @@
 
                                 <ng-container matColumnDef="rate">
                                 <th mat-header-cell *matHeaderCellDef> Flat Rate </th>
-                                <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
+                                <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.2-2'}} </td>
                                 </ng-container>
 
                                 <ng-container matColumnDef="actualTax">
@@ -451,7 +451,7 @@
 
                                             <ng-container matColumnDef="rate">
                                             <th mat-header-cell *matHeaderCellDef> Flat Rate </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
+                                            <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.2-2'}} </td>
                                             </ng-container>
 
                                             <ng-container matColumnDef="actualTax">
@@ -483,7 +483,7 @@
 
                                             <ng-container matColumnDef="rate">
                                             <th mat-header-cell *matHeaderCellDef> Rate </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
+                                            <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.2-2'}} </td>
                                             <td mat-footer-cell *matFooterCellDef></td>
                                             </ng-container>
 
@@ -519,7 +519,7 @@
 
                                             <ng-container matColumnDef="rate">
                                             <th mat-header-cell *matHeaderCellDef> Flat Rate </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
+                                            <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.2-2'}} </td>
                                             </ng-container>
 
                                             <ng-container matColumnDef="actualTax">
@@ -551,7 +551,7 @@
 
                                             <ng-container matColumnDef="rate">
                                             <th mat-header-cell *matHeaderCellDef> Rate </th>
-                                            <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.0-4'}} </td>
+                                            <td mat-cell *matCellDef="let element"> {{element.rate | percent : '1.2-2'}} </td>
                                             <td mat-footer-cell *matFooterCellDef></td>
                                             </ng-container>
 
