@@ -97,7 +97,6 @@ export class FinanceCalculators {
       residence_state_income_ee: residenceStateTax ? this.financeCalculatorsService.getEstimatedTaxes(grossWages, residenceStateTax) : blankTax
     }
 
-    // this.initTaxPieChart();
     this.updateTaxPieChart(allPayableTaxes)
     return allPayableTaxes
   })

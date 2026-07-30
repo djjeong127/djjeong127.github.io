@@ -99,6 +99,8 @@ export class FinanceCalculatorsService {
             this.taxRateResult.set(storedTaxCalculatorLocalStorageObject.response)
         }
         else {
+            //send request for initial taxRateResult population
+            this.getTaxInfo()
             const taxCalculatorLocalStorageObject: PayrollTaxLocalStorageObject = {
                 request: this.taxCalculatorModel(),
                 response: this.taxRateResult()
@@ -285,7 +287,7 @@ export class FinanceCalculatorsService {
     }
 
     getSpecificStateTax(taxTypeCode: string): Tax {
-        let tax = this.taxRateResult()!.taxes.find((tax: Tax) => tax.tax_type_code === taxTypeCode)
+        let tax = this.taxRateResult()?.taxes.find((tax: Tax) => tax.tax_type_code === taxTypeCode)
 
         const emptyStateTax: Tax = {
             brackets: [{

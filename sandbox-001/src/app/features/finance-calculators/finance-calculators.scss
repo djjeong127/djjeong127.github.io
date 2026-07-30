@@ -115,7 +115,6 @@
         display: grid;
         justify-self: center;
         justify-content: center;
-        width: 70%;
     }
 
     @media (min-width: 768px) {
@@ -126,9 +125,6 @@
             justify-self: center;
         }
 
-        .pie-chart-wrapper {
-            width: 50%;
-        }
     }
 
 
