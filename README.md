@@ -15,8 +15,8 @@
 
 ## Built With
 
-* **Angular (v22)** - Core framework.
-* **Angular Material** - UI library.
+* **[Angular (v22)](https://angular.dev/overview)** - Core framework.
+* **[Angular Material](https://material.angular.dev/)** - UI library.
 * **[angular-cli-ghpages](https://github.com/angular-schule/angular-cli-ghpages)** - Open-source npm package that automates compiling your Angular application and publishing the final production build to github pages.
 * **Google Gemini AI** - Food recipe pictures.
 * **[TMDB API](https://developer.themoviedb.org/docs/getting-started)** - Movie and Shows source of metadata.
