@@ -84,7 +84,7 @@ export class MediaPlayer {
   })
   searchTVForm = form(this.searchTVModel)
 
-  safeVidsrcUrl = signal<SafeResourceUrl | undefined>(undefined)
+  safeVidsrcUrl = signal<SafeResourceUrl>('')
 
 
   // javascript calculations for the movie-shows-header height, so that I can get a buffer of the same size
@@ -144,7 +144,7 @@ export class MediaPlayer {
 
   constructor() {
     effect(() => {
-      this.safeVidsrcUrl.set(undefined)
+      this.safeVidsrcUrl.set('')
       this.isLoading.set(true)
 
       this.selectedMovie.set(undefined)
@@ -193,6 +193,14 @@ export class MediaPlayer {
     this.updateHeaderElementHeight()
   }
 
+  ngAfterViewInit() {
+    if (this.scrollToMediaPlayer()) {
+      setTimeout(() => {
+        this.scrollToVideoHeader()
+      }, 1000)
+    }
+  }
+
   getTmdbAndVidsrcInfo(mediaType: MediaType, id: number, seasonNumber: number, episodeNumber: number) {
     if (mediaType === MediaType.Movie) {
       this.tmdbApiService.getMovieDetail(id).subscribe({
@@ -211,16 +219,10 @@ export class MediaPlayer {
             error: (err) => {
               this.isLoading.set(false)
               this.safeVidsrcUrl.set('')
-              if (this.scrollToMediaPlayer()) {
-                this.scrollToVideoHeader()
-              }
               console.error(err)
             },
             complete: () => {
               this.isLoading.set(false)
-              if (this.scrollToMediaPlayer()) {
-                this.scrollToVideoHeader()
-              }
             }
           })
         }
@@ -294,16 +296,10 @@ export class MediaPlayer {
                               error: (err) => {
                                 this.isLoading.set(false)
                                 this.safeVidsrcUrl.set('')
-                                if (this.scrollToMediaPlayer()) {
-                                  this.scrollToVideoHeader()
-                                }
                                 console.error(err)
                               },
                               complete: () => {
                                 this.isLoading.set(false)
-                                if (this.scrollToMediaPlayer()) {
-                                  this.scrollToVideoHeader()
-                                }
                               }
                             })
                           }
@@ -341,16 +337,10 @@ export class MediaPlayer {
                           error: (err) => {
                             this.isLoading.set(false)
                             this.safeVidsrcUrl.set('')
-                            if (this.scrollToMediaPlayer()) {
-                              this.scrollToVideoHeader()
-                            }
                             console.error(err)
                           },
                           complete: () => {
                             this.isLoading.set(false)
-                            if (this.scrollToMediaPlayer()) {
-                              this.scrollToVideoHeader()
-                            }
                           }
                         })
                       }
