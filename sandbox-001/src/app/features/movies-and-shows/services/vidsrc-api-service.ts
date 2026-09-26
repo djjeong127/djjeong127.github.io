@@ -40,24 +40,24 @@ export class VidsrcApiService {
 
     getVidsrcMovie(movieId: number): Observable<SafeResourceUrl> {
         // disable correct return for iframe src
-        // return of('')
+        return of('')
         
-        return this.http.get(this.vidsrcMovieUrl + movieId, this.httpOptions).pipe(
-            map((response) => {
-                return this.sanitizer.bypassSecurityTrustResourceUrl(this.extractIframeSrc(response))
-            })
-        )
+        // return this.http.get(this.vidsrcMovieUrl + movieId, this.httpOptions).pipe(
+        //     map((response) => {
+        //         return this.sanitizer.bypassSecurityTrustResourceUrl(this.extractIframeSrc(response))
+        //     })
+        // )
     }
 
     getVidsrcTV(tvId: number, season: number, episode: number): Observable<SafeResourceUrl> {
         // disable correct return for iframe src
-        // return of('')
+        return of('')
 
-        return this.http.get(this.vidsrcTVUrl + `${tvId}&season=${season}&episode=${episode}`, this.httpOptions).pipe(
-            map((response) => {
-                return this.sanitizer.bypassSecurityTrustResourceUrl(this.extractIframeSrc(response))
-            })
-        )
+        // return this.http.get(this.vidsrcTVUrl + `${tvId}&season=${season}&episode=${episode}`, this.httpOptions).pipe(
+        //     map((response) => {
+        //         return this.sanitizer.bypassSecurityTrustResourceUrl(this.extractIframeSrc(response))
+        //     })
+        // )
     }
 
     extractIframeSrc(rawHtml: string): string {
