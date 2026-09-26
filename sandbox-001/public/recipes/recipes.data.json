@@ -785,6 +785,42 @@
           "text": "Store in fridge up to 1 week."
         }
       ]
+    },
+    {
+      "id": 11,
+      "name": "Frozen Grapes",
+      "description": "A nice frozen snack, like a bite sized sorbet",
+      "author": "me",
+      "image": "/recipes/images/frozen_grapes.png",
+      "ingredients": [
+        {
+          "item": "seedless grapes",
+          "amount": 1,
+          "unit": "bag"
+        }
+      ],
+      "instructions": [
+        {
+          "step": 1,
+          "text": "Wash and soak the grapes in water and baking soda for 10 min"
+        },
+        {
+          "step": 2,
+          "text": "Rinse the grapes"
+        },
+        {
+          "step": 3,
+          "text": "Pluck and rinse the grapes again (gotta ensure the baking soda taste is gone)"
+        },
+        {
+          "step": 4,
+          "text": "Pat the grapes dry, and leave them to air dry. (These must be bone dry, or else we get a bunch of frost buildup)"
+        },
+        {
+          "step": 5,
+          "text": "Put all the dry grapes in a big ziplock bag and freeze"
+        }
+      ]
     }
   ],
   
